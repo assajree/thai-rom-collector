@@ -1,8 +1,6 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
-import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from '../services/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { TagRepository } from '../repositories/tag.repository';
@@ -21,9 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './admin-patch-page.component.html'
 })
 export class AdminPatchPageComponent {
-  private readonly auth = inject(AuthService);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly patchRepository = inject(PatchRepository);
@@ -41,6 +37,7 @@ export class AdminPatchPageComponent {
   protected newTranslatorName = '';
   protected newTranslatorShortName = '';
   protected newTranslatorLink = '';
+  protected translatorDialogOpen = false;
   protected selectedTags: string[] = [];
   protected newTagName = '';
   protected newSystemName = '';
@@ -105,14 +102,21 @@ export class AdminPatchPageComponent {
   protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
   protected async createTag(): Promise<void> { const name = this.newTagName.trim(); if (!name) return; const tag = await this.tagRepository.create(name); if (!this.selectedTags.includes(tag.name)) this.selectedTags = [...this.selectedTags, tag.name]; this.newTagName = ''; }
   protected async createTranslator(): Promise<void> {
-    const name = this.newTranslatorName.trim();
-    if (!name) return;
-    const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink);
-    this.form.controls.translatorId.setValue(translator.id);
-    this.newTranslatorName = '';
-    this.newTranslatorShortName = '';
-    this.newTranslatorLink = '';
+    try {
+      const name = this.newTranslatorName.trim();
+      if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
+      const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink);
+      this.form.controls.translatorId.setValue(translator.id);
+      this.newTranslatorName = '';
+      this.newTranslatorShortName = '';
+      this.newTranslatorLink = '';
+      this.translatorDialogOpen = false;
+    } catch (error) {
+      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่มทีมแปลได้', 'error');
+    }
   }
+  protected openTranslatorDialog(): void { this.translatorDialogOpen = true; }
+  protected closeTranslatorDialog(): void { this.translatorDialogOpen = false; }
   protected async createSystem(): Promise<void> {
     try {
       const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);
@@ -128,8 +132,4 @@ export class AdminPatchPageComponent {
   protected openSystemDialog(): void { this.systemDialogOpen = true; }
   protected closeSystemDialog(): void { this.systemDialogOpen = false; }
 
-  protected async signOut(): Promise<void> {
-    await this.auth.signOut();
-    await this.router.navigateByUrl('/', { replaceUrl: true });
-  }
 }

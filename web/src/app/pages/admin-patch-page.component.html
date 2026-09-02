@@ -10,8 +10,10 @@
       <label>เครื่องเกม<select class="admin-input" formControlName="system"><option value="">เลือกเครื่องเกม</option>@for (system of systems | async; track system.id) { <option [value]="system.name">{{ system.shortName }} — {{ system.name }}</option> }</select></label>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button" (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
-    <label>ทีมแปล<select class="admin-input" formControlName="translatorId"><option value="">เลือกทีมแปล</option>@for (translator of translators | async; track translator.id) { <option [value]="translator.id">{{ translator.shortName }} — {{ translator.name }}</option> }</select></label>
-    <div class="border-t border-slate-600 pt-4"><label>ชื่อย่อทีมแปล<input class="admin-input" [value]="newTranslatorShortName" (input)="newTranslatorShortName = $any($event.target).value" /></label><label class="mt-2 block">ชื่อเต็มทีมแปล<input class="admin-input" [value]="newTranslatorName" (input)="newTranslatorName = $any($event.target).value" /></label><label class="mt-2 block">ลิงก์ทีมแปล (ถ้ามี)<input class="admin-input" [value]="newTranslatorLink" (input)="newTranslatorLink = $any($event.target).value" /></label><button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button" (click)="createTranslator()">เพิ่มทีมแปล</button></div>
+    <div>
+      <label>ทีมแปล<select class="admin-input" formControlName="translatorId"><option value="">เลือกทีมแปล</option>@for (translator of translators | async; track translator.id) { <option [value]="translator.id">{{ translator.shortName }} — {{ translator.name }}</option> }</select></label>
+      <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button" (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
+    </div>
     <label>Patch tool<input class="admin-input" formControlName="patchTool" /></label>
     <fieldset class="border border-slate-600 p-3"><legend>หมวดหมู่</legend>@for (tag of tags | async; track tag.id) { <label class="mr-3 inline-flex gap-1"><input type="checkbox" [checked]="selectedTags.includes(tag.name)" (change)="toggleTag(tag.name)">{{ tag.name }}</label> }<div class="mt-3"><input class="admin-input" placeholder="สร้าง tag ใหม่" [value]="newTagName" (input)="newTagName = $any($event.target).value"><button class="mt-2 border border-signal px-3 py-2 font-bold text-signal" type="button" (click)="createTag()">เพิ่ม tag</button></div></fieldset>
     <label>Patch file URL<input class="admin-input" formControlName="patchFileUrl" type="url" /></label>
@@ -31,5 +33,15 @@
       </section>
     </div>
   }
-  <button class="mt-6 border border-slate-300 px-4 py-2 font-bold text-slate-100 hover:border-signal hover:text-signal" type="button" (click)="signOut()">ออกจากระบบ</button>
+  @if (translatorDialogOpen) {
+    <div class="system-dialog-backdrop" role="presentation" (click)="closeTranslatorDialog()">
+      <section class="system-dialog" role="dialog" aria-modal="true" aria-labelledby="translator-dialog-title" (click)="$event.stopPropagation()">
+        <h2 id="translator-dialog-title" class="font-black">เพิ่มทีมแปล</h2>
+        <label class="mt-4 block">ชื่อย่อทีมแปล<input class="admin-input" [value]="newTranslatorShortName" (input)="newTranslatorShortName = $any($event.target).value" /></label>
+        <label class="mt-3 block">ชื่อเต็มทีมแปล<input class="admin-input" [value]="newTranslatorName" (input)="newTranslatorName = $any($event.target).value" /></label>
+        <label class="mt-3 block">ลิงก์ทีมแปล (ถ้ามี)<input class="admin-input" [value]="newTranslatorLink" (input)="newTranslatorLink = $any($event.target).value" /></label>
+        <div class="mt-5 flex gap-2"><button class="border border-signal bg-signal px-3 py-2 font-bold text-ink" type="button" (click)="createTranslator()">บันทึก</button><button class="border border-slate-300 px-3 py-2 font-bold text-slate-100" type="button" (click)="closeTranslatorDialog()">ยกเลิก</button></div>
+      </section>
+    </div>
+  }
 </main>
