@@ -16,19 +16,23 @@
     <nav aria-label="Main navigation">
       <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">Browse</a>
       <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">Add patch</a>
+      @if (authService.isAdmin()) {
+        <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการเครื่องเกม</a>
+      }
     </nav>
 
     <div class="retro-system-section">
       <p class="retro-rail-heading">Systems</p>
       <div>
-        @for (platform of platforms; track platform) {
+        <a class="retro-system-button" routerLink="/" routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }" (click)="selectPlatform(null)">All systems</a>
+        @for (platform of platforms(); track platform.id) {
           <a
             class="retro-system-button"
-            [routerLink]="platform === 'All systems' ? '/' : browseRoute('system', platform)"
+            [routerLink]="browseRoute('system', platform.name)"
             routerLinkActive="retro-system-button--active"
             [routerLinkActiveOptions]="{ exact: true }"
-            (click)="selectPlatform(platform)">
-            {{ platform }}
+            (click)="selectPlatform(platform.name)">
+            {{ platform.shortName }} — {{ platform.name }}
           </a>
         }
       </div>
@@ -40,7 +44,7 @@
         <a class="retro-system-button" routerLink="/" routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }" (click)="selectTranslator(null)">All teams</a>
         @for (translator of translators(); track translator.id) {
           <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.name)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
-            {{ translator.name }}
+            {{ translator.shortName }} — {{ translator.name }}
           </a>
         }
       </div>

@@ -1,11 +1,18 @@
 export interface Translator {
   id: string;
+  shortName: string;
   name: string;
   link?: string;
 }
 
 export interface Tag {
   id: string;
+  name: string;
+}
+
+export interface SystemMaster {
+  id: string;
+  shortName: string;
   name: string;
 }
 

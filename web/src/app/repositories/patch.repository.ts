@@ -14,6 +14,7 @@ export class PatchRepository {
   private readonly patches = collection(this.firestore, 'patches');
   private readonly translators = collection(this.firestore, 'translators');
   private readonly tags = collection(this.firestore, 'tags');
+  private readonly systems = collection(this.firestore, 'systems');
 
   watchAll(): Observable<Patch[]> {
     return collectionData(this.patches, { idField: 'id' }).pipe(
@@ -79,20 +80,34 @@ export class PatchRepository {
 
   private async buildDocument(draft: PatchDraft, coverUrl: string, updateDate: string): Promise<PatchDocument> {
     const translator = await this.getTranslator(draft.translatorId);
+    const system = await this.getSystem(draft.system);
     const tags = await this.getMasterTags(draft.tags);
     const fields = [draft.fileName, draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: clean(draft.system),
+      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.name,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim()
     };
   }
 
+  private getSystem(name: string): Promise<{ name: string }> {
+    const normalized = clean(name);
+    return new Promise((resolve, reject) => {
+      collectionData(this.systems).subscribe({
+        next: (rows) => {
+          const row = rows.find((item) => clean(String(item['name'] ?? '')).toLocaleLowerCase('th') === normalized.toLocaleLowerCase('th'));
+          row ? resolve({ name: clean(String(row['name'])) }) : reject(new RepositoryError('ไม่พบเครื่องเกมที่เลือก', 'create'));
+        },
+        error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบเครื่องเกมได้', 'create'))
+      });
+    });
+  }
+
   private getTranslator(id: string): Promise<Translator> {
     return new Promise((resolve, reject) => {
       docData(doc(this.translators, id), { idField: 'id' }).subscribe({
-        next: (row) => row ? resolve({ id, name: clean(String((row as Record<string, unknown>)['name'] ?? '')) }) : reject(new RepositoryError('ไม่พบทีมแปลที่เลือก', 'create')),
+        next: (row) => row ? resolve({ id, shortName: clean(String((row as Record<string, unknown>)['shortName'] ?? '')), name: clean(String((row as Record<string, unknown>)['name'] ?? '')) }) : reject(new RepositoryError('ไม่พบทีมแปลที่เลือก', 'create')),
         error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบทีมแปลได้', 'create'))
       });
     });

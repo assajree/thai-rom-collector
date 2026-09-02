@@ -5,6 +5,7 @@ import { BrowsePageComponent } from './pages/browse-page.component';
 import { adminGuard } from './guards/admin.guard';
 import { AdminRedirectComponent } from './pages/admin-redirect.component';
 import { LogoutPageComponent } from './pages/logout-page.component';
+import { AdminSystemsPageComponent } from './pages/admin-systems-page.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,11 @@ export const routes: Routes = [
   {
     path: 'add-patch/:id',
     component: AdminPatchPageComponent,
+    canActivate: [adminGuard]
+  },
+  {
+    path: 'admin/systems',
+    component: AdminSystemsPageComponent,
     canActivate: [adminGuard]
   },
   {

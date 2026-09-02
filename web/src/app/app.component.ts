@@ -5,6 +5,7 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
 import { Tag, Translator } from './models/patch.models';
+import { SystemMaster, SystemRepository } from './repositories/system.repository';
 import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
@@ -23,10 +24,10 @@ export class AppComponent implements OnDestroy {
   protected readonly authService = inject(AuthService);
   private readonly tagRepository = inject(TagRepository);
   private readonly translatorRepository = inject(TranslatorRepository);
+  private readonly systemRepository = inject(SystemRepository);
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
-  protected readonly platforms = ['All systems', 'PS', 'GBA', 'NDS', 'PSP'];
-  protected readonly selectedPlatform = computed(() => this.filterState.selectedSystem() ?? 'All systems');
+  protected readonly platforms = signal<SystemMaster[]>([]);
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
   private readonly sidebarScrollLock = effect(() => {
@@ -37,8 +38,8 @@ export class AppComponent implements OnDestroy {
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
   protected closeSidebar(): void { this.sidebarOpen.set(false); }
-  protected selectPlatform(platform: string): void {
-    this.filterState.selectedSystem.set(platform === 'All systems' ? null : platform);
+  protected selectPlatform(platform: string | null): void {
+    this.filterState.selectedSystem.set(platform);
     this.filterState.selectedTranslatorId.set(null);
     this.filterState.selectedTag.set(null);
     this.closeSidebar();
@@ -59,6 +60,7 @@ export class AppComponent implements OnDestroy {
   constructor() {
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
+    this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });
   }
 
   ngOnDestroy(): void {

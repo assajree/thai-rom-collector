@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, DestroyRef, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
@@ -6,10 +6,13 @@ import { AuthService } from '../services/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { TagRepository } from '../repositories/tag.repository';
+import { SystemRepository } from '../repositories/system.repository';
 import { CoverInputComponent } from '../components/cover-input.component';
 import { PatchRepository } from '../repositories/patch.repository';
 import { CoverStorageService } from '../services/cover-storage.service';
 import { StatusMessageService } from '../shared/status-message.service';
+import { Translator } from '../models/patch.models';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-admin-patch-page', styleUrl: './admin-patch-page.component.css',
@@ -27,16 +30,48 @@ export class AdminPatchPageComponent {
   private readonly coverStorage = inject(CoverStorageService);
   private readonly status = inject(StatusMessageService);
   private readonly tagRepository = inject(TagRepository);
+  private readonly systemRepository = inject(SystemRepository);
+  private readonly destroyRef = inject(DestroyRef);
   protected readonly translators = this.translatorRepository.watchAll();
   protected readonly tags = this.tagRepository.watchAll();
+  protected readonly systems = this.systemRepository.watchAll();
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''] });
   protected cover?: Blob;
   protected editId: string | null = null;
   protected newTranslatorName = '';
+  protected newTranslatorShortName = '';
   protected newTranslatorLink = '';
   protected selectedTags: string[] = [];
   protected newTagName = '';
-  constructor() { void this.loadEditRecord(); }
+  protected newSystemName = '';
+  protected newSystemShortName = '';
+  protected systemDialogOpen = false;
+  constructor() {
+    this.initializeFilenameGeneration();
+    void this.loadEditRecord();
+  }
+
+  private translatorOptions: Translator[] = [];
+
+  private initializeFilenameGeneration(): void {
+    this.translators.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: (translators) => {
+        this.translatorOptions = translators;
+        this.updateGeneratedFilename();
+      }
+    });
+    this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
+    this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
+  }
+
+  private updateGeneratedFilename(): void {
+    const gameTitle = this.form.controls.gameTitle.value.trim().replace(/\s+/g, ' ');
+    const translator = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
+    const fileName = gameTitle && translator?.shortName
+      ? `${gameTitle} (Thai by ${translator.shortName.trim().replace(/\s+/g, ' ')})`
+      : '';
+    this.form.controls.fileName.setValue(fileName, { emitEvent: false });
+  }
 
   protected async save(): Promise<void> {
     if (this.form.invalid) { this.form.markAllAsTouched(); this.status.show('กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'error'); return; }
@@ -72,11 +107,26 @@ export class AdminPatchPageComponent {
   protected async createTranslator(): Promise<void> {
     const name = this.newTranslatorName.trim();
     if (!name) return;
-    const translator = await this.translatorRepository.create(name, this.newTranslatorLink);
+    const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink);
     this.form.controls.translatorId.setValue(translator.id);
     this.newTranslatorName = '';
+    this.newTranslatorShortName = '';
     this.newTranslatorLink = '';
   }
+  protected async createSystem(): Promise<void> {
+    try {
+      const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);
+      this.form.controls.system.setValue(system.name);
+      this.newSystemName = '';
+      this.newSystemShortName = '';
+      this.systemDialogOpen = false;
+    } catch (error) {
+      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่มเครื่องเกมได้', 'error');
+    }
+  }
+
+  protected openSystemDialog(): void { this.systemDialogOpen = true; }
+  protected closeSystemDialog(): void { this.systemDialogOpen = false; }
 
   protected async signOut(): Promise<void> {
     await this.auth.signOut();
