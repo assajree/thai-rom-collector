@@ -70,6 +70,9 @@ export class PatchRepository {
       await setDoc(doc(this.patches, id), data);
     } catch (error) {
       if (error instanceof RepositoryError) throw error;
+      if (this.isPermissionDenied(error)) {
+        throw new RepositoryError('ไม่มีสิทธิ์แก้ไขแพตช์: ตรวจสอบว่า UID นี้อยู่ใน admins และ deploy Firestore Rules แล้ว', 'update');
+      }
       throw new RepositoryError('ไม่สามารถแก้ไขแพตช์ได้', 'update');
     }
   }

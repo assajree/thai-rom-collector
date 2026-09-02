@@ -3,10 +3,6 @@
   <input id="game-search" type="search" placeholder="ค้นหาเกม..." [(ngModel)]="draft.keyword" (ngModelChange)="emit()" />
   @if (draft.keyword) { <button class="search-clear" type="button" (click)="draft.keyword = ''; emit()" aria-label="ล้างคำค้น">×</button> }
 </div>
-<div class="filter-chips" aria-label="Tag filters">
-  @for (tag of tags; track tag.id) { <button class="filter-chip filter-chip--green" [class.filter-chip--selected]="draft.tag === tag.name" type="button" (click)="draft.tag = draft.tag === tag.name ? null : tag.name; emit()" [attr.aria-pressed]="draft.tag === tag.name">{{ tag.name }}</button> }
-  @if (draft.tag) { <button class="filter-chip filter-chip--clear" type="button" (click)="draft.tag = null; emit()">ล้าง tag</button> }
-</div>
 <div class="sort-row">
   <label for="filter-system">เครื่องเกม</label>
   <select id="filter-system" [(ngModel)]="draft.system" (ngModelChange)="emit()"><option [ngValue]="null">ทุกเครื่อง</option>@for (system of systems; track system) { <option [ngValue]="system">{{ system }}</option> }</select>

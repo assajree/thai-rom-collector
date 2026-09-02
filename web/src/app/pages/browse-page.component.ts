@@ -1,11 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { PatchRepository } from '../repositories/patch.repository';
-import { TagRepository } from '../repositories/tag.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
-import { Patch, Tag, Translator } from '../models/patch.models';
+import { Patch, Translator } from '../models/patch.models';
 import { GameListControlsComponent } from '../components/game-list-controls.component';
 import { PatchCardListComponent } from '../components/patch-card-list.component';
 import { AuthService } from '../services/auth.service';
+import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
 
 @Component({
   selector: 'app-browse-page',
@@ -16,16 +16,15 @@ import { AuthService } from '../services/auth.service';
 })
 export class BrowsePageComponent {
   private readonly patchRepository = inject(PatchRepository);
-  private readonly tagRepository = inject(TagRepository);
+  private readonly filterState = inject(BrowseFilterStateService);
   private readonly translatorRepository = inject(TranslatorRepository);
   protected readonly auth = inject(AuthService);
   protected readonly patches = signal<Patch[]>([]);
   protected readonly keyword = signal('');
-  protected readonly selectedTag = signal<string | null>(null);
-  protected readonly selectedTranslatorId = signal<string | null>(null);
-  protected readonly selectedSystem = signal<string | null>(null);
+  protected readonly selectedTag = this.filterState.selectedTag;
+  protected readonly selectedTranslatorId = this.filterState.selectedTranslatorId;
+  protected readonly selectedSystem = this.filterState.selectedSystem;
   protected readonly systems = computed(() => [...new Set(this.patches().map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' })));
-  protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
@@ -69,7 +68,6 @@ export class BrowsePageComponent {
       next: (patches) => { this.patches.set(patches); this.loading.set(false); },
       error: () => { this.unavailable.set(true); this.loading.set(false); }
     });
-    this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags), error: () => this.unavailable.set(true) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators), error: () => this.unavailable.set(true) });
   }
 }

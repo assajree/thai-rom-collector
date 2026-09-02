@@ -1,8 +1,12 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
+import { Tag, Translator } from './models/patch.models';
+import { TagRepository } from './repositories/tag.repository';
+import { TranslatorRepository } from './repositories/translator.repository';
+import { BrowseFilterStateService } from './shared/browse-filter-state.service';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +18,37 @@ import { AuthService } from './services/auth.service';
 export class AppComponent {
   protected readonly statusMessageService = inject(StatusMessageService);
   protected readonly authService = inject(AuthService);
+  private readonly tagRepository = inject(TagRepository);
+  private readonly translatorRepository = inject(TranslatorRepository);
+  protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
   protected readonly platforms = ['All systems', '3DS', 'GBA', 'NDS', 'PSP'];
-  protected readonly selectedPlatform = signal('All systems');
+  protected readonly selectedPlatform = computed(() => this.filterState.selectedSystem() ?? 'All systems');
+  protected readonly tags = signal<Tag[]>([]);
+  protected readonly translators = signal<Translator[]>([]);
+  protected readonly sidebarOpen = signal(false);
+
+  protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
+  protected closeSidebar(): void { this.sidebarOpen.set(false); }
 
   protected selectPlatform(platform: string): void {
-    this.selectedPlatform.set(platform);
+    this.filterState.selectedSystem.set(platform === 'All systems' ? null : platform);
+    this.closeSidebar();
+  }
+
+  protected selectTag(tag: string): void {
+    this.filterState.selectedTag.update((current) => current === tag ? null : tag);
+    this.closeSidebar();
+  }
+
+  protected selectTranslator(translatorId: string | null): void {
+    this.filterState.selectedTranslatorId.update((current) => current === translatorId ? null : translatorId);
+    this.closeSidebar();
+  }
+
+  constructor() {
+    this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
+    this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
   }
 
   protected async signIn(): Promise<void> {

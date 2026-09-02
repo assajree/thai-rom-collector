@@ -4,6 +4,33 @@
   padding: 0.45rem 0.5rem 1rem;
 }
 
+.mobile-menu-button {
+  background: transparent;
+  border: 1px solid #00ffff;
+  color: #00ffff;
+  cursor: pointer;
+  display: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.2rem 0.4rem;
+}
+
+@media (max-width: 1023px) {
+  .mobile-menu-button { display: inline-block; }
+  .retro-rail {
+    background: #35006c;
+    display: none;
+    left: 0;
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    position: fixed;
+    top: 2.5rem;
+    width: min(18rem, 85vw);
+    z-index: 20;
+  }
+  .retro-rail.mobile-sidebar-open { display: block; }
+}
+
 .site-title {
   text-decoration: none;
   font-size: 18pt;
@@ -34,6 +61,10 @@
 }
 
 .retro-system-section {
+  margin-top: 0.65rem;
+}
+
+.retro-tag-section {
   margin-top: 0.65rem;
 }
 

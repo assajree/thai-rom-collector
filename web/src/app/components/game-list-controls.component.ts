@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { GameListFilters, Tag, Translator } from '../models/patch.models';
+import { GameListFilters, Translator } from '../models/patch.models';
 
 @Component({
   selector: 'app-game-list-controls',
@@ -10,7 +10,6 @@ import { GameListFilters, Tag, Translator } from '../models/patch.models';
   styleUrl: './game-list-controls.component.css'
 })
 export class GameListControlsComponent {
-  @Input() tags: Tag[] = [];
   @Input() translators: Translator[] = [];
   @Input() systems: string[] = [];
   @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'updateDate', sortDirection: 'desc' };
