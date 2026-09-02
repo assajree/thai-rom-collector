@@ -1,22 +1,28 @@
 <section class="mx-auto mt-2 max-w-4xl" aria-label="Game patch cards">
   @for (patch of patches; track patch.id) {
   <article class="patch-card">
-    
+
     <img class="mock-cover patch-cover-image" [src]="patch.coverUrl || 'assets/images/no-image.jpg'"
       [alt]="'ปกเกม ' + patch.gameTitle" (error)="onImageError($event)" />
     <div class="patch-card__body">
       @if (canEdit) {
       <a class="edit-button" [routerLink]="['/add-patch', patch.id]">แก้ไข</a>
       }
-      <h2>{{ patch.gameTitle }}</h2>
+      <h2>{{ patch.gameTitle }}({{ patch.system }})</h2>
       <div class="patch-card__description">
-        <div>{{ patch.system }}</div>
-        <div>{{ patch.translatedBy }}</div>
-        @if (patch.updateDate) { <div>อัปเดตเมื่อ {{ patch.updateDate | date:'d MMM yyyy':'':'th-TH' }}</div> }
+        
+        <div>โดย: {{ patch.translatedBy }}</div>
+        @if (patch.updateDate) { <div>เพิ่มเมื่อ: {{ patch.updateDate | date:'d MMM yyyy':'':'th-TH' }}</div> }
       </div>
-      <ul class="patch-card__tags">@for (tag of patch.tags; track tag) { <li>{{ tag }}</li> }</ul>
+      @if (patch.tags.length > 0) {
+      <span>แท็ก: </span><ul class="patch-card__tags">@for (tag of patch.tags; track tag) { @if (tag.trim()) { <li>{{ tag }}</li> } }</ul>
+      }
+      @if (patch.patchTool) {
       <a class="download-button" [href]="patch.patchTool">Patch Tool</a>
+      }
+      @if (patch.patchFileUrl) {
       <a class="download-button" [href]="patch.patchFileUrl">Patch File</a>
+      }
 
     </div>
 

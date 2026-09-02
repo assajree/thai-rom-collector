@@ -14,7 +14,7 @@
     <p class="retro-rail-heading">Sections</p>
 
     <nav aria-label="Main navigation">
-      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">เกมทั้งหมด</a>
+      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
       
       @if (authService.isAdmin()) {
         <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">เพิ่มเกม</a>
@@ -31,10 +31,10 @@
         @for (platform of platforms(); track platform.id) {
           <a
             class="retro-system-button"
-            [routerLink]="browseRoute('system', platform.name)"
+            [routerLink]="browseRoute('system', platform.shortName)"
             routerLinkActive="retro-system-button--active"
             [routerLinkActiveOptions]="{ exact: true }"
-            (click)="selectPlatform(platform.name)">
+            (click)="selectPlatform(platform.shortName)">
             {{ platform.name }}
           </a>
         }
@@ -45,7 +45,7 @@
       <p class="retro-rail-heading">ทีมแปล</p>
       <div>        
         @for (translator of translators(); track translator.id) {
-          <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.name)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
+          <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.shortName)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
             {{ translator.name }}
           </a>
         }

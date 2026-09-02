@@ -8,6 +8,7 @@ import { PatchCardListComponent } from '../components/patch-card-list.component'
 import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
 import { normalizeBrowseName } from '../shared/browse-route.util';
+import { SystemMaster, SystemRepository } from '../repositories/system.repository';
 
 @Component({
   selector: 'app-browse-page',
@@ -20,6 +21,7 @@ export class BrowsePageComponent {
   private readonly patchRepository = inject(PatchRepository);
   private readonly filterState = inject(BrowseFilterStateService);
   private readonly translatorRepository = inject(TranslatorRepository);
+  private readonly systemRepository = inject(SystemRepository);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
@@ -30,12 +32,20 @@ export class BrowsePageComponent {
   protected readonly selectedSystem = this.filterState.selectedSystem;
   protected readonly systems = computed(() => [...new Set(this.patches().map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' })));
   protected readonly translators = signal<Translator[]>([]);
+  private readonly systemMasters = signal<SystemMaster[]>([]);
+  private readonly systemsLoaded = signal(false);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
   protected readonly routeKind = signal<'system' | 'translator' | 'tag' | null>(null);
   private readonly routeSlug = signal<string | null>(null);
+  private readonly clearAllEffect = effect(() => {
+    this.filterState.clearAllRequested();
+    this.keyword.set('');
+    this.sortBy.set('updateDate');
+    this.direction.set('desc');
+  });
   protected readonly activeRouteLabel = computed(() => {
     const slug = this.routeSlug();
     return slug ? decodeURIComponent(slug) : null;
@@ -49,7 +59,7 @@ export class BrowsePageComponent {
     const translatorId = this.selectedTranslatorId();
     if (translatorId && patch.translatorId !== translatorId) return false;
     const system = this.selectedSystem();
-    if (system && patch.system.trim() !== system) return false;
+    if (system && normalizeBrowseName(patch.system).toLocaleLowerCase('th') !== normalizeBrowseName(system).toLocaleLowerCase('th')) return false;
     const query = this.keyword().trim().toLocaleLowerCase('th');
     if (!query) return true;
     return [patch.gameTitle, patch.fileName, patch.system, patch.translatedBy]
@@ -75,15 +85,15 @@ export class BrowsePageComponent {
     if (!slug) return;
     const value = decodeURIComponent(slug);
     if (kind === 'system') {
-      if (!this.patchesLoaded()) return;
-      const system = this.patches().find((patch) => normalizeBrowseName(patch.system) === normalizeBrowseName(value))?.system;
-      if (!system) return void this.router.navigateByUrl('/');
-      this.filterState.selectedSystem.set(normalizeBrowseName(system));
+      if (!this.patchesLoaded() || !this.systemsLoaded()) return;
+      const master = this.systemMasters().find((system) => normalizeBrowseName(system.shortName) === normalizeBrowseName(value));
+      if (!master) return void this.router.navigateByUrl('/');
+      this.filterState.selectedSystem.set(master.shortName);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(null);
     } else if (kind === 'translator') {
       if (!this.translatorsLoaded()) return;
-      const translator = this.translators().find((item) => normalizeBrowseName(item.name) === normalizeBrowseName(value));
+      const translator = this.translators().find((item) => normalizeBrowseName(item.shortName) === normalizeBrowseName(value));
       if (!translator) return void this.router.navigateByUrl('/');
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(translator.id);
@@ -111,6 +121,7 @@ export class BrowsePageComponent {
 
   constructor() {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
+    this.systemRepository.watchAll().subscribe({ next: (systems) => { this.systemMasters.set(systems); this.systemsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
       this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | undefined) ?? null);

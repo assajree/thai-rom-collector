@@ -38,6 +38,10 @@ export class AppComponent implements OnDestroy {
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
   protected closeSidebar(): void { this.sidebarOpen.set(false); }
+  protected clearAllFilters(): void {
+    this.filterState.clearAll();
+    this.closeSidebar();
+  }
   protected selectPlatform(platform: string | null): void {
     this.filterState.selectedSystem.set(platform);
     this.filterState.selectedTranslatorId.set(null);

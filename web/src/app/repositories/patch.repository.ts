@@ -85,19 +85,23 @@ export class PatchRepository {
     const fields = [draft.fileName, draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.name,
+      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim()
     };
   }
 
-  private getSystem(name: string): Promise<{ name: string }> {
+  private getSystem(name: string): Promise<{ shortName: string }> {
     const normalized = clean(name);
     return new Promise((resolve, reject) => {
       collectionData(this.systems).subscribe({
         next: (rows) => {
-          const row = rows.find((item) => clean(String(item['name'] ?? '')).toLocaleLowerCase('th') === normalized.toLocaleLowerCase('th'));
-          row ? resolve({ name: clean(String(row['name'])) }) : reject(new RepositoryError('ไม่พบเครื่องเกมที่เลือก', 'create'));
+          const row = rows.find((item) => {
+            const shortName = clean(String(item['shortName'] ?? '')).toLocaleLowerCase('th');
+            const fullName = clean(String(item['name'] ?? '')).toLocaleLowerCase('th');
+            return shortName === normalized.toLocaleLowerCase('th') || fullName === normalized.toLocaleLowerCase('th');
+          });
+          row ? resolve({ shortName: clean(String(row['shortName'])) }) : reject(new RepositoryError('ไม่พบเครื่องเกมที่เลือก', 'create'));
         },
         error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบเครื่องเกมได้', 'create'))
       });

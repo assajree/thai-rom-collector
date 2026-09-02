@@ -7,7 +7,7 @@
     <label>วันที่อัปเดต<input class="admin-input" formControlName="updateDate" type="date" /></label>
     <label>ชื่อเกม<input class="admin-input" formControlName="gameTitle" /></label>
     <div>
-      <label>เครื่องเกม<select class="admin-input" formControlName="system"><option value="">เลือกเครื่องเกม</option>@for (system of systems | async; track system.id) { <option [value]="system.name">{{ system.shortName }} — {{ system.name }}</option> }</select></label>
+      <label>เครื่องเกม<select class="admin-input" formControlName="system"><option value="">เลือกเครื่องเกม</option>@for (system of systems | async; track system.id) { <option [value]="system.shortName">{{ system.shortName }} — {{ system.name }}</option> }</select></label>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button" (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
     <div>

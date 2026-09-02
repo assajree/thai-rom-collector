@@ -13,6 +13,9 @@ import { Patch } from '../models/patch.models';
 export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
   @Input() canEdit = false;
+  protected hasTags(tags: string[]): boolean {
+    return tags.some((tag) => tag.trim().length > 0);
+  }
   protected onImageError(event: Event): void {
     const image = event.target as HTMLImageElement;
     image.onerror = null;
