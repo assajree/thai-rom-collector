@@ -11,6 +11,7 @@ export interface Tag {
 
 export interface Patch {
   id: string;
+  updateDate: string;
   fileName: string;
   gameTitle: string;
   system: string;
@@ -28,6 +29,7 @@ export interface AdminProfile {
 }
 
 export interface PatchDraft {
+  updateDate: string;
   fileName: string;
   gameTitle: string;
   system: string;
@@ -45,7 +47,7 @@ export interface ProcessedCover {
   height: number;
 }
 
-export type GameListSortField = 'gameTitle' | 'translatedBy' | 'system';
+export type GameListSortField = 'gameTitle' | 'translatedBy' | 'system' | 'updateDate';
 export type SortDirection = 'asc' | 'desc';
 
 export interface GameListFilters {

@@ -11,17 +11,51 @@
 }
 
 @layer base {
-  html { @apply bg-ink; }
+  html {
+    @apply bg-ink;
+  }
+
   body {
     @apply min-h-screen bg-ink text-slate-100;
     font-family: 'RD Chulajaruek', serif;
+    font-size: 1rem;
     background-image: linear-gradient(rgba(199, 255, 58, 0.025) 1px, transparent 1px);
     background-size: 100% 4px;
   }
-  button, input, select, textarea { font: inherit; }
-  :focus-visible { @apply outline outline-2 outline-offset-2 outline-arcade; }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  small {
+    font-size: inherit;
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-arcade;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+a {
+  text-decoration: underline;
 }

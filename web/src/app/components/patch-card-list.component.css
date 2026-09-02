@@ -14,13 +14,8 @@
 }
 
 .patch-card h2 {
-  font-size: clamp(1.7rem, 5vw, 2.7rem);
   line-height: 1.05;
   margin: 1.25rem 0 0;
-}
-
-.patch-card h2 span {
-  font-size: .78em;
 }
 
 .patch-card__tags {
@@ -34,7 +29,6 @@
 
 .patch-card__tags li {
   border: 1px solid #555;
-  font-size: .78rem;
   padding: .15rem .5rem;
 }
 
@@ -44,17 +38,18 @@
   border: 4px solid #080808;
   box-shadow: 4px 4px 0 #080808, inset 2px 2px rgba(255, 255, 255, .55), inset -2px -2px rgba(0, 0, 0, .25);
   color: #080808;
-  font-size: clamp(1.15rem, 3vw, 1.55rem);
   font-weight: 800;
   grid-column: 2;
   justify-self: start;
   padding: .55rem 1rem;
-  text-decoration: none;
 }
 
-.download-button span {
-  font-size: 1.3em;
-  margin-right: .4rem;
+.edit-button {
+  color: #ffd92b;
+  font-weight: 700;
+  grid-column: 2;
+  justify-self: start;
+  padding-right: 1em;
 }
 
 .download-button:hover {
@@ -110,13 +105,8 @@
 
 .patch-card h2 {
   color: #ffd92b;
-  font-size: 1.05rem;
   line-height: 1.1;
   margin: 0;
-}
-
-.patch-card h2 span {
-  font-size: .8em;
 }
 
 .patch-card__description {
@@ -133,7 +123,6 @@
 .patch-card__tags li {
   border: 0;
   color: #45e6c2;
-  font-size: .7rem;
   padding: 0;
   text-decoration: underline;
 }
@@ -143,10 +132,10 @@
   border: 0;
   box-shadow: none;
   color: #45e6c2;
-  font-size: .75rem;
   grid-column: 2;
   padding: 0;
   text-align: left;
+  padding-right: 1em;
 }
 
 @media (max-width: 34rem) {
@@ -159,6 +148,10 @@
   }
 
   .patch-card__body {
+    grid-column: 1;
+  }
+
+  .edit-button {
     grid-column: 1;
   }
 }

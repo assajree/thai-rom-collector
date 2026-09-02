@@ -13,9 +13,7 @@ export class GameListControlsComponent {
   @Input() tags: Tag[] = [];
   @Input() translators: Translator[] = [];
   @Input() systems: string[] = [];
-  @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'gameTitle', sortDirection: 'asc' };
+  @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'updateDate', sortDirection: 'desc' };
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
-  @Input() viewMode: 'card' | 'table' = 'card';
-  @Output() viewModeChange = new EventEmitter<'card' | 'table'>();
   protected emit(): void { this.filtersChanged.emit({ ...this.draft }); }
 }

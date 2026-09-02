@@ -19,6 +19,7 @@ export class PatchRepository {
     return collectionData(this.patches, { idField: 'id' }).pipe(
       map((rows) => rows.map((row) => ({
         id: String(row['id']),
+        updateDate: String(row['updateDate'] ?? ''),
         fileName: String(row['fileName'] ?? ''),
         gameTitle: String(row['gameTitle'] ?? ''),
         system: String(row['system'] ?? ''),
@@ -44,7 +45,7 @@ export class PatchRepository {
 
   async create(draft: PatchDraft, coverUrl: string, id?: string): Promise<string> {
     const ref = id ? doc(this.patches, id) : doc(this.patches);
-    const data = await this.buildDocument(draft, coverUrl);
+    const data = await this.buildDocument(draft, coverUrl, draft.updateDate);
     try {
       await setDoc(ref, data);
       return ref.id;
@@ -65,7 +66,7 @@ export class PatchRepository {
     try {
       const existing = await this.getById(id);
       if (!existing) throw new RepositoryError('ไม่พบแพตช์ที่ต้องการแก้ไข', 'update');
-      const data = await this.buildDocument(draft, coverUrl ?? existing.coverUrl);
+      const data = await this.buildDocument(draft, coverUrl ?? existing.coverUrl, draft.updateDate || existing.updateDate);
       await setDoc(doc(this.patches, id), data);
     } catch (error) {
       if (error instanceof RepositoryError) throw error;
@@ -73,13 +74,13 @@ export class PatchRepository {
     }
   }
 
-  private async buildDocument(draft: PatchDraft, coverUrl: string): Promise<PatchDocument> {
+  private async buildDocument(draft: PatchDraft, coverUrl: string, updateDate: string): Promise<PatchDocument> {
     const translator = await this.getTranslator(draft.translatorId);
     const tags = await this.getMasterTags(draft.tags);
     const fields = [draft.fileName, draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: clean(draft.system),
+      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: clean(draft.system),
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim()
     };

@@ -1,6 +1,9 @@
 <header class="flex min-h-10 items-center justify-between border-b-2 border-slate-300 bg-black px-4 sm:px-6">
-  <a class="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white no-underline" routerLink="/">Thai Patch DB</a>
-  <a class="text-[0.62rem] font-bold uppercase tracking-wider text-signal no-underline" routerLink="/admin">Admin</a>
+  <a class="site-title" routerLink="/">Thai Patch DB</a>
+
+  <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-bB421aAaaxd09BA4-9.gif' border='0' alt='free web counter'></a><script type='text/javascript' src='https://www.counter12.com/ad.js?id=bB421aAaaxd09BA4'></script></div>
+   
+  
 </header>
 
 <div class="min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[8.7rem_minmax(0,1fr)]">
@@ -27,11 +30,12 @@
       </div>
     </div>
 
+    
   </aside>
 
   <section class="min-w-0 bg-[#343568]">
     @if (statusMessage(); as message) {
-      <div class="flex items-center gap-2 border-b border-black bg-signal px-4 py-2 text-sm font-bold text-ink sm:px-6" [class.bg-arcade]="message.tone === 'error'" [class.text-white]="message.tone === 'error'" role="status" aria-live="polite">
+      <div class="flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6" [class.bg-arcade]="message.tone === 'error'" [class.text-white]="message.tone === 'error'" role="status" aria-live="polite">
         <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{ message.tone === 'error' ? '!' : 'i' }}</span>
         {{ message.text }}
         <button class="ml-auto text-xl leading-none" type="button" (click)="statusMessageService.clear()" aria-label="Dismiss message">×</button>

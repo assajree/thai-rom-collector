@@ -15,16 +15,11 @@ docs/{feature-name}/
 
 ---
 
-## Pick a track first — Fast path vs Full path
+## When to use this workflow
 
-Not every feature needs all three documents. Choose the track before starting:
+Use this workflow for substantial changes: new features, non-trivial logic, public API or data-model changes, migrations, or work that changes behavior across multiple components.
 
-| Track | When | Documents |
-|-------|------|-----------|
-| **Fast path** | The view / DTO / service already exists and you are mostly binding a new chart or making a small change (the "quick wins" in `docs/dashboard-charts.md`). | **One file** — `docs/{feature}/spec.md` with a short *Requirements* section and a short *Design* section at the top, then the task checklist below. Skip the separate `requirements.md` / `design.md`. Start from the template at `docs/_templates/spec.md`. |
-| **Full path** | A new reporting view is needed, the logic is non-trivial, or there is a drill-down. | All three — `requirements.md` → `design.md` → `tasks.md`, as described below. |
-
-When unsure, start Fast and promote to Full only if the design grows. The SQL file convention and the Living-spec rule apply to **both** tracks.
+Small, self-contained changes that do not alter public APIs, schemas, data flow, or cross-component behavior proceed directly to implementation and do not create workflow documents. The SQL file convention and the Living-spec rule apply whenever this workflow is used.
 
 ---
 
@@ -128,7 +123,7 @@ sql/
 
 ### Reference
 
-- Reference the view/proc file path(s) in `design.md` (Data Models section) or `spec.md` so future agents know where to find the SQL.
+- Reference the view/proc file path(s) in `design.md` (Data Models section) so future agents know where to find the SQL.
 
 ---
 

@@ -7,7 +7,7 @@ module.exports = {
         ink: '#090b16',
         panel: '#11162a',
         line: '#293153',
-        signal: '#c7ff3a',
+        signal: '#fa4f8b',
         arcade: '#fa4f8b'
       },
       fontFamily: {

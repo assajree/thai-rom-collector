@@ -13,10 +13,6 @@
   <label for="filter-translator">ทีมแปล</label>
   <select id="filter-translator" [(ngModel)]="draft.translatorId" (ngModelChange)="emit()"><option [ngValue]="null">ทุกทีม</option>@for (translator of translators; track translator.id) { <option [ngValue]="translator.id">{{ translator.name }}</option> }</select>
   <label for="sort-patches">เรียงตาม</label>
-  <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
-  <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortDirection === 'asc' ? 'A → Z' : 'Z → A' }}</button>
-</div>
-<div class="view-toggle" aria-label="รูปแบบการแสดงผล">
-  <button type="button" [class.view-toggle__button--selected]="viewMode === 'card'" [attr.aria-pressed]="viewMode === 'card'" (click)="viewModeChange.emit('card')">Card</button>
-  <button type="button" [class.view-toggle__button--selected]="viewMode === 'table'" [attr.aria-pressed]="viewMode === 'table'" (click)="viewModeChange.emit('table')">Table</button>
+  <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่อัปเดต</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
+  <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortBy === 'updateDate' ? (draft.sortDirection === 'asc' ? 'เก่า → ใหม่' : 'ใหม่ → เก่า') : (draft.sortDirection === 'asc' ? 'A → Z' : 'Z → A') }}</button>
 </div>

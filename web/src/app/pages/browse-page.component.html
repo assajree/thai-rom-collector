@@ -1,10 +1,9 @@
 <main class="browse-catalogue min-h-full p-4 sm:p-6 lg:p-8">
-  <app-game-list-controls [tags]="tags()" [translators]="translators()" [systems]="systems()" [draft]="filters()" [viewMode]="viewMode()" (filtersChanged)="setFilters($event)" (viewModeChange)="setViewMode($event)" />
+  <app-game-list-controls [tags]="tags()" [translators]="translators()" [systems]="systems()" [draft]="filters()" (filtersChanged)="setFilters($event)" />
 
   @if (loading()) { <p class="state-message">กำลังโหลดรายการแพตช์...</p> }
   @if (unavailable()) { <p class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง</p> }
   @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ยังไม่มีรายการแพตช์</p> }
 
-  @if (viewMode() === 'card') { <app-patch-card-list [patches]="sortedPatches()" /> }
-  @if (viewMode() === 'table') { <app-patch-table [patches]="sortedPatches()" /> }
+  <app-patch-card-list [patches]="sortedPatches()" [canEdit]="auth.isAdmin()" />
 </main>

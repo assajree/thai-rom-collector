@@ -4,9 +4,14 @@
   padding: 0.45rem 0.5rem 1rem;
 }
 
+.site-title {
+  text-decoration: none;
+  font-size: 18pt;
+  color: #00ff00;
+}
+
 .retro-rail-heading {
   color: #ff4d5d;
-  font-size: 0.7rem;
   font-weight: 700;
   line-height: 1.1;
   margin: 0 0 0.2rem;
@@ -16,18 +21,21 @@
   color: #00ffff;
   display: block;
   font-family: inherit;
-  font-size: 0.72rem;
   font-weight: 700;
   line-height: 0.98;
   padding: 0.05rem 0;
-  text-decoration: none;
   text-decoration-line: underline;
   text-underline-offset: 1px;
 }
 
-.retro-rail-link:hover, .retro-rail-link--active { color: #c7ff3a; }
+.retro-rail-link:hover,
+.retro-rail-link--active {
+  color: #c7ff3a;
+}
 
-.retro-system-section { margin-top: 0.65rem; }
+.retro-system-section {
+  margin-top: 0.65rem;
+}
 
 .retro-system-button {
   background: transparent;
@@ -36,7 +44,6 @@
   cursor: pointer;
   display: block;
   font-family: inherit;
-  font-size: 0.67rem;
   font-weight: 700;
   line-height: 0.98;
   padding: 0.05rem 0;
@@ -46,4 +53,7 @@
   width: 100%;
 }
 
-.retro-system-button:hover, .retro-system-button--active { color: #c7ff3a; }
+.retro-system-button:hover,
+.retro-system-button--active {
+  color: #c7ff3a;
+}

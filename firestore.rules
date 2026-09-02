@@ -9,9 +9,10 @@ service cloud.firestore {
 
     function validPatch(data) {
       return data.keys().hasOnly([
-          'fileName', 'gameTitle', 'system', 'translatorId', 'translatedBy',
+          'updateDate', 'fileName', 'gameTitle', 'system', 'translatorId', 'translatedBy',
           'patchTool', 'tags', 'coverUrl', 'patchFileUrl'
         ])
+        && data.updateDate is string && data.updateDate.size() > 0
         && data.fileName is string && data.fileName.size() > 0
         && data.gameTitle is string && data.gameTitle.size() > 0
         && data.system is string && data.system.size() > 0

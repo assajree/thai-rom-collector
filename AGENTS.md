@@ -1,6 +1,6 @@
 ## AI Workflow -- Spec-driven development
 
-> See `rules/ai-workflow.md` for the full 3-phase workflow (Design -> Tasks -> Implementation).
+Use the full workflow in `rules/ai-workflow.md` only when the user explicitly requests it. Otherwise, proceed directly to implementation regardless of change size or scope.
 
 ### AGENTS.md content-splitting rule
 
