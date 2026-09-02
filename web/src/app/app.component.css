@@ -1,39 +1,49 @@
 .retro-rail {
-  background-image:
-    radial-gradient(circle at 0 18%, transparent 0 3.2rem, rgba(113, 117, 255, 0.5) 3.25rem 3.34rem, transparent 3.4rem),
-    repeating-linear-gradient(135deg, transparent 0 2.2rem, rgba(113, 117, 255, 0.28) 2.25rem 2.3rem, transparent 2.35rem 4.5rem);
+  border-right: 1px solid #a8abd9;
+  min-height: 100%;
+  padding: 0.45rem 0.5rem 1rem;
+}
+
+.retro-rail-heading {
+  color: #ff4d5d;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin: 0 0 0.2rem;
 }
 
 .retro-rail-link {
-  color: #f8fafc;
+  color: #00ffff;
   display: block;
   font-family: inherit;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  padding: 0.7rem 0.25rem 0.7rem 1rem;
-  position: relative;
+  line-height: 0.98;
+  padding: 0.05rem 0;
   text-decoration: none;
-  text-transform: uppercase;
+  text-decoration-line: underline;
+  text-underline-offset: 1px;
 }
 
-.retro-rail-link::before { border: 1px solid #a5b4fc; border-left: 0; border-bottom: 0; content: ''; height: 0.75rem; left: 0; position: absolute; top: 0.68rem; transform: rotate(45deg); width: 0.75rem; }
 .retro-rail-link:hover, .retro-rail-link--active { color: #c7ff3a; }
+
+.retro-system-section { margin-top: 0.65rem; }
 
 .retro-system-button {
   background: transparent;
   border: 0;
-  border-left: 2px solid transparent;
-  color: #cbd5e1;
+  color: #00ffff;
   cursor: pointer;
   display: block;
   font-family: inherit;
-  font-size: 0.63rem;
+  font-size: 0.67rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.38rem 0.4rem;
+  line-height: 0.98;
+  padding: 0.05rem 0;
   text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 1px;
   width: 100%;
 }
 
-.retro-system-button:hover, .retro-system-button--active { background: rgba(199, 255, 58, 0.12); border-left-color: #c7ff3a; color: #c7ff3a; }
+.retro-system-button:hover, .retro-system-button--active { color: #c7ff3a; }

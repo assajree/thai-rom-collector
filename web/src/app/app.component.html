@@ -1,22 +1,20 @@
-<header class="flex min-h-16 items-center justify-between border-b-2 border-slate-400 bg-black px-4 lg:hidden">
-  <a class="text-sm font-bold uppercase tracking-[0.16em] text-white no-underline" routerLink="/">Thai Patch DB</a>
-  <a class="text-xs font-bold uppercase tracking-wider text-signal no-underline" routerLink="/admin">Admin</a>
+<header class="flex min-h-10 items-center justify-between border-b-2 border-slate-300 bg-black px-4 sm:px-6">
+  <a class="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white no-underline" routerLink="/">Thai Patch DB</a>
+  <a class="text-[0.62rem] font-bold uppercase tracking-wider text-signal no-underline" routerLink="/admin">Admin</a>
 </header>
 
-<div class="min-h-screen lg:grid lg:grid-cols-[8.5rem_minmax(0,1fr)]">
-  <aside class="retro-rail hidden border-r-4 border-slate-300 bg-black px-2 py-4 lg:flex lg:flex-col" aria-label="Game system selection">
-    <a class="mb-7 block border-b border-slate-700 pb-3 text-center text-[0.68rem] font-bold uppercase tracking-[0.16em] text-slate-100 no-underline" routerLink="/">
-      Thai Patch<br><span class="text-signal">Archive</span>
-    </a>
+<div class="min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[8.7rem_minmax(0,1fr)]">
+  <aside class="retro-rail hidden bg-[#35006c] lg:flex lg:flex-col" aria-label="Main navigation">
+    <p class="retro-rail-heading">Sections</p>
 
-    <nav class="space-y-3" aria-label="Main navigation">
+    <nav aria-label="Main navigation">
       <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }">Browse</a>
       <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active">Add patch</a>
     </nav>
 
-    <div class="mt-8 border-t border-slate-700 pt-4">
-      <p class="mb-3 text-center text-[0.57rem] font-bold uppercase tracking-[0.12em] text-slate-400">Game system</p>
-      <div class="space-y-1">
+    <div class="retro-system-section">
+      <p class="retro-rail-heading">Systems</p>
+      <div>
         @for (platform of platforms; track platform) {
           <button
             class="retro-system-button"
@@ -29,7 +27,6 @@
       </div>
     </div>
 
-    <p class="mt-auto pt-8 text-center text-[0.56rem] leading-4 text-slate-600">TH / GAME<br>PATCH DATABASE</p>
   </aside>
 
   <section class="min-w-0 bg-[#343568]">
