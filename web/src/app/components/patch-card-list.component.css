@@ -98,6 +98,12 @@
   object-fit: contain;
 }
 
+@media (min-width: 34.01rem) {
+  .patch-cover-image {
+    justify-self: center;
+  }
+}
+
 .patch-card__body {
   padding: .05rem 0;
 }

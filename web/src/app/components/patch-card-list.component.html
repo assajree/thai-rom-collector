@@ -12,7 +12,7 @@
       <div class="patch-card__description">
         
         <div>โดย: {{ patch.translatedBy }}</div>
-        @if (patch.updateDate) { <div>เพิ่มเมื่อ: {{ patch.updateDate | date:'d MMM yyyy':'':'th-TH' }}</div> }
+        @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
       </div>
       @if (patch.tags.length > 0) {
       <span>แท็ก: </span><ul class="patch-card__tags">@for (tag of patch.tags; track tag) { @if (tag.trim()) { <li>{{ tag }}</li> } }</ul>
