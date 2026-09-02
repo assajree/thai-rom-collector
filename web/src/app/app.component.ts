@@ -8,6 +8,7 @@ import { Tag, Translator } from './models/patch.models';
 import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
+import { browseRoute } from './shared/browse-route.util';
 
 @Component({
   selector: 'app-root',
@@ -24,7 +25,7 @@ export class AppComponent implements OnDestroy {
   private readonly translatorRepository = inject(TranslatorRepository);
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
-  protected readonly platforms = ['All systems', '3DS', 'GBA', 'NDS', 'PSP'];
+  protected readonly platforms = ['All systems', 'PS', 'GBA', 'NDS', 'PSP'];
   protected readonly selectedPlatform = computed(() => this.filterState.selectedSystem() ?? 'All systems');
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
@@ -32,22 +33,26 @@ export class AppComponent implements OnDestroy {
     this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
   });
   protected readonly sidebarOpen = signal(false);
+  protected readonly browseRoute = browseRoute;
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
   protected closeSidebar(): void { this.sidebarOpen.set(false); }
-
   protected selectPlatform(platform: string): void {
     this.filterState.selectedSystem.set(platform === 'All systems' ? null : platform);
+    this.filterState.selectedTranslatorId.set(null);
+    this.filterState.selectedTag.set(null);
     this.closeSidebar();
   }
-
-  protected selectTag(tag: string): void {
-    this.filterState.selectedTag.update((current) => current === tag ? null : tag);
-    this.closeSidebar();
-  }
-
   protected selectTranslator(translatorId: string | null): void {
-    this.filterState.selectedTranslatorId.update((current) => current === translatorId ? null : translatorId);
+    this.filterState.selectedTranslatorId.set(translatorId);
+    this.filterState.selectedSystem.set(null);
+    this.filterState.selectedTag.set(null);
+    this.closeSidebar();
+  }
+  protected selectRouteTag(tag: string): void {
+    this.filterState.selectedTag.set(tag);
+    this.filterState.selectedSystem.set(null);
+    this.filterState.selectedTranslatorId.set(null);
     this.closeSidebar();
   }
 

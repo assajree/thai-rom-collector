@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameListFilters, Translator } from '../models/patch.models';
+import { BrowseRouteKind } from '../shared/browse-route.util';
 
 @Component({
   selector: 'app-game-list-controls',
@@ -12,6 +13,7 @@ import { GameListFilters, Translator } from '../models/patch.models';
 export class GameListControlsComponent {
   @Input() translators: Translator[] = [];
   @Input() systems: string[] = [];
+  @Input() routeKind: BrowseRouteKind | null = null;
   @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'updateDate', sortDirection: 'desc' };
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
   protected emit(): void { this.filtersChanged.emit({ ...this.draft }); }

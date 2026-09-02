@@ -22,13 +22,14 @@
       <p class="retro-rail-heading">Systems</p>
       <div>
         @for (platform of platforms; track platform) {
-          <button
+          <a
             class="retro-system-button"
-            [class.retro-system-button--active]="selectedPlatform() === platform"
-            type="button"
+            [routerLink]="platform === 'All systems' ? '/' : browseRoute('system', platform)"
+            routerLinkActive="retro-system-button--active"
+            [routerLinkActiveOptions]="{ exact: true }"
             (click)="selectPlatform(platform)">
             {{ platform }}
-          </button>
+          </a>
         }
       </div>
     </div>
@@ -36,13 +37,11 @@
     <div class="retro-tag-section">
       <p class="retro-rail-heading">Translators</p>
       <div>
-        <button class="retro-system-button" [class.retro-system-button--active]="filterState.selectedTranslatorId() === null" type="button" (click)="selectTranslator(null)">
-          All teams
-        </button>
+        <a class="retro-system-button" routerLink="/" routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }" (click)="selectTranslator(null)">All teams</a>
         @for (translator of translators(); track translator.id) {
-          <button class="retro-system-button" [class.retro-system-button--active]="filterState.selectedTranslatorId() === translator.id" type="button" (click)="selectTranslator(translator.id)">
+          <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.name)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
             {{ translator.name }}
-          </button>
+          </a>
         }
       </div>
     </div>
@@ -51,9 +50,9 @@
       <p class="retro-rail-heading">Tags</p>
       <div>
         @for (tag of tags(); track tag.id) {
-          <button class="retro-system-button" [class.retro-system-button--active]="filterState.selectedTag() === tag.name" type="button" (click)="selectTag(tag.name)">
+          <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)" routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.name)">
             {{ tag.name }}
-          </button>
+          </a>
         }
       </div>
     </div>

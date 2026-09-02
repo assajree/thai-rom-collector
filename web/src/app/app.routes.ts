@@ -12,6 +12,9 @@ export const routes: Routes = [
     pathMatch: 'full',
     component: BrowsePageComponent
   },
+  { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system' } },
+  { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator' } },
+  { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
   {
     path: 'add-patch',
     component: AdminPatchPageComponent,

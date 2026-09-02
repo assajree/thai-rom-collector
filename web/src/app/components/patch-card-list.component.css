@@ -44,12 +44,12 @@
   padding: .55rem 1rem;
 }
 
-.edit-button {
-  color: #ffd92b;
+.edit-button {  
   font-weight: 700;
   grid-column: 2;
   justify-self: start;
   padding-right: 1em;
+  float: right;
 }
 
 .download-button:hover {
@@ -141,6 +141,7 @@
 @media (max-width: 34rem) {
   .patch-card {
     grid-template-columns: 1fr;
+    padding-top: 18pt;
   }
 
   .patch-cover-image {
