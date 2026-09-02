@@ -1,4 +1,5 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { StatusMessageService } from './shared/status-message.service';
@@ -15,7 +16,8 @@ import { BrowseFilterStateService } from './shared/browse-filter-state.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnDestroy {
+  private readonly document = inject(DOCUMENT);
   protected readonly statusMessageService = inject(StatusMessageService);
   protected readonly authService = inject(AuthService);
   private readonly tagRepository = inject(TagRepository);
@@ -26,6 +28,9 @@ export class AppComponent {
   protected readonly selectedPlatform = computed(() => this.filterState.selectedSystem() ?? 'All systems');
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
+  private readonly sidebarScrollLock = effect(() => {
+    this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
+  });
   protected readonly sidebarOpen = signal(false);
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
@@ -49,6 +54,11 @@ export class AppComponent {
   constructor() {
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
+  }
+
+  ngOnDestroy(): void {
+    this.document.body.classList.remove('sidebar-open');
+    this.sidebarScrollLock.destroy();
   }
 
   protected async signIn(): Promise<void> {

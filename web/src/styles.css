@@ -23,6 +23,12 @@
     background-size: 100% 4px;
   }
 
+  @media (max-width: 1023px) {
+    body.sidebar-open {
+      overflow: hidden;
+    }
+  }
+
   button,
   input,
   select,
