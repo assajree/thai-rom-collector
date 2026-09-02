@@ -48,7 +48,16 @@ export class BrowsePageComponent {
   });
   protected readonly activeRouteLabel = computed(() => {
     const slug = this.routeSlug();
-    return slug ? decodeURIComponent(slug) : null;
+    if (!slug) return null;
+    const value = decodeURIComponent(slug);
+    const kind = this.routeKind();
+    if (kind === 'system') {
+      return this.systemMasters().find((system) => normalizeBrowseName(system.shortName) === normalizeBrowseName(value))?.name ?? value;
+    }
+    if (kind === 'translator') {
+      return this.translators().find((translator) => normalizeBrowseName(translator.shortName) === normalizeBrowseName(value))?.name ?? value;
+    }
+    return value;
   });
   private readonly patchesLoaded = signal(false);
   private readonly translatorsLoaded = signal(false);
