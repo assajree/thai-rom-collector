@@ -1,0 +1,39 @@
+.retro-rail {
+  background-image:
+    radial-gradient(circle at 0 18%, transparent 0 3.2rem, rgba(113, 117, 255, 0.5) 3.25rem 3.34rem, transparent 3.4rem),
+    repeating-linear-gradient(135deg, transparent 0 2.2rem, rgba(113, 117, 255, 0.28) 2.25rem 2.3rem, transparent 2.35rem 4.5rem);
+}
+
+.retro-rail-link {
+  color: #f8fafc;
+  display: block;
+  font-family: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 0.7rem 0.25rem 0.7rem 1rem;
+  position: relative;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.retro-rail-link::before { border: 1px solid #a5b4fc; border-left: 0; border-bottom: 0; content: ''; height: 0.75rem; left: 0; position: absolute; top: 0.68rem; transform: rotate(45deg); width: 0.75rem; }
+.retro-rail-link:hover, .retro-rail-link--active { color: #c7ff3a; }
+
+.retro-system-button {
+  background: transparent;
+  border: 0;
+  border-left: 2px solid transparent;
+  color: #cbd5e1;
+  cursor: pointer;
+  display: block;
+  font-family: inherit;
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.38rem 0.4rem;
+  text-align: left;
+  width: 100%;
+}
+
+.retro-system-button:hover, .retro-system-button--active { background: rgba(199, 255, 58, 0.12); border-left-color: #c7ff3a; color: #c7ff3a; }

@@ -1,0 +1,12 @@
+<main class="flex min-h-[70vh] items-center justify-center p-6 text-center text-white">
+  <div>
+    <p class="text-xs font-bold uppercase tracking-[0.16em] text-signal">Admin access</p>
+    <h1 class="mt-2 text-3xl font-black">เข้าสู่ระบบผู้ดูแล</h1>
+    @if (auth.user()) {
+      <p class="mt-3 text-slate-300">กำลังตรวจสอบสิทธิ์...</p>
+    } @else {
+      <p class="mt-3 text-slate-300">ใช้บัญชี Google ที่ได้รับอนุญาตเพื่อจัดการแพตช์</p>
+      <button class="mt-6 border-2 border-signal bg-signal px-5 py-3 font-bold text-ink hover:bg-white" type="button" (click)="signIn()">Login with Google</button>
+    }
+  </div>
+</main>

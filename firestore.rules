@@ -1,0 +1,64 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function validPatch(data) {
+      return data.keys().hasOnly([
+          'fileName', 'gameTitle', 'system', 'translatorId', 'translatedBy',
+          'patchTool', 'tags', 'coverUrl', 'patchFileUrl'
+        ])
+        && data.fileName is string && data.fileName.size() > 0
+        && data.gameTitle is string && data.gameTitle.size() > 0
+        && data.system is string && data.system.size() > 0
+        && data.translatorId is string && data.translatorId.size() > 0
+        && data.translatedBy is string && data.translatedBy.size() > 0
+        && data.patchTool is string
+        && data.patchFileUrl is string
+        && data.coverUrl is string
+        && data.tags is list
+        && data.tags.size() <= 30
+        && (data.coverUrl == '' || data.coverUrl.matches('https://firebasestorage.googleapis.com/.*'));
+    }
+
+    function translatorMatches(data) {
+      return exists(/databases/$(database)/documents/translators/$(data.translatorId))
+        && get(/databases/$(database)/documents/translators/$(data.translatorId)).data.name == data.translatedBy;
+    }
+
+    match /patches/{patchId} {
+      allow read: if true;
+      allow create, update: if isAdmin() && validPatch(request.resource.data)
+        && translatorMatches(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /translators/{translatorId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name', 'link'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && (!request.resource.data.keys().hasAny(['link']) || request.resource.data.link is string);
+      allow update, delete: if isAdmin();
+    }
+
+    match /tags/{tagId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['name'])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0;
+      allow update, delete: if isAdmin();
+    }
+
+    match /admins/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.browse-catalogue {
+  background: radial-gradient(circle at 50% 15%, #00a6a0 0, #007d82 38%, #00676d 100%);
+  color: #050505;
+}
+
+.state-message { background: rgba(0, 0, 0, .22); border: 2px solid #a8abd9; color: #fff; margin: 1.5rem auto 0; max-width: 48rem; padding: .75rem 1rem; }
+.state-message--error { border-color: #ff9dbf; color: #ffe5ee; }

@@ -1,0 +1,19 @@
+<section class="mx-auto mt-8 max-w-4xl" aria-label="Game patch cards">
+  @for (patch of patches; track patch.id) {
+  <article class="patch-card">
+    <img class="mock-cover patch-cover-image" [src]="patch.coverUrl || 'assets/images/no-image.jpg'"
+      [alt]="'ปกเกม ' + patch.gameTitle" (error)="onImageError($event)" />
+    <div class="patch-card__body">
+      <h2>{{ patch.gameTitle }}</h2>
+      <div class="patch-card__description">
+        <div>{{ patch.system }}</div>
+        <div>{{ patch.translatedBy }}</div>
+      </div>
+      <ul class="patch-card__tags">@for (tag of patch.tags; track tag) { <li>{{ tag }}</li> }</ul>
+       <a class="download-button" [href]="patch.patchTool">Patch Tool</a>
+    <a class="download-button" [href]="patch.patchFileUrl">Patch File</a>
+    </div>
+   
+  </article>
+  }
+</section>

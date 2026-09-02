@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'RD Chulajaruek';
+  src: url('/assets/fonts/RD%20CHULAJARUEK.ttf') format('truetype');
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+}
+
+@layer base {
+  html { @apply bg-ink; }
+  body {
+    @apply min-h-screen bg-ink text-slate-100;
+    font-family: 'RD Chulajaruek', serif;
+    background-image: linear-gradient(rgba(199, 255, 58, 0.025) 1px, transparent 1px);
+    background-size: 100% 4px;
+  }
+  button, input, select, textarea { font: inherit; }
+  :focus-visible { @apply outline outline-2 outline-offset-2 outline-arcade; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; scroll-behavior: auto !important; transition-duration: 0.01ms !important; }
+}

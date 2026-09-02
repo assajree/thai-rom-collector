@@ -1,0 +1,10 @@
+.admin-input { display: block; margin-top: .35rem; width: 100%; background: #11162a; border: 1px solid #8890bd; color: #fff; padding: .65rem; }
+
+label:has([formcontrolname="fileName"])::after,
+label:has([formcontrolname="gameTitle"])::after,
+label:has([formcontrolname="system"])::after,
+label:has([formcontrolname="translatorId"])::after {
+  color: #c7ff3a;
+  content: ' *';
+  font-weight: 700;
+}

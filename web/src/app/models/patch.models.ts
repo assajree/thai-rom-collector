@@ -1,0 +1,58 @@
+export interface Translator {
+  id: string;
+  name: string;
+  link?: string;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+}
+
+export interface Patch {
+  id: string;
+  fileName: string;
+  gameTitle: string;
+  system: string;
+  translatorId: string;
+  translatedBy: string;
+  patchTool: string;
+  tags: string[];
+  coverUrl: string;
+  patchFileUrl: string;
+}
+
+export interface AdminProfile {
+  uid: string;
+  email: string;
+}
+
+export interface PatchDraft {
+  fileName: string;
+  gameTitle: string;
+  system: string;
+  translatorId: string;
+  patchTool: string;
+  tags: string[];
+  patchFileUrl: string;
+  coverFile?: File;
+}
+
+export interface ProcessedCover {
+  blob: Blob;
+  filename: string;
+  width: number;
+  height: number;
+}
+
+export type GameListSortField = 'gameTitle' | 'translatedBy' | 'system';
+export type SortDirection = 'asc' | 'desc';
+
+export interface GameListFilters {
+  keyword: string;
+  tag: string | null;
+  translatorId: string | null;
+  system: string | null;
+  sortBy: GameListSortField;
+  sortDirection: SortDirection;
+}

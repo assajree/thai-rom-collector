@@ -1,0 +1,145 @@
+Project Requirements: Thai Game Patch Database Web Application
+
+1. System Overview
+
+Project Purpose: A public database and repository web application for Thai-translated game patches, ROM mods, and translation tools.
+
+Architecture: Static Single Page Application (SPA) hosted on GitHub Pages, integrated with Firebase Cloud Services (Authentication, Firestore Database, and Cloud Storage).
+
+Technology Stack: Angular (v16+ with Signals/RxJS & Angular Router), @angular/fire / Firebase Web SDK, Pure CSS / Retro 90s–2000s Gaming UI.
+
+2. Functional Requirements
+
+User Authentication & Route Access Control:
+
+Public visitors can view, search, filter, and download patch files on the main page freely without authentication.
+
+Login Requirement for Admin Route: Authentication via Google Sign-In is required only when attempting to access the data entry page (/add-patch / /admin).
+
+Implement Angular CanActivate Route Guard to check authentication state before allowing access to the submission interface.
+
+Master Data Management (Translators & Tags Master):
+
+Maintain dedicated Firestore master collections to standardize data across all patches:
+
+translators Master: Manages standardized translator/team names and optional external links.
+
+tags Master: Manages standardized category tags (e.g., RPG, 3DS, แปลจบแล้ว, GBA).
+
+Inline Master Creation on Add Patch Page:
+
+Allow admins to select existing items from dynamic dropdowns/multiselect lists OR add new Translators and Tags directly within the /add-patch form without navigating away.
+
+Newly added Master items are instantly saved to Firestore and become immediately selectable for current and future game entries.
+
+Patch Management & Entry Submission (Admin Only):
+
+Support submitting game patch metadata with the following fields:
+
+File Name (Text)
+
+Game Title (Text)
+
+System/Platform (Text/Dropdown - e.g., 3DS, GBA, NDS, PSP)
+
+Translator/Team Name (Select from Translator Master or create inline)
+
+Patch Tool Used (Text - e.g., NTR CFW, Citra Patcher, Lua Script)
+
+Category Tags (Select multiple from Tag Master or create inline)
+
+Patch File URL (Text link to download file .zip, .rar, .ips)
+
+Advanced Cover Image Upload & Optimization:
+
+Support selecting image files via standard File Input or pasting directly from Clipboard (Ctrl + V).
+
+Automatic client-side image processing before upload:
+
+Dynamic resizing to ensure maximum width or height does not exceed 250 pixels (maintaining aspect ratio).
+
+Automatic file renaming using standard conventions (e.g., cover_max250px_<timestamp>.jpg).
+
+Conversion to JPEG format with optimized compression.
+
+Data Browsing & Responsive Search List (Public User):
+
+Desktop Mode Display (Wide Screen):
+
+Display full structured Data Table showing all details: Cover Image (max 250px), File Name, Game Title, System/Platform, Translator/Team, Patch Tool, Category Tags, and Download Link.
+
+Mobile Mode Display (Small Screen / Responsive Card Mode):
+
+Automatically switch to a compact Card Layout optimized for mobile screens.
+
+Display essential fields per entry: Cover Image, System/Platform, Game Title, and Translator/Team Name (with downloadable link/button).
+
+Real-time client-side search/filter by keyword matching game title, file name, platform, or translator.
+
+Dynamic tag filter system displaying clickable tag buttons fetched from the Tag Master to filter the patch list automatically.
+
+Automatic sorting by latest added or updated timestamp (createdAt).
+
+3. Non-Functional Requirements
+
+Performance & Responsive UI Design:
+
+Fully Responsive Web Design: CSS Media Queries / Flexbox / Grid implementation adapting seamlessly between Desktop and Mobile viewports.
+
+Fast initial page rendering optimized for static deployment on GitHub Pages.
+
+Efficient Angular State Management (Signals / RxJS) for instant search and tag filtering without triggering unnecessary database reads.
+
+Lightweight image payloads resulting from mandatory client-side max 250px image resizing.
+
+User Experience & Aesthetic:
+
+Retro 90s – 2000s classic web/gaming aesthetic (Windows 95/98 styling, arcade/pixel feel) adapted gracefully for modern mobile screens.
+
+Security & Hosting Infrastructure:
+
+Hosted on GitHub Pages for static frontend assets and Firebase Spark Plan for backend services.
+
+Firestore and Cloud Storage Security Rules enforced:
+
+Public Read access for patch entries, translators master, tags master, and image assets.
+
+Write/Delete access restricted strictly to authenticated admin accounts when creating or updating entries.
+
+4. Data Structure Specification (Firestore Schema)
+
+Collection Name: translators (Master Collection)
+
+id (String): Auto-generated Document ID
+
+name (String): Translator or team name
+
+link (String): Optional external social/website link
+
+Collection Name: tags (Master Collection)
+
+id (String): Auto-generated Document ID
+
+name (String): Category tag name (e.g., RPG, แปลจบแล้ว)
+
+Collection Name: patches
+
+id (String): Auto-generated Document ID
+
+fileName (String): Display name for the patch file
+
+gameTitle (String): Full title of the game
+
+system (String): Platform or console system
+
+translatorId (String): Reference ID from translators collection
+
+translatedBy (String): Denormalized translator name for fast querying
+
+patchTool (String): Software or tool needed for applying the patch
+
+coverUrl (String): Direct URL to the max 250px resized image in Cloud Storage
+
+patchFileUrl (String): Download link for the patch file
+
+tags (Array of Strings): List of associated tag names referenced from tags master
