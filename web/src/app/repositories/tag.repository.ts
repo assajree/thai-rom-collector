@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tag } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
@@ -31,4 +31,11 @@ export class TagRepository {
       throw new RepositoryError('ไม่สามารถเพิ่มหมวดหมู่ได้', 'create');
     }
   }
+  async update(id: string, name: string): Promise<Tag> {
+    const normalizedName = normalizeName(name);
+    if (!normalizedName) throw new RepositoryError('กรุณาระบุชื่อหมวดหมู่', 'update');
+    try { await updateDoc(doc(this.tags, id), { name: normalizedName }); return { id, name: normalizedName }; }
+    catch { throw new RepositoryError('ไม่สามารถแก้ไขหมวดหมู่ได้', 'update'); }
+  }
+  async delete(id: string): Promise<void> { try { await deleteDoc(doc(this.tags, id)); } catch { throw new RepositoryError('ไม่สามารถลบหมวดหมู่ได้', 'delete'); } }
 }

@@ -6,6 +6,8 @@ import { adminGuard } from './guards/admin.guard';
 import { AdminRedirectComponent } from './pages/admin-redirect.component';
 import { LogoutPageComponent } from './pages/logout-page.component';
 import { AdminSystemsPageComponent } from './pages/admin-systems-page.component';
+import { AdminTranslatorsPageComponent } from './pages/admin-translators-page.component';
+import { AdminTagsPageComponent } from './pages/admin-tags-page.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +33,8 @@ export const routes: Routes = [
     component: AdminSystemsPageComponent,
     canActivate: [adminGuard]
   },
+  { path: 'admin/translators', component: AdminTranslatorsPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/tags', component: AdminTagsPageComponent, canActivate: [adminGuard] },
   {
     path: 'admin',
     pathMatch: 'full',

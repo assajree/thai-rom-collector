@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, addDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, addDoc, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { Tag, Translator } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
@@ -36,6 +36,15 @@ export class TranslatorRepository {
       throw new RepositoryError('ไม่สามารถเพิ่มทีมแปลได้', 'create');
     }
   }
+  async update(id: string, shortName: string, name: string, link?: string): Promise<Translator> {
+    const normalizedShortName = normalizeName(shortName); const normalizedName = normalizeName(name); const normalizedLink = link?.trim();
+    if (!normalizedShortName || !normalizedName) throw new RepositoryError('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'update');
+    try {
+      const data: TranslatorDocument = normalizedLink ? { shortName: normalizedShortName, name: normalizedName, link: normalizedLink } : { shortName: normalizedShortName, name: normalizedName };
+      await updateDoc(doc(this.translators, id), data); return { id, shortName: normalizedShortName, name: normalizedName, ...(normalizedLink ? { link: normalizedLink } : {}) };
+    } catch { throw new RepositoryError('ไม่สามารถแก้ไขทีมแปลได้', 'update'); }
+  }
+  async delete(id: string): Promise<void> { try { await deleteDoc(doc(this.translators, id)); } catch { throw new RepositoryError('ไม่สามารถลบทีมแปลได้', 'delete'); } }
 }
 
 export type { TranslatorDocument };

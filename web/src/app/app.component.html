@@ -18,6 +18,8 @@
       <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">Add patch</a>
       @if (authService.isAdmin()) {
         <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการเครื่องเกม</a>
+        <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการทีมแปล</a>
+        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการ tag</a>
       }
     </nav>
 
