@@ -95,6 +95,12 @@
     max-width: 48rem;
 }
 
+.sort-field {
+    align-items: center;
+    display: flex;
+    gap: .55rem;
+}
+
 .sort-row select,
 .sort-row button {
     background: #d8d8d8;
@@ -120,5 +126,32 @@
         font-size: 1.6rem;
         height: 2.25rem;
         width: 2.25rem;
+    }
+
+    .sort-row {
+        align-items: stretch;
+        flex-direction: column;
+        gap: .75rem;
+    }
+
+    .sort-field {
+        align-items: stretch;
+        display: grid;
+        grid-template-columns: minmax(5rem, auto) 1fr;
+        width: 100%;
+    }
+
+    .sort-field select,
+    .sort-field button {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .sort-field--sort {
+        grid-template-columns: minmax(5rem, auto) 1fr;
+    }
+
+    .sort-field--sort button {
+        grid-column: 2;
     }
 }

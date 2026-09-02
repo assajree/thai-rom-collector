@@ -45,11 +45,11 @@
 }
 
 .edit-button {  
-  font-weight: 700;
-  grid-column: 2;
-  justify-self: start;
-  padding-right: 1em;
-  float: right;
+  background: #001414;
+  padding: .15rem .35rem;
+  position: absolute;
+  right: .2rem;
+  top: .2rem;
 }
 
 .download-button:hover {
@@ -96,6 +96,21 @@
   width: auto;
   height: auto;
   object-fit: contain;
+}
+
+.patch-cover-wrap {
+  position: relative;
+}
+
+.patch-system-badge {
+  background: #001414;
+  color: #ffd92b;
+  padding: .15rem .35rem;
+  position: absolute;
+  left: .2rem;
+  top: .2rem;
+  min-width: 34px;
+  text-align: center;
 }
 
 @media (min-width: 34.01rem) {

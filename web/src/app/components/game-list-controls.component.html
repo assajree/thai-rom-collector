@@ -5,14 +5,20 @@
 </div>
 <div class="sort-row">
   @if (routeKind !== 'system') {
-    <label for="filter-system">เครื่องเกม</label>
-    <select id="filter-system" [(ngModel)]="draft.system" (ngModelChange)="emit()"><option [ngValue]="null">ทุกเครื่อง</option>@for (system of systems; track system) { <option [ngValue]="system">{{ system }}</option> }</select>
+    <div class="sort-field">
+      <label for="filter-system">เครื่องเกม</label>
+      <select id="filter-system" [(ngModel)]="draft.system" (ngModelChange)="emit()"><option [ngValue]="null">ทุกเครื่อง</option>@for (system of systems; track system) { <option [ngValue]="system">{{ system }}</option> }</select>
+    </div>
   }
   @if (routeKind !== 'translator') {
-    <label for="filter-translator">ทีมแปล</label>
-    <select id="filter-translator" [(ngModel)]="draft.translatorId" (ngModelChange)="emit()"><option [ngValue]="null">ทุกทีม</option>@for (translator of translators; track translator.id) { <option [ngValue]="translator.id">{{ translator.name }}</option> }</select>
+    <div class="sort-field">
+      <label for="filter-translator">ทีมแปล</label>
+      <select id="filter-translator" [(ngModel)]="draft.translatorId" (ngModelChange)="emit()"><option [ngValue]="null">ทุกทีม</option>@for (translator of translators; track translator.id) { <option [ngValue]="translator.id">{{ translator.name }}</option> }</select>
+    </div>
   }
-  <label for="sort-patches">เรียงตาม</label>
-  <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่อัปเดต</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
-  <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortBy === 'updateDate' ? (draft.sortDirection === 'asc' ? 'เก่า → ใหม่' : 'ใหม่ → เก่า') : (draft.sortDirection === 'asc' ? 'A → Z' : 'Z → A') }}</button>
+  <div class="sort-field sort-field--sort">
+    <label for="sort-patches">เรียงตาม</label>
+    <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่อัปเดต</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
+    <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortBy === 'updateDate' ? (draft.sortDirection === 'asc' ? 'เก่า → ใหม่' : 'ใหม่ → เก่า') : (draft.sortDirection === 'asc' ? 'A → Z' : 'Z → A') }}</button>
+  </div>
 </div>
