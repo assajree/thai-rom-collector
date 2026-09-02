@@ -9,25 +9,25 @@
   
 </header>
 
-<div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[8.7rem_minmax(0,1fr)]">
+<div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
   <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col" [class.mobile-sidebar-open]="sidebarOpen()" (click)="$event.stopPropagation()" aria-label="Main navigation">
     <p class="retro-rail-heading">Sections</p>
 
     <nav aria-label="Main navigation">
-      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">Browse</a>
-      <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">Add patch</a>
+      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="closeSidebar()">เกมทั้งหมด</a>
+      
       @if (authService.isAdmin()) {
+        <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">เพิ่มเกม</a>
         <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการเครื่องเกม</a>
         <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการทีมแปล</a>
-        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการ tag</a>
+        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการแท็ก</a>
         <button class="retro-rail-link w-full text-left" type="button" (click)="signOut()">ออกจากระบบ</button>
       }
     </nav>
 
     <div class="retro-system-section">
-      <p class="retro-rail-heading">Systems</p>
-      <div>
-        <a class="retro-system-button" routerLink="/" routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }" (click)="selectPlatform(null)">All systems</a>
+      <p class="retro-rail-heading">ระบบเกม</p>
+      <div>        
         @for (platform of platforms(); track platform.id) {
           <a
             class="retro-system-button"
@@ -35,19 +35,18 @@
             routerLinkActive="retro-system-button--active"
             [routerLinkActiveOptions]="{ exact: true }"
             (click)="selectPlatform(platform.name)">
-            {{ platform.shortName }} — {{ platform.name }}
+            {{ platform.name }}
           </a>
         }
       </div>
     </div>
 
     <div class="retro-tag-section">
-      <p class="retro-rail-heading">Translators</p>
-      <div>
-        <a class="retro-system-button" routerLink="/" routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }" (click)="selectTranslator(null)">All teams</a>
+      <p class="retro-rail-heading">ทีมแปล</p>
+      <div>        
         @for (translator of translators(); track translator.id) {
           <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.name)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
-            {{ translator.shortName }} — {{ translator.name }}
+            {{ translator.name }}
           </a>
         }
       </div>

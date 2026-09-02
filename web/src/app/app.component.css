@@ -1,7 +1,9 @@
 .retro-rail {
+  box-sizing: border-box;
   border-right: 1px solid #a8abd9;
-  min-height: 100%;
-  padding: 0.45rem 0.5rem 1rem;
+  min-height: 100%;  
+  min-width: 16rem;
+  padding: 0.45rem 1rem 1rem 0.5rem;
 }
 
 .mobile-menu-button {

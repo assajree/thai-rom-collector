@@ -1,13 +1,17 @@
 <main class="browse-catalogue min-h-full p-4 sm:p-6 lg:p-8">
-  <app-game-list-controls [translators]="translators()" [systems]="systems()" [routeKind]="routeKind()" [draft]="filters()" (filtersChanged)="setFilters($event)" />
+
+  <app-game-list-controls [translators]="translators()" [systems]="systems()" [routeKind]="routeKind()"
+    [draft]="filters()" (filtersChanged)="setFilters($event)" />
 
   @if (activeRouteLabel(); as routeLabel) {
-    <p class="browse-route-label">{{ routeLabel }}</p>
+  <p class="browse-route-label">{{ routeLabel }}</p>
   }
-
+  
   @if (loading()) { <p class="state-message">กำลังโหลดรายการแพตช์...</p> }
-  @if (unavailable()) { <p class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้ กรุณาลองใหม่อีกครั้ง</p> }
-  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ยังไม่มีรายการแพตช์</p> }
+  @if (unavailable()) { <p class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
+    กรุณาลองใหม่อีกครั้ง</p> }
+  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ยังไม่มีรายการแพตช์</p>
+  }
 
   <app-patch-card-list [patches]="sortedPatches()" [canEdit]="auth.isAdmin()" />
 </main>

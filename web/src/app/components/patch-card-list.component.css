@@ -1,5 +1,5 @@
 .patch-card {
-  background: linear-gradient(135deg, #f3f3f3, #bbb);
+  background: #000133;
   border: 5px solid #111;
   box-shadow: 5px 5px 0 #111, inset 3px 3px #fff, inset -4px -4px #777;
   display: grid;
@@ -80,7 +80,6 @@
 
 /* Compact retro web card */
 .patch-card {
-  background: #003333;
   border: 1px solid #001414;
   box-shadow: none;
   gap: .45rem;
