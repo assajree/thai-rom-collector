@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Output, inject, signal } from '@angular/core';
+import { Component, EventEmitter, HostListener, Input, Output, inject, signal } from '@angular/core';
 import { ImageProcessorService } from '../services/image-processor.service';
 
 @Component({
@@ -8,6 +8,7 @@ import { ImageProcessorService } from '../services/image-processor.service';
   styleUrl: './cover-input.component.css'
 })
 export class CoverInputComponent {
+  @Input() gameTitle = '';
   @Output() selected = new EventEmitter<Blob>();
   private readonly processor = inject(ImageProcessorService);
   protected readonly preview = signal<string | null>(null);
@@ -39,6 +40,16 @@ export class CoverInputComponent {
     } catch (error) {
       this.error.set(error instanceof Error ? error.message : 'ไม่สามารถอ่านรูปจาก Clipboard ได้');
     }
+  }
+
+  protected searchCoverImage(): void {
+    const title = this.gameTitle.trim();
+    if (!title) {
+      this.error.set('กรุณาระบุชื่อเกมก่อนค้นหารูปภาพ');
+      return;
+    }
+    const query = encodeURIComponent(`${title} box art launchbox`);
+    window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank', 'noopener,noreferrer');
   }
 
   @HostListener('document:paste', ['$event'])

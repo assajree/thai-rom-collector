@@ -1,6 +1,8 @@
 import { Component, Input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Patch, Translator } from '../models/patch.models';
+import { browseRoute } from '../shared/browse-route.util';
+import { SystemMaster } from '../repositories/system.repository';
 
 @Component({
   selector: 'app-patch-card-list',
@@ -12,10 +14,17 @@ import { Patch, Translator } from '../models/patch.models';
 export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
+  @Input() systems: SystemMaster[] = [];
   @Input() canEdit = false;
   protected readonly loadedImages = signal(new Set<string>());
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
+  }
+  protected systemLink(system: string): string {
+    return browseRoute('system', system);
+  }
+  protected systemName(shortName: string): string {
+    return this.systems.find((system) => system.shortName === shortName)?.name ?? shortName;
   }
   protected hasTags(tags: string[]): boolean {
     return tags.some((tag) => tag.trim().length > 0);

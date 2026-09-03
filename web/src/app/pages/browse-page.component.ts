@@ -32,13 +32,13 @@ export class BrowsePageComponent {
   protected readonly selectedSystem = this.filterState.selectedSystem;
   protected readonly systems = computed(() => [...new Set(this.patches().map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' })));
   protected readonly translators = signal<Translator[]>([]);
-  private readonly systemMasters = signal<SystemMaster[]>([]);
+  protected readonly systemMasters = signal<SystemMaster[]>([]);
   private readonly systemsLoaded = signal(false);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
-  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | null>(null);
+  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | null>(null);
   private readonly routeSlug = signal<string | null>(null);
   private readonly clearAllEffect = effect(() => {
     this.filterState.clearAllRequested();
@@ -47,6 +47,7 @@ export class BrowsePageComponent {
     this.direction.set('desc');
   }, { allowSignalWrites: true });
   protected readonly activeRouteLabel = computed(() => {
+    if (this.routeKind() === 'rom') return 'รอมแปลไทย';
     const slug = this.routeSlug();
     if (!slug) return null;
     const value = decodeURIComponent(slug);
@@ -63,6 +64,7 @@ export class BrowsePageComponent {
   private readonly translatorsLoaded = signal(false);
   protected readonly filters = computed(() => ({ keyword: this.keyword(), tag: this.selectedTag(), translatorId: this.selectedTranslatorId(), system: this.selectedSystem(), sortBy: this.sortBy(), sortDirection: this.direction() }));
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
+    if (this.routeKind() === 'rom' && patch.haveRom !== true) return false;
     const tag = this.selectedTag();
     if (tag && !patch.tags.includes(tag)) return false;
     const translatorId = this.selectedTranslatorId();
@@ -114,6 +116,10 @@ export class BrowsePageComponent {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(tag);
+    } else if (kind === 'rom') {
+      this.filterState.selectedSystem.set(null);
+      this.filterState.selectedTranslatorId.set(null);
+      this.filterState.selectedTag.set(null);
     }
   }, { allowSignalWrites: true });
   protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
@@ -141,7 +147,7 @@ export class BrowsePageComponent {
     this.systemRepository.watchAll().subscribe({ next: (systems) => { this.systemMasters.set(systems); this.systemsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
-      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | undefined) ?? null);
+      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | undefined) ?? null);
     });
     this.route.paramMap.subscribe((params) => {
       this.routeSlug.set(params.get('slug'));

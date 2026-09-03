@@ -18,6 +18,6 @@
   }
 
   @if (!loading() && !unavailable() && sortedPatches().length > 0) {
-    <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [canEdit]="auth.isAdmin()" />
+    <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [systems]="systemMasters()" [canEdit]="auth.isAdmin()" />
   }
 </main>

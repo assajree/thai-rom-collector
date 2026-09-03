@@ -10,6 +10,8 @@
 }
 
 .patch-card__body {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
@@ -60,10 +62,9 @@
 .patch-cover-image {
   display: block;
   height: 100%;
-  object-fit: cover;
   width: 100%;
 }
-.patch-cover-placeholder { background: #303269; inset: 0; min-height: 180px; position: absolute; }
+.patch-cover-placeholder { inset: 0; position: absolute; }
 .patch-cover-image { opacity: 0; position: relative; transition: opacity .2s ease; }
 .patch-cover-image--loaded { opacity: 1; }
 
@@ -95,22 +96,12 @@
 
 .patch-cover-image {
   width: 250px;
-  height: auto;
+  height: 250px;
 }
 
 .patch-cover-wrap {
+  height: 250px;
   position: relative;
-}
-
-.patch-system-badge {
-  background: #001414;
-  color: #ffd92b;
-  padding: .15rem .35rem;
-  position: absolute;
-  left: .2rem;
-  top: .2rem;
-  min-width: 34px;
-  text-align: center;
 }
 
 @media (min-width: 34.01rem) {
@@ -120,7 +111,18 @@
 }
 
 .patch-card__body {
+  display: flex;
+  flex-direction: column;
   padding: .05rem 0;
+}
+
+.patch-card__links {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .2rem 1rem;
+  margin-top: auto;
+  padding-top: .35rem;
 }
 
 .patch-card h2 {
@@ -155,7 +157,10 @@
   grid-column: 2;
   padding: 0;
   text-align: left;
-  padding-right: 1em;
+}
+
+.patch-card__links .download-button {
+  grid-column: auto;
 }
 
 @media (max-width: 34rem) {
@@ -170,6 +175,11 @@
 
   .patch-card__body {
     grid-column: 1;
+  }
+
+  .patch-card__links {
+    align-items: center;
+    flex-direction: row;
   }
 
   .edit-button {

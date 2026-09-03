@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system' } },
   { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator' } },
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
+  { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' } },
   {
     path: 'add-patch',
     component: AdminPatchPageComponent,
