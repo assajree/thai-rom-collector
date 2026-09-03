@@ -12,7 +12,8 @@ export const MOCK_PATCHES: readonly Patch[] = [
     patchTool: 'xDelta UI',
     tags: ['RPG', 'Adventure'],
     coverUrl: '',
-    patchFileUrl: '#mock-download-ocarina'
+    patchFileUrl: '#mock-download-ocarina',
+    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: ''
   },
   {
     id: 'mock-mother-gba',
@@ -25,7 +26,8 @@ export const MOCK_PATCHES: readonly Patch[] = [
     patchTool: 'FLIPS',
     tags: ['RPG', 'Story'],
     coverUrl: '',
-    patchFileUrl: '#mock-download-mother'
+    patchFileUrl: '#mock-download-mother',
+    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: ''
   },
   {
     id: 'mock-patapon-psp',
@@ -38,6 +40,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
     patchTool: 'PPF-O-Matic',
     tags: ['Rhythm', 'Action'],
     coverUrl: '',
-    patchFileUrl: '#mock-download-patapon'
+    patchFileUrl: '#mock-download-patapon',
+    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: ''
   }
 ];

@@ -12,7 +12,13 @@
       <h2>{{ patch.gameTitle }}</h2>
       <div class="patch-card__description">
 
-        <div>โดย: {{ patch.translatedBy }}</div>
+        <div>โดย:
+          @if (translatorLink(patch); as link) {
+          <a [href]="link" target="_blank" rel="noopener noreferrer">{{ patch.translatedBy }}</a>
+          } @else {
+          {{ patch.translatedBy }}
+          }
+        </div>
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
       </div>
       @if (patch.tags.length > 0) {
@@ -24,6 +30,9 @@
       }
       @if (patch.patchFileUrl) {
       <a class="download-button" [href]="patch.patchFileUrl">Patch File</a>
+      }
+      @if (patch.haveRom && patch.patchedRomUrl) {
+      <a class="download-button" [href]="patch.patchedRomUrl" target="_blank" rel="noopener noreferrer">Patched ROM</a>
       }
       @if (patch.coverUrl) {
       <a class="download-button" [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ดาวน์โหลดรูป</a>

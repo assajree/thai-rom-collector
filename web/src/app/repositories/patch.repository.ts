@@ -29,7 +29,11 @@ export class PatchRepository {
         patchTool: String(row['patchTool'] ?? ''),
         tags: Array.isArray(row['tags']) ? row['tags'].map(String) : [],
         coverUrl: String(row['coverUrl'] ?? ''),
-        patchFileUrl: String(row['patchFileUrl'] ?? '')
+        patchFileUrl: String(row['patchFileUrl'] ?? ''),
+        haveRom: Boolean(row['haveRom'] ?? false),
+        patchedRomUrl: String(row['patchedRomUrl'] ?? ''),
+        referenceText: String(row['referenceText'] ?? ''),
+        referenceUrl: String(row['referenceUrl'] ?? '')
       }))),
       catchError(() => throwError(() => new RepositoryError('ไม่สามารถโหลดรายการแพตช์ได้', 'read')))
     );
@@ -87,7 +91,8 @@ export class PatchRepository {
     return {
       updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
-      tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim()
+      tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(), haveRom: draft.haveRom,
+      patchedRomUrl: draft.patchedRomUrl.trim(), referenceText: clean(draft.referenceText), referenceUrl: draft.referenceUrl.trim()
     };
   }
 

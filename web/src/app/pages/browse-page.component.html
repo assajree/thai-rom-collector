@@ -13,5 +13,5 @@
   @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ยังไม่มีรายการแพตช์</p>
   }
 
-  <app-patch-card-list [patches]="sortedPatches()" [canEdit]="auth.isAdmin()" />
+  <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [canEdit]="auth.isAdmin()" />
 </main>

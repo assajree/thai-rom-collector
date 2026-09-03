@@ -31,7 +31,7 @@ export class AdminPatchPageComponent {
   protected readonly translators = this.translatorRepository.watchAll();
   protected readonly tags = this.tagRepository.watchAll();
   protected readonly systems = this.systemRepository.watchAll();
-  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''] });
+  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
   protected cover?: Blob;
   protected editId: string | null = null;
   protected newTranslatorName = '';
@@ -97,7 +97,7 @@ export class AdminPatchPageComponent {
     const patch = await this.patchRepository.getById(id);
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl });
+    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' });
     this.selectedTags = [...patch.tags];
   }
   private todayInputDate(): string { return new Date().toISOString().slice(0, 10); }

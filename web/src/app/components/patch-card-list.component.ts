@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Patch } from '../models/patch.models';
+import { Patch, Translator } from '../models/patch.models';
 
 @Component({
   selector: 'app-patch-card-list',
@@ -11,7 +11,11 @@ import { Patch } from '../models/patch.models';
 })
 export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
+  @Input() translators: Translator[] = [];
   @Input() canEdit = false;
+  protected translatorLink(patch: Patch): string | undefined {
+    return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
+  }
   protected hasTags(tags: string[]): boolean {
     return tags.some((tag) => tag.trim().length > 0);
   }
