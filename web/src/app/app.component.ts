@@ -10,6 +10,7 @@ import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
 import { browseRoute } from './shared/browse-route.util';
+import { PatchCacheService } from './services/patch-cache.service';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent implements OnDestroy {
   private readonly tagRepository = inject(TagRepository);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly systemRepository = inject(SystemRepository);
+  private readonly patchCache = inject(PatchCacheService);
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
   protected readonly platforms = signal<SystemMaster[]>([]);
@@ -58,6 +60,10 @@ export class AppComponent implements OnDestroy {
     this.filterState.selectedTag.set(tag);
     this.filterState.selectedSystem.set(null);
     this.filterState.selectedTranslatorId.set(null);
+    this.closeSidebar();
+  }
+  protected forceRefreshPatches(): void {
+    this.patchCache.requestForceRefresh();
     this.closeSidebar();
   }
 

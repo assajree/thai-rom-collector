@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, doc, docData, setDoc } from '@angular/fire/firestore';
-import { Observable, catchError, map, throwError } from 'rxjs';
+import { Firestore, collection, collectionData, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
+import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Patch, PatchDraft, Translator, Tag } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
+import { PatchCacheService } from '../services/patch-cache.service';
 
 type PatchDocument = Omit<Patch, 'id'>;
 
@@ -11,13 +12,14 @@ const clean = (value: string): string => value.trim().replace(/\s+/g, ' ');
 @Injectable({ providedIn: 'root' })
 export class PatchRepository {
   private readonly firestore = inject(Firestore);
+  private readonly patchCache = inject(PatchCacheService);
   private readonly patches = collection(this.firestore, 'patches');
   private readonly translators = collection(this.firestore, 'translators');
   private readonly tags = collection(this.firestore, 'tags');
   private readonly systems = collection(this.firestore, 'systems');
 
   watchAll(): Observable<Patch[]> {
-    return collectionData(this.patches, { idField: 'id' }).pipe(
+    return this.patchCache.get(() => from(getDocsFromServer(this.patches)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).pipe(
       map((rows) => rows.map((row) => ({
         id: String(row['id']),
         updateDate: String(row['updateDate'] ?? ''),
@@ -38,6 +40,8 @@ export class PatchRepository {
       catchError(() => throwError(() => new RepositoryError('ไม่สามารถโหลดรายการแพตช์ได้', 'read')))
     );
   }
+
+  clearCache(): void { this.patchCache.clear(); }
 
   getById(id: string): Promise<Patch | undefined> {
     return new Promise((resolve, reject) => {

@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
 import { normalizeBrowseName } from '../shared/browse-route.util';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
+import { PatchCacheService } from '../services/patch-cache.service';
 
 @Component({
   selector: 'app-browse-page',
@@ -22,6 +23,7 @@ export class BrowsePageComponent {
   private readonly filterState = inject(BrowseFilterStateService);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly systemRepository = inject(SystemRepository);
+  private readonly patchCache = inject(PatchCacheService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
@@ -45,6 +47,12 @@ export class BrowsePageComponent {
     this.keyword.set('');
     this.sortBy.set('updateDate');
     this.direction.set('desc');
+  }, { allowSignalWrites: true });
+  private readonly forceRefreshEffect = effect(() => {
+    if (this.patchCache.refreshRequested() === 0) return;
+    this.loading.set(true);
+    this.unavailable.set(false);
+    this.loadPatches();
   }, { allowSignalWrites: true });
   protected readonly activeRouteLabel = computed(() => {
     if (this.routeKind() === 'rom') return 'รอมแปลไทย';
