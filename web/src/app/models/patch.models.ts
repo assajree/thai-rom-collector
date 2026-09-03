@@ -2,6 +2,7 @@ export interface Translator {
   id: string;
   shortName: string;
   name: string;
+  modTool?: string;
   link?: string;
 }
 

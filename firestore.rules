@@ -41,11 +41,12 @@ service cloud.firestore {
     match /translators/{translatorId} {
       allow read: if true;
       allow create: if isAdmin()
-        && request.resource.data.keys().hasOnly(['shortName', 'name', 'link'])
+        && request.resource.data.keys().hasOnly(['shortName', 'name', 'modTool', 'link'])
         && request.resource.data.shortName is string
         && request.resource.data.shortName.size() > 0
         && request.resource.data.name is string
         && request.resource.data.name.size() > 0
+        && (!request.resource.data.keys().hasAny(['modTool']) || request.resource.data.modTool is string)
         && (!request.resource.data.keys().hasAny(['link']) || request.resource.data.link is string);
       allow update, delete: if isAdmin();
     }

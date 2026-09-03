@@ -37,6 +37,7 @@ export class AdminPatchPageComponent {
   protected newTranslatorName = '';
   protected newTranslatorShortName = '';
   protected newTranslatorLink = '';
+  protected newTranslatorModTool = '';
   protected translatorDialogOpen = false;
   protected selectedTags: string[] = [];
   protected newTagName = '';
@@ -58,7 +59,10 @@ export class AdminPatchPageComponent {
       }
     });
     this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
-    this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
+    this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
+      this.updateGeneratedFilename();
+      if (!this.editId) this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
+    });
   }
 
   private updateGeneratedFilename(): void {
@@ -105,12 +109,13 @@ export class AdminPatchPageComponent {
     try {
       const name = this.newTranslatorName.trim();
       if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
-      const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink);
+      const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink, this.newTranslatorModTool);
       this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator];
       this.form.controls.translatorId.setValue(translator.id);
       this.newTranslatorName = '';
       this.newTranslatorShortName = '';
       this.newTranslatorLink = '';
+      this.newTranslatorModTool = '';
       this.translatorDialogOpen = false;
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่มทีมแปลได้', 'error');
