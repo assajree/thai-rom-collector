@@ -12,8 +12,8 @@ export class ImageProcessorService {
     const canvas = document.createElement('canvas');
     canvas.width = width; canvas.height = height;
     canvas.getContext('2d')?.drawImage(image, 0, 0, width, height);
-    const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((result) => result ? resolve(result) : reject(new Error('ไม่สามารถแปลงรูปภาพได้')), 'image/jpeg', 0.82));
-    return { blob, width, height, filename: `cover_max250px_${Date.now()}.jpg` };
+    const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((result) => result ? resolve(result) : reject(new Error('ไม่สามารถแปลงรูปภาพได้')), 'image/png'));
+    return { blob, width, height, filename: `cover_max250px_${Date.now()}.png` };
   }
 
   private decode(source: Blob): Promise<HTMLImageElement> {

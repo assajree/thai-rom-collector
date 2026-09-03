@@ -45,7 +45,7 @@ export class BrowsePageComponent {
     this.keyword.set('');
     this.sortBy.set('updateDate');
     this.direction.set('desc');
-  });
+  }, { allowSignalWrites: true });
   protected readonly activeRouteLabel = computed(() => {
     const slug = this.routeSlug();
     if (!slug) return null;
@@ -115,7 +115,7 @@ export class BrowsePageComponent {
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(tag);
     }
-  });
+  }, { allowSignalWrites: true });
   protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
   protected toggleDirection(): void { this.direction.update((value) => value === 'asc' ? 'desc' : 'asc'); }
   protected setKeyword(value: string): void { this.keyword.set(value); }

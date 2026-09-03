@@ -18,6 +18,29 @@ export class CoverInputComponent {
     if (file) await this.process(file);
   }
 
+  protected async readFromClipboard(): Promise<void> {
+    this.error.set(null);
+
+    try {
+      if (!navigator.clipboard?.read) {
+        throw new Error('เบราว์เซอร์นี้ไม่รองรับการดึงรูปจาก Clipboard');
+      }
+
+      const items = await navigator.clipboard.read();
+      for (const item of items) {
+        const imageType = item.types.find((type) => type.startsWith('image/'));
+        if (imageType) {
+          await this.process(await item.getType(imageType));
+          return;
+        }
+      }
+
+      throw new Error('ไม่พบรูปภาพใน Clipboard');
+    } catch (error) {
+      this.error.set(error instanceof Error ? error.message : 'ไม่สามารถอ่านรูปจาก Clipboard ได้');
+    }
+  }
+
   @HostListener('document:paste', ['$event'])
   protected async paste(event: ClipboardEvent): Promise<void> {
     const image = Array.from(event.clipboardData?.items ?? [])

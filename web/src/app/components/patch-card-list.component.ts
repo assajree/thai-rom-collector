@@ -26,4 +26,18 @@ export class PatchCardListComponent {
     image.onerror = null;
     image.src = 'assets/images/no-image.jpg';
   }
+  protected async downloadCover(event: Event, patch: Patch): Promise<void> {
+    event.preventDefault();
+    const card = (event.currentTarget as HTMLElement).closest('.patch-card');
+    const image = card?.querySelector<HTMLImageElement>('.patch-cover-image');
+    const imageUrl = image?.currentSrc || patch.coverUrl;
+    const response = await fetch(imageUrl);
+    if (!response.ok) throw new Error(`ไม่สามารถดาวน์โหลดรูปได้ (${response.status})`);
+    const blobUrl = URL.createObjectURL(await response.blob());
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = patch.fileName;
+    link.click();
+    URL.revokeObjectURL(blobUrl);
+  }
 }

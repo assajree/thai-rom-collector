@@ -91,11 +91,8 @@
 }
 
 .patch-cover-image {
-  max-width: 250px;
-  max-height: 250px;
-  width: auto;
+  width: 250px;
   height: auto;
-  object-fit: contain;
 }
 
 .patch-cover-wrap {

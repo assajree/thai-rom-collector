@@ -3,11 +3,8 @@
 .system-dialog-backdrop { position: fixed; inset: 0; z-index: 20; display: grid; place-items: center; background: rgb(0 0 0 / 70%); padding: 1rem; }
 .system-dialog { width: min(100%, 32rem); border: 2px solid #c7ff3a; background: #171d35; padding: 1.25rem; color: #fff; box-shadow: 0 1rem 3rem rgb(0 0 0 / 45%); }
 
-label:has([formcontrolname="fileName"])::after,
-label:has([formcontrolname="gameTitle"])::after,
-label:has([formcontrolname="system"])::after,
-label:has([formcontrolname="translatorId"])::after {
+label.required::before{
   color: #c7ff3a;
-  content: ' *';
+  content: '* ';
   font-weight: 700;
 }

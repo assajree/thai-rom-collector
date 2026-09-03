@@ -48,7 +48,7 @@ export class AdminPatchPageComponent {
     void this.loadEditRecord();
   }
 
-  private translatorOptions: Translator[] = [];
+  protected translatorOptions: Translator[] = [];
 
   private initializeFilenameGeneration(): void {
     this.translators.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
@@ -77,7 +77,7 @@ export class AdminPatchPageComponent {
       const draft = { ...value, updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
       let coverUrl = '';
       const patchId = this.editId ?? crypto.randomUUID();
-      if (this.cover) coverUrl = await this.coverStorage.upload(patchId, this.cover, `cover_max250px_${Date.now()}.jpg`);
+      if (this.cover) coverUrl = await this.coverStorage.upload(patchId, this.cover, `cover_max250px_${Date.now()}.png`);
       if (this.editId) await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
       else await this.patchRepository.create(draft, coverUrl, patchId);
       this.status.show('บันทึกแพตช์สำเร็จ');
@@ -106,6 +106,7 @@ export class AdminPatchPageComponent {
       const name = this.newTranslatorName.trim();
       if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
       const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink);
+      this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator];
       this.form.controls.translatorId.setValue(translator.id);
       this.newTranslatorName = '';
       this.newTranslatorShortName = '';
@@ -120,7 +121,7 @@ export class AdminPatchPageComponent {
   protected async createSystem(): Promise<void> {
     try {
       const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);
-      this.form.controls.system.setValue(system.name);
+      this.form.controls.system.setValue(system.shortName);
       this.newSystemName = '';
       this.newSystemShortName = '';
       this.systemDialogOpen = false;

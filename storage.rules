@@ -11,9 +11,9 @@ service firebase.storage {
       allow read: if true;
       allow write: if isAdmin()
         && request.resource != null
-        && request.resource.contentType == 'image/jpeg'
+        && request.resource.contentType in ['image/jpeg', 'image/png']
         && request.resource.size < 2 * 1024 * 1024
-        && filename.matches('cover_max250px_[0-9]+\\.jpg');
+        && filename.matches('cover_max250px_[0-9]+\\.(jpg|png)');
       allow delete: if isAdmin();
     }
 
