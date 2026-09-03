@@ -37,7 +37,7 @@ export const routes: Routes = [
   { path: 'admin/translators', component: AdminTranslatorsPageComponent, canActivate: [adminGuard] },
   { path: 'admin/tags', component: AdminTagsPageComponent, canActivate: [adminGuard] },
   {
-    path: 'admin',
+    path: 'login',
     pathMatch: 'full',
     component: AdminRedirectComponent
   },

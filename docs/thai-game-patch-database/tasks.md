@@ -8,7 +8,7 @@
   - [x] 1.1 Initialize the Angular 16+ application with Angular Router, reactive forms, strict TypeScript, and the Firebase Web SDK / `@angular/fire` dependencies.
     - Create environment-based Firebase configuration placeholders; do not commit production secrets.
     - _Requirements: 8.1, 8.2_
-  - [x] 1.2 Configure application routes for `/`, `/add-patch`, `/admin` redirect, and wildcard redirect according to the design.
+  - [x] 1.2 Configure application routes for `/`, `/add-patch`, `/login` redirect, and wildcard redirect according to the design.
     - _Requirements: 1.1, 4.1, 4.2_
   - [x] 1.3 Configure the production build base href and GitHub Pages deployment workflow so direct navigation and page refresh work on the published site.
     - _Requirements: 8.1_

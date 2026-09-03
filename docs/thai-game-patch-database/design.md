@@ -34,7 +34,7 @@ flowchart LR
 
 | Layer | Responsibility |
 |---|---|
-| Angular Router | Maps `/` to public browsing and `/add-patch` / `/admin` to the protected administration screen. Configure the GitHub Pages base href during build. |
+| Angular Router | Maps `/` to public browsing and `/add-patch` / `/login` to the protected administration screen. Configure the GitHub Pages base href during build. |
 | Page and presentational components | Render public table/cards, filters, sign-in state, and reactive admin forms. Keep Firebase calls out of templates and presentational components. |
 | Repositories | Encapsulate Firestore collection access and DTO mapping. Return observable streams or signals that pages consume. |
 | Auth and guard | Starts Google sign-in, exposes auth state and admin status, and blocks protected routes when either is absent. |
@@ -55,7 +55,7 @@ The temporary browse showcase uses a mobile-first card mode: a beveled search co
 |---|---|---|
 | `/` | `BrowsePageComponent` | Public |
 | `/add-patch` | `AdminPatchPageComponent` | `adminGuard` |
-| `/admin` | Redirect to `/add-patch` | `adminGuard` |
+| `/login` | Redirect to `/add-patch` | `adminGuard` |
 | `**` | Redirect to `/` | Public |
 
 ## Components and Interfaces
@@ -287,7 +287,7 @@ The deployable Cloud Storage rules are maintained in the repository root at `sto
 
 Manual verification is the primary acceptance gate.
 
-- [ ] Open `/` while signed out; confirm the patch list and tag filter load, while `/add-patch` and `/admin` are blocked.
+- [ ] Open `/` while signed out; confirm the patch list and tag filter load, while `/add-patch` and `/login` are blocked.
 - [ ] Confirm the public list displays all available patch documents without requiring timestamp fields.
 - [ ] Search independently by game title, file name, platform, and translator; combine each search with a tag, then clear each filter.
 - [ ] Select each sort field and both sort directions; confirm game title, translator/team, and system/platform values follow the configured Thai-locale comparison and equal values use the document-ID tie-breaker.

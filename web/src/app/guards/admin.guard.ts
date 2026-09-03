@@ -12,7 +12,7 @@ export const adminGuard: CanActivateFn = () => {
 
   if (!authService.user()) {
     status.show('กรุณาเข้าสู่ระบบด้วยบัญชีผู้ดูแลระบบก่อน', 'error');
-    return router.parseUrl('/admin');
+    return router.parseUrl('/login');
   }
   status.show('บัญชีนี้ไม่มีสิทธิ์เข้าถึงส่วนผู้ดูแลระบบ', 'error');
   return router.parseUrl('/');

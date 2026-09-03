@@ -14,7 +14,7 @@ User Authentication & Route Access Control:
 
 Public visitors can view, search, filter, and download patch files on the main page freely without authentication.
 
-Login Requirement for Admin Route: Authentication via Google Sign-In is required only when attempting to access the data entry page (/add-patch / /admin).
+Login Requirement for Admin Route: Authentication via Google Sign-In is required only when attempting to access the data entry page (/add-patch / /login).
 
 Implement Angular CanActivate Route Guard to check authentication state before allowing access to the submission interface.
 
