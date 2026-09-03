@@ -9,6 +9,7 @@ import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
 import { normalizeBrowseName } from '../shared/browse-route.util';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
+import { PatchCacheService } from '../services/patch-cache.service';
 
 @Component({
   selector: 'app-browse-page',
@@ -22,6 +23,7 @@ export class BrowsePageComponent {
   private readonly filterState = inject(BrowseFilterStateService);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly systemRepository = inject(SystemRepository);
+  private readonly patchCache = inject(PatchCacheService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
@@ -32,13 +34,13 @@ export class BrowsePageComponent {
   protected readonly selectedSystem = this.filterState.selectedSystem;
   protected readonly systems = computed(() => [...new Set(this.patches().map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' })));
   protected readonly translators = signal<Translator[]>([]);
-  private readonly systemMasters = signal<SystemMaster[]>([]);
+  protected readonly systemMasters = signal<SystemMaster[]>([]);
   private readonly systemsLoaded = signal(false);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
-  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | null>(null);
+  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | null>(null);
   private readonly routeSlug = signal<string | null>(null);
   private readonly clearAllEffect = effect(() => {
     this.filterState.clearAllRequested();
@@ -46,7 +48,14 @@ export class BrowsePageComponent {
     this.sortBy.set('updateDate');
     this.direction.set('desc');
   }, { allowSignalWrites: true });
+  private readonly forceRefreshEffect = effect(() => {
+    if (this.patchCache.refreshRequested() === 0) return;
+    this.loading.set(true);
+    this.unavailable.set(false);
+    this.loadPatches();
+  }, { allowSignalWrites: true });
   protected readonly activeRouteLabel = computed(() => {
+    if (this.routeKind() === 'rom') return 'รอมแปลไทย';
     const slug = this.routeSlug();
     if (!slug) return null;
     const value = decodeURIComponent(slug);
@@ -63,6 +72,7 @@ export class BrowsePageComponent {
   private readonly translatorsLoaded = signal(false);
   protected readonly filters = computed(() => ({ keyword: this.keyword(), tag: this.selectedTag(), translatorId: this.selectedTranslatorId(), system: this.selectedSystem(), sortBy: this.sortBy(), sortDirection: this.direction() }));
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
+    if (this.routeKind() === 'rom' && patch.haveRom !== true) return false;
     const tag = this.selectedTag();
     if (tag && !patch.tags.includes(tag)) return false;
     const translatorId = this.selectedTranslatorId();
@@ -114,6 +124,10 @@ export class BrowsePageComponent {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(tag);
+    } else if (kind === 'rom') {
+      this.filterState.selectedSystem.set(null);
+      this.filterState.selectedTranslatorId.set(null);
+      this.filterState.selectedTag.set(null);
     }
   }, { allowSignalWrites: true });
   protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
@@ -128,12 +142,20 @@ export class BrowsePageComponent {
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
   protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); }
 
-  constructor() {
+  protected retry(): void {
+    this.loading.set(true);
+    this.unavailable.set(false);
+    this.loadPatches();
+  }
+  private loadPatches(): void {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
+  }
+  constructor() {
+    this.loadPatches();
     this.systemRepository.watchAll().subscribe({ next: (systems) => { this.systemMasters.set(systems); this.systemsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
-      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | undefined) ?? null);
+      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | undefined) ?? null);
     });
     this.route.paramMap.subscribe((params) => {
       this.routeSlug.set(params.get('slug'));

@@ -10,6 +10,8 @@
 }
 
 .patch-card__body {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
 }
 
@@ -32,18 +34,6 @@
   padding: .15rem .5rem;
 }
 
-.download-button {
-  align-self: end;
-  background: #22caef;
-  border: 4px solid #080808;
-  box-shadow: 4px 4px 0 #080808, inset 2px 2px rgba(255, 255, 255, .55), inset -2px -2px rgba(0, 0, 0, .25);
-  color: #080808;
-  font-weight: 800;
-  grid-column: 2;
-  justify-self: start;
-  padding: .55rem 1rem;
-}
-
 .edit-button {  
   background: #001414;
   padding: .15rem .35rem;
@@ -52,17 +42,14 @@
   top: .2rem;
 }
 
-.download-button:hover {
-  filter: brightness(1.12);
-  transform: translate(1px, 1px);
-}
-
 .patch-cover-image {
   display: block;
   height: 100%;
-  object-fit: cover;
   width: 100%;
 }
+.patch-cover-placeholder { inset: 0; position: absolute; }
+.patch-cover-image { opacity: 0; position: relative; transition: opacity .2s ease; }
+.patch-cover-image--loaded { opacity: 1; }
 
 @media (max-width: 34rem) {
   .patch-card {
@@ -71,11 +58,6 @@
     padding: 1rem;
   }
 
-  .download-button {
-    grid-column: 1 / -1;
-    justify-self: stretch;
-    text-align: center;
-  }
 }
 
 /* Compact retro web card */
@@ -92,22 +74,12 @@
 
 .patch-cover-image {
   width: 250px;
-  height: auto;
+  height: 250px;
 }
 
 .patch-cover-wrap {
+  height: 250px;
   position: relative;
-}
-
-.patch-system-badge {
-  background: #001414;
-  color: #ffd92b;
-  padding: .15rem .35rem;
-  position: absolute;
-  left: .2rem;
-  top: .2rem;
-  min-width: 34px;
-  text-align: center;
 }
 
 @media (min-width: 34.01rem) {
@@ -117,7 +89,27 @@
 }
 
 .patch-card__body {
+  display: flex;
+  flex-direction: column;
   padding: .05rem 0;
+}
+
+.patch-card__links {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: auto;
+  padding-top: 10px;
+}
+
+.patch-card__links-label { flex-basis: 100%; }
+
+.patch-card__download-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.5rem;
+  margin-top: -10px;
 }
 
 .patch-card h2 {
@@ -132,9 +124,13 @@
   margin: .15rem 0;
 }
 
+.patch-card__tags-label{
+  padding-top: 10px;
+}
+
 .patch-card__tags {
-  gap: .2rem;
-  margin: .15rem 0 0;
+  gap: 0.5rem;
+  margin: -10px 0 0;
 }
 
 .patch-card__tags li {
@@ -142,17 +138,6 @@
   color: #45e6c2;
   padding: 0;
   text-decoration: underline;
-}
-
-.download-button {
-  background: none;
-  border: 0;
-  box-shadow: none;
-  color: #45e6c2;
-  grid-column: 2;
-  padding: 0;
-  text-align: left;
-  padding-right: 1em;
 }
 
 @media (max-width: 34rem) {
@@ -167,6 +152,11 @@
 
   .patch-card__body {
     grid-column: 1;
+  }
+
+  .patch-card__links {
+    align-items: center;
+    flex-direction: row;
   }
 
   .edit-button {

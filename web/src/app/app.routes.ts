@@ -18,6 +18,7 @@ export const routes: Routes = [
   { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system' } },
   { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator' } },
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
+  { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' } },
   {
     path: 'add-patch',
     component: AdminPatchPageComponent,
@@ -36,7 +37,7 @@ export const routes: Routes = [
   { path: 'admin/translators', component: AdminTranslatorsPageComponent, canActivate: [adminGuard] },
   { path: 'admin/tags', component: AdminTagsPageComponent, canActivate: [adminGuard] },
   {
-    path: 'admin',
+    path: 'login',
     pathMatch: 'full',
     component: AdminRedirectComponent
   },

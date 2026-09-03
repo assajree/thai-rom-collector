@@ -1,53 +1,67 @@
 <header class="app-topbar flex min-h-10 items-center justify-between border-b-2 border-slate-300 bg-black px-4 sm:px-6">
   <div class="flex items-center gap-3">
-    <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()" aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
+    <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
+      aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
     <a class="site-title" routerLink="/">THAI ROM DB</a>
   </div>
 
-  <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-bB421aAaaxd09BA4-9.gif' border='0' alt='free web counter'></a></div>
-   
-  
+  <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-bB421aAaaxd09BA4-9.gif'
+        border='0' alt='free web counter'></a></div>
+
+
 </header>
 
 <div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
-  <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col" [class.mobile-sidebar-open]="sidebarOpen()" (click)="$event.stopPropagation()" aria-label="Main navigation">
-    <p class="retro-rail-heading">Sections</p>
+  <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col"
+    [class.mobile-sidebar-open]="sidebarOpen()" (click)="$event.stopPropagation()" aria-label="Main navigation">
+    <p class="retro-rail-heading">THAI ROM DB</p>
 
     <nav aria-label="Main navigation">
-      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active" [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
-      
-      @if (authService.isAdmin()) {
-        <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">เพิ่มเกม</a>
-        <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการเครื่องเกม</a>
-        <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการทีมแปล</a>
-        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active" (click)="closeSidebar()">จัดการแท็ก</a>
-        <button class="retro-rail-link w-full text-left" type="button" (click)="signOut()">ออกจากระบบ</button>
-      }
+      <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
+      <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
     </nav>
+
+    @if (authService.isAdmin()) {
+    <div class="retro-system-section">
+      <p class="retro-rail-heading">Admin</p>
+      <nav aria-label="Main navigation">
+        <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">เพิ่มเกม</a>
+        <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการเครื่องเกม</a>
+        <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการทีมแปล</a>
+        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการแท็ก</a>
+        <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active"
+          (click)="signOut()">ออกจากระบบ</a>
+      </nav>
+    </div>
+    }
 
     <div class="retro-system-section">
       <p class="retro-rail-heading">ระบบเกม</p>
-      <div>        
+      <div>
         @for (platform of platforms(); track platform.id) {
-          <a
-            class="retro-system-button"
-            [routerLink]="browseRoute('system', platform.shortName)"
-            routerLinkActive="retro-system-button--active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            (click)="selectPlatform(platform.shortName)">
-            {{ platform.name }}
-          </a>
+        <a class="retro-system-button" [routerLink]="browseRoute('system', platform.shortName)"
+          routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }"
+          (click)="selectPlatform(platform.shortName)">
+          {{ platform.name }}
+        </a>
         }
       </div>
     </div>
 
     <div class="retro-tag-section">
       <p class="retro-rail-heading">ทีมแปล</p>
-      <div>        
+      <div>
         @for (translator of translators(); track translator.id) {
-          <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.shortName)" routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
-            {{ translator.name }}
-          </a>
+        <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.shortName)"
+          routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
+          {{ translator.name }}
+        </a>
         }
       </div>
     </div>
@@ -56,26 +70,41 @@
       <p class="retro-rail-heading">Tags</p>
       <div>
         @for (tag of tags(); track tag.id) {
-          <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)" routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.name)">
-            {{ tag.name }}
-          </a>
+        <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)"
+          routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.name)">
+          {{ tag.name }}
+        </a>
         }
+      </div>
+    </div>
+
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">อื่นๆ</p>
+      <div>
+        <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
+          Refresh
+        </button>
       </div>
     </div>
 
   </aside>
 
   @if (sidebarOpen()) {
-    <button class="mobile-sidebar-backdrop" type="button" (click)="closeSidebar()" aria-label="Close navigation menu"></button>
+  <button class="mobile-sidebar-backdrop" type="button" (click)="closeSidebar()"
+    aria-label="Close navigation menu"></button>
   }
 
-  <section class="min-w-0 bg-[#343568]">
+  <section class="app-content min-w-0 bg-[#343568]">
     @if (statusMessage(); as message) {
-      <div class="flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6" [class.bg-arcade]="message.tone === 'error'" [class.text-white]="message.tone === 'error'" role="status" aria-live="polite">
-        <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{ message.tone === 'error' ? '!' : 'i' }}</span>
-        {{ message.text }}
-        <button class="ml-auto text-xl leading-none" type="button" (click)="statusMessageService.clear()" aria-label="Dismiss message">×</button>
-      </div>
+    <div class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
+      [class.bg-arcade]="message.tone === 'error'" [class.text-white]="message.tone === 'error'" role="status"
+      aria-live="polite">
+      <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
+        message.tone === 'error' ? '!' : 'i' }}</span>
+      {{ message.text }}
+      <button class="ml-auto text-xl leading-none" type="button" (click)="statusMessageService.clear()"
+        aria-label="Dismiss message">x</button>
+    </div>
     }
 
     <router-outlet />

@@ -65,7 +65,7 @@ Build a public, static single-page web application that lets Thai game players d
 
 4.1 The public browsing routes remain accessible to signed-out visitors.
 
-4.2 Navigating to `/add-patch` or `/admin` while signed out redirects the visitor to Google sign-in or otherwise blocks access to the administration interface.
+4.2 Navigating to `/add-patch` or `/login` while signed out redirects the visitor to Google sign-in or otherwise blocks access to the administration interface.
 
 4.3 After a successful Google sign-in by an approved administrator, the route guard permits access to the administration interface.
 

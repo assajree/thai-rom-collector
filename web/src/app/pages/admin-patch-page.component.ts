@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, HostListener, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { CoverInputComponent } from '../components/cover-input.component';
 import { PatchRepository } from '../repositories/patch.repository';
 import { CoverStorageService } from '../services/cover-storage.service';
 import { StatusMessageService } from '../shared/status-message.service';
-import { Translator } from '../models/patch.models';
+import { Tag, Translator } from '../models/patch.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -41,6 +41,8 @@ export class AdminPatchPageComponent {
   protected translatorDialogOpen = false;
   protected selectedTags: string[] = [];
   protected newTagName = '';
+  protected tagSuggestions: Tag[] = [];
+  protected tagAutocompleteOpen = false;
   protected newSystemName = '';
   protected newSystemShortName = '';
   protected systemDialogOpen = false;
@@ -63,6 +65,7 @@ export class AdminPatchPageComponent {
       this.updateGeneratedFilename();
       if (!this.editId) this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
     });
+    this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
   }
 
   private updateGeneratedFilename(): void {
@@ -104,7 +107,35 @@ export class AdminPatchPageComponent {
   private toInputDate(value: string): string { const timestamp = Date.parse(value); return Number.isNaN(timestamp) ? this.todayInputDate() : new Date(timestamp).toISOString().slice(0, 10); }
   private toIsoDate(value: string): string { const timestamp = Date.parse(`${value}T00:00:00.000Z`); if (Number.isNaN(timestamp)) throw new Error('กรุณาระบุวันที่อัปเดตให้ถูกต้อง'); return new Date(timestamp).toISOString(); }
   protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
-  protected async createTag(): Promise<void> { const name = this.newTagName.trim(); if (!name) return; const tag = await this.tagRepository.create(name); if (!this.selectedTags.includes(tag.name)) this.selectedTags = [...this.selectedTags, tag.name]; this.newTagName = ''; }
+  protected filteredTagSuggestions(): Tag[] {
+    const query = this.newTagName.trim().toLocaleLowerCase();
+    return this.tagSuggestions
+      .filter((tag) => !this.selectedTags.includes(tag.name))
+      .filter((tag) => !query || tag.name.toLocaleLowerCase().includes(query))
+      .slice(0, 8);
+  }
+  protected selectTag(tag: Tag): void {
+    if (!this.selectedTags.includes(tag.name)) this.selectedTags = [...this.selectedTags, tag.name];
+    this.newTagName = '';
+    this.tagAutocompleteOpen = false;
+  }
+  protected removeTag(name: string): void { this.selectedTags = this.selectedTags.filter((tag) => tag !== name); }
+  protected onTagInput(value: string): void { this.newTagName = value; this.tagAutocompleteOpen = true; }
+  protected openTagAutocomplete(): void { this.tagAutocompleteOpen = true; }
+  @HostListener('document:click')
+  protected closeTagAutocomplete(): void { this.tagAutocompleteOpen = false; }
+  protected async createTag(): Promise<void> {
+    const name = this.newTagName.trim();
+    if (!name) return;
+    const existing = this.tagSuggestions.find((tag) => tag.name.toLocaleLowerCase() === name.toLocaleLowerCase());
+    if (existing) { this.selectTag(existing); return; }
+    try {
+      const tag = await this.tagRepository.create(name);
+      this.selectTag(tag);
+    } catch (error) {
+      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่ม tag ได้', 'error');
+    }
+  }
   protected async createTranslator(): Promise<void> {
     try {
       const name = this.newTranslatorName.trim();

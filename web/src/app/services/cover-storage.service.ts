@@ -10,7 +10,10 @@ export class CoverStorageService {
     if (!patchId || blob.type !== 'image/png') throw new RepositoryError('ไฟล์ปกไม่ถูกต้อง', 'create');
     try {
       const coverRef = ref(this.storage, `covers/${patchId}/${filename}`);
-      await uploadBytes(coverRef, blob, { contentType: 'image/png' });
+      await uploadBytes(coverRef, blob, {
+        contentType: 'image/png',
+        cacheControl: 'public,max-age=31536000,immutable'
+      });
       return await getDownloadURL(coverRef);
     } catch {
       throw new RepositoryError('ไม่สามารถอัปโหลดรูปปกได้', 'create');

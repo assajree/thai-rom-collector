@@ -6,12 +6,18 @@
   @if (activeRouteLabel(); as routeLabel) {
   <p class="browse-route-label">{{ routeLabel }}</p>
   }
-  
-  @if (loading()) { <p class="state-message">กำลังโหลดรายการแพตช์...</p> }
-  @if (unavailable()) { <p class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
-    กรุณาลองใหม่อีกครั้ง</p> }
-  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ยังไม่มีรายการแพตช์</p>
+
+  @if (loading()) {
+    <div class="skeleton-grid" aria-label="กำลังโหลดรายการแพตช์" aria-busy="true">
+      @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) { <div class="patch-skeleton"><span></span><div><i></i><i></i><i></i></div></div> }
+    </div>
+  }
+  @if (unavailable()) { <div class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
+    กรุณาลองใหม่อีกครั้ง <button type="button" class="retry-button" (click)="retry()">ลองใหม่</button></div> }
+  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ไม่พบรายการแพตช์ตามเงื่อนไข</p>
   }
 
-  <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [canEdit]="auth.isAdmin()" />
+  @if (!loading() && !unavailable() && sortedPatches().length > 0) {
+    <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [systems]="systemMasters()" [canEdit]="auth.isAdmin()" />
+  }
 </main>

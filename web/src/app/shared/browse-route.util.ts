@@ -1,4 +1,4 @@
-export type BrowseRouteKind = 'system' | 'translator' | 'tag';
+export type BrowseRouteKind = 'system' | 'translator' | 'tag' | 'rom';
 
 export function normalizeBrowseName(value: string): string {
   return value.trim().replace(/\s+/g, ' ');

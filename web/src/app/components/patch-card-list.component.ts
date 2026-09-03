@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Patch, Translator } from '../models/patch.models';
+import { browseRoute } from '../shared/browse-route.util';
+import { SystemMaster } from '../repositories/system.repository';
 
 @Component({
   selector: 'app-patch-card-list',
@@ -12,12 +14,34 @@ import { Patch, Translator } from '../models/patch.models';
 export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
+  @Input() systems: SystemMaster[] = [];
   @Input() canEdit = false;
+  protected readonly loadedImages = signal(new Set<string>());
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
   }
+  protected translatorShortName(patch: Patch): string | undefined {
+    return this.translators.find((translator) => translator.id === patch.translatorId)?.shortName;
+  }
+  protected cardTags(patch: Patch): string[] {
+    const translatorShortName = this.translatorShortName(patch);
+    return translatorShortName ? [translatorShortName, ...patch.tags] : patch.tags;
+  }
+  protected translatorRoute(shortName: string): string {
+    return browseRoute('translator', shortName);
+  }
+  protected browseRoute = browseRoute;
+  protected systemLink(system: string): string {
+    return browseRoute('system', system);
+  }
+  protected systemName(shortName: string): string {
+    return this.systems.find((system) => system.shortName === shortName)?.name ?? shortName;
+  }
   protected hasTags(tags: string[]): boolean {
     return tags.some((tag) => tag.trim().length > 0);
+  }
+  protected hasDownloadLinks(patch: Patch): boolean {
+    return Boolean(patch.coverUrl || patch.patchTool || patch.patchFileUrl || (patch.haveRom && patch.patchedRomUrl));
   }
   protected formatUpdateDate(value: string): string {
     const date = new Date(value);
@@ -29,6 +53,14 @@ export class PatchCardListComponent {
     const image = event.target as HTMLImageElement;
     image.onerror = null;
     image.src = 'assets/images/no-image.jpg';
+  }
+  protected onImageLoad(patchId: string): void {
+    this.loadedImages.update((loaded) => new Set(loaded).add(patchId));
+  }
+  protected imageUrl(patch: Patch): string {
+    if (!patch.coverUrl) return 'assets/images/no-image.jpg';
+    const version = encodeURIComponent(patch.updateDate || patch.id);
+    return `${patch.coverUrl}${patch.coverUrl.includes('?') ? '&' : '?'}v=${version}`;
   }
   protected async downloadCover(event: Event, patch: Patch): Promise<void> {
     event.preventDefault();

@@ -14,25 +14,17 @@ export class AdminRedirectComponent {
   protected readonly auth = inject(AuthService);
   private readonly status = inject(StatusMessageService);
 
-  constructor() {
-    if (this.auth.user()) void this.resolveExistingSession();
-  }
-
-  private async resolveExistingSession(): Promise<void> {
-    if (await this.auth.waitForAdminCheck()) {
-      await this.router.navigateByUrl('/add-patch', { replaceUrl: true });
-    } else {
-      this.status.show('บัญชีนี้ยังไม่ได้รับสิทธิ์ผู้ดูแลระบบ', 'error');
-    }
-  }
-
   protected async signIn(): Promise<void> {
     try {
       await this.auth.signInWithGoogle();
-      if (await this.auth.waitForAdminCheck()) await this.router.navigateByUrl('/add-patch', { replaceUrl: true });
-      else this.status.show('บัญชีนี้ยังไม่ได้รับสิทธิ์ผู้ดูแลระบบ', 'error');
+      await this.router.navigateByUrl('/', { replaceUrl: true });
     } catch {
       this.status.show('ไม่สามารถเข้าสู่ระบบด้วย Google ได้ กรุณาลองใหม่อีกครั้ง', 'error');
     }
+  }
+
+  protected async signOut(): Promise<void> {
+    await this.auth.signOut();
+    await this.router.navigateByUrl('/', { replaceUrl: true });
   }
 }
