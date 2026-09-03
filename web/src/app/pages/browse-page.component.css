@@ -5,8 +5,11 @@
 .state-message { background: rgba(0, 0, 0, .22); border: 2px solid #a8abd9; color: #fff; margin: 1.5rem auto 0; max-width: 48rem; padding: .75rem 1rem; }
 .state-message--error { border-color: #ff9dbf; color: #ffe5ee; }
 .browse-route-label {
-  color: #c7ff3a;
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0.75rem 0 0;
+  color: #ffd92b;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0.75rem 0 0;
+    background: #35006c;
+    padding-left: 1rem;
+    box-shadow: 2px 2px #080808;
 }
