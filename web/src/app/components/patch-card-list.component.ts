@@ -20,6 +20,17 @@ export class PatchCardListComponent {
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
   }
+  protected translatorShortName(patch: Patch): string | undefined {
+    return this.translators.find((translator) => translator.id === patch.translatorId)?.shortName;
+  }
+  protected cardTags(patch: Patch): string[] {
+    const translatorShortName = this.translatorShortName(patch);
+    return translatorShortName ? [translatorShortName, ...patch.tags] : patch.tags;
+  }
+  protected translatorRoute(shortName: string): string {
+    return browseRoute('translator', shortName);
+  }
+  protected browseRoute = browseRoute;
   protected systemLink(system: string): string {
     return browseRoute('system', system);
   }

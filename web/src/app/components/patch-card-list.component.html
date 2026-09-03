@@ -23,25 +23,31 @@
         <div>ระบบ: <a [routerLink]="systemLink(patch.system)">{{ systemName(patch.system) }}</a></div>
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
       </div>
-      @if (patch.tags.length > 0) {
+      @if (cardTags(patch).length > 0) {
       <span class="patch-card__tags-label">แท็ก: </span>
-      <ul class="patch-card__tags">@for (tag of patch.tags; track tag) { @if (tag.trim()) { <li>{{ tag }}</li> } }</ul>
+      <ul class="patch-card__tags">@for (tag of cardTags(patch); track $index) { @if (tag.trim()) { <li>
+        @if ($first && translatorShortName(patch)) {
+        <a [routerLink]="translatorRoute(tag)">{{ tag }}</a>
+        } @else {
+        <a [routerLink]="browseRoute('tag', tag)">{{ tag }}</a>
+        }
+      </li> } }</ul>
       }
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
         <div class="patch-card__links-label">ดาวน์โหลด</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
-          <a class="download-button" [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ภาพปก</a>
+          <a [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ภาพปก</a>
           }
           @if (patch.patchTool) {
-          <a class="download-button" [href]="patch.patchTool">Patch Tool</a>
+          <a [href]="patch.patchTool">Patch Tool</a>
           }
           @if (patch.patchFileUrl) {
-          <a class="download-button" [href]="patch.patchFileUrl">Patch</a>
+          <a [href]="patch.patchFileUrl">Patch</a>
           }
           @if (patch.haveRom && patch.patchedRomUrl) {
-          <a class="download-button" [href]="patch.patchedRomUrl" target="_blank"
+          <a [href]="patch.patchedRomUrl" target="_blank"
             rel="noopener noreferrer">รอมแปลไทย</a>
           }
         </div>

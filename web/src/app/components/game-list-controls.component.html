@@ -18,7 +18,7 @@
   }
   <div class="sort-field sort-field--sort">
     <label for="sort-patches">เรียงตาม</label>
-    <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่อัปเดต</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
-    <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortBy === 'updateDate' ? (draft.sortDirection === 'asc' ? 'เก่า → ใหม่' : 'ใหม่ → เก่า') : (draft.sortDirection === 'asc' ? 'A → Z' : 'Z → A') }}</button>
+    <select id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่เพิ่ม</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option></select>
+    <button type="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortDirection === 'asc' ? 'ก → ฮ' : 'ฮ → ก' }}</button>
   </div>
 </div>
