@@ -3,8 +3,9 @@
   <article class="patch-card">
 
     <div class="patch-cover-wrap">
-      <img class="mock-cover patch-cover-image" [src]="patch.coverUrl || 'assets/images/no-image.jpg'"
-        [alt]="'ปกเกม ' + patch.gameTitle" (error)="onImageError($event)" />
+      <div class="patch-cover-placeholder" aria-hidden="true"></div>
+      <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)" loading="lazy" decoding="async" [src]="imageUrl(patch)"
+        [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
       @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]">แก้ไข</a> }
       @if (patch.system) { <span class="patch-system-badge">{{ patch.system }}</span> }
     </div>

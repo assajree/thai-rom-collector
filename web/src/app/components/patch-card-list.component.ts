@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Patch, Translator } from '../models/patch.models';
 
@@ -13,6 +13,7 @@ export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
   @Input() canEdit = false;
+  protected readonly loadedImages = signal(new Set<string>());
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
   }
@@ -29,6 +30,14 @@ export class PatchCardListComponent {
     const image = event.target as HTMLImageElement;
     image.onerror = null;
     image.src = 'assets/images/no-image.jpg';
+  }
+  protected onImageLoad(patchId: string): void {
+    this.loadedImages.update((loaded) => new Set(loaded).add(patchId));
+  }
+  protected imageUrl(patch: Patch): string {
+    if (!patch.coverUrl) return 'assets/images/no-image.jpg';
+    const version = encodeURIComponent(patch.updateDate || patch.id);
+    return `${patch.coverUrl}${patch.coverUrl.includes('?') ? '&' : '?'}v=${version}`;
   }
   protected async downloadCover(event: Event, patch: Patch): Promise<void> {
     event.preventDefault();

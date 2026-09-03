@@ -128,8 +128,16 @@ export class BrowsePageComponent {
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
   protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); }
 
-  constructor() {
+  protected retry(): void {
+    this.loading.set(true);
+    this.unavailable.set(false);
+    this.loadPatches();
+  }
+  private loadPatches(): void {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
+  }
+  constructor() {
+    this.loadPatches();
     this.systemRepository.watchAll().subscribe({ next: (systems) => { this.systemMasters.set(systems); this.systemsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {

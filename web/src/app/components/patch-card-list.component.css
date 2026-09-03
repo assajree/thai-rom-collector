@@ -63,6 +63,9 @@
   object-fit: cover;
   width: 100%;
 }
+.patch-cover-placeholder { background: #303269; inset: 0; min-height: 180px; position: absolute; }
+.patch-cover-image { opacity: 0; position: relative; transition: opacity .2s ease; }
+.patch-cover-image--loaded { opacity: 1; }
 
 @media (max-width: 34rem) {
   .patch-card {
