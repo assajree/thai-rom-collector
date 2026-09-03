@@ -22,19 +22,25 @@ export class AdminSystemsPageComponent {
   protected editingId: string | null = null;
   protected shortName = '';
   protected name = '';
+  protected saving = false;
 
   protected openCreate(): void { this.editingId = null; this.shortName = ''; this.name = ''; this.dialogOpen = true; }
   protected openEdit(system: SystemMaster): void { this.editingId = system.id; this.shortName = system.shortName; this.name = system.name; this.dialogOpen = true; }
   protected closeDialog(): void { this.dialogOpen = false; }
 
   protected async save(): Promise<void> {
+    if (this.saving) return;
     if (!this.shortName.trim() || !this.name.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของเครื่องเกม', 'error'); return; }
+    const editing = !!this.editingId;
+    this.saving = true;
+    this.status.show('กำลังบันทึกเครื่องเกม…');
     try {
       if (this.editingId) await this.repository.update(this.editingId, this.shortName, this.name);
       else await this.repository.create(this.shortName, this.name);
       this.closeDialog();
-      this.status.show(this.editingId ? 'แก้ไขเครื่องเกมสำเร็จ' : 'เพิ่มเครื่องเกมสำเร็จ');
+      this.status.show(editing ? 'แก้ไขเครื่องเกมสำเร็จ' : 'เพิ่มเครื่องเกมสำเร็จ', 'success');
     } catch (error) { this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกเครื่องเกมได้', 'error'); }
+    finally { this.saving = false; }
   }
 
   protected async remove(system: SystemMaster): Promise<void> {

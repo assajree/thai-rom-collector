@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostListener, inject } from '@angular/core';
+import { Component, DestroyRef, HostListener, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -19,6 +19,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './admin-patch-page.component.html'
 })
 export class AdminPatchPageComponent {
+  @ViewChild(CoverInputComponent) private coverInput?: CoverInputComponent;
   private readonly route = inject(ActivatedRoute);
   private readonly fb = inject(FormBuilder);
   private readonly translatorRepository = inject(TranslatorRepository);
@@ -33,6 +34,7 @@ export class AdminPatchPageComponent {
   protected readonly systems = this.systemRepository.watchAll();
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
   protected cover?: Blob;
+  protected saving = false;
   protected editId: string | null = null;
   protected newTranslatorName = '';
   protected newTranslatorShortName = '';
@@ -46,6 +48,8 @@ export class AdminPatchPageComponent {
   protected newSystemName = '';
   protected newSystemShortName = '';
   protected systemDialogOpen = false;
+  protected savingTranslator = false;
+  protected savingSystem = false;
   constructor() {
     this.initializeFilenameGeneration();
     void this.loadEditRecord();
@@ -78,7 +82,10 @@ export class AdminPatchPageComponent {
   }
 
   protected async save(): Promise<void> {
+    if (this.saving) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); this.status.show('กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'error'); return; }
+    this.saving = true;
+    this.status.show('กำลังบันทึกแพตช์…');
     try {
       const value = this.form.getRawValue();
       const draft = { ...value, updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
@@ -87,10 +94,12 @@ export class AdminPatchPageComponent {
       if (this.cover) coverUrl = await this.coverStorage.upload(patchId, this.cover, `cover_max250px_${Date.now()}.png`);
       if (this.editId) await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
       else await this.patchRepository.create(draft, coverUrl, patchId);
-      this.status.show('บันทึกแพตช์สำเร็จ');
-      this.form.reset(); this.selectedTags = []; this.cover = undefined;
+      this.status.show('บันทึกแพตช์สำเร็จ', 'success');
+      this.form.reset(); this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกแพตช์ได้', 'error');
+    } finally {
+      this.saving = false;
     }
   }
 
@@ -137,9 +146,12 @@ export class AdminPatchPageComponent {
     }
   }
   protected async createTranslator(): Promise<void> {
+    if (this.savingTranslator) return;
     try {
       const name = this.newTranslatorName.trim();
       if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
+      this.savingTranslator = true;
+      this.status.show('กำลังบันทึกทีมแปล…');
       const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink, this.newTranslatorModTool);
       this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator];
       this.form.controls.translatorId.setValue(translator.id);
@@ -148,21 +160,30 @@ export class AdminPatchPageComponent {
       this.newTranslatorLink = '';
       this.newTranslatorModTool = '';
       this.translatorDialogOpen = false;
+      this.status.show('เพิ่มทีมแปลสำเร็จ', 'success');
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่มทีมแปลได้', 'error');
+    } finally {
+      this.savingTranslator = false;
     }
   }
   protected openTranslatorDialog(): void { this.translatorDialogOpen = true; }
   protected closeTranslatorDialog(): void { this.translatorDialogOpen = false; }
   protected async createSystem(): Promise<void> {
+    if (this.savingSystem) return;
     try {
+      this.savingSystem = true;
+      this.status.show('กำลังบันทึกเครื่องเกม…');
       const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);
       this.form.controls.system.setValue(system.shortName);
       this.newSystemName = '';
       this.newSystemShortName = '';
       this.systemDialogOpen = false;
+      this.status.show('เพิ่มเครื่องเกมสำเร็จ', 'success');
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถเพิ่มเครื่องเกมได้', 'error');
+    } finally {
+      this.savingSystem = false;
     }
   }
 

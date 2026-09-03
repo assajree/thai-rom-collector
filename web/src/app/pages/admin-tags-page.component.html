@@ -24,7 +24,7 @@
                     <td class="p-4" colspan="2">ยังไม่มีข้อมูล tag</td>
                 </tr>}</tbody>
         </table>
-    </div>@if(open){<div class="system-dialog-backdrop" (click)="close()">
+    </div>@if(open){<div class="system-dialog-backdrop">
         <section class="system-dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
             <h2 class="font-black">{{id?'แก้ไข tag':'เพิ่ม tag'}}</h2><label class="mt-4 block">ชื่อ tag<input
                     class="admin-input" [(ngModel)]="name"></label>

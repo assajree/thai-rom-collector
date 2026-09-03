@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
-export type StatusMessageTone = 'info' | 'error';
+export type StatusMessageTone = 'info' | 'success' | 'error';
 
 export interface StatusMessage {
   text: string;

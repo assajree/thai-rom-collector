@@ -74,11 +74,11 @@
 
 .patch-cover-image {
   width: 250px;
-  height: 250px;
+  height: auto;
 }
 
 .patch-cover-wrap {
-  height: 250px;
+  min-height: 170px;
   position: relative;
 }
 

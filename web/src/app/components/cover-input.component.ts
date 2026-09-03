@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostListener, Input, Output, inject, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, Input, Output, ViewChild, inject, signal } from '@angular/core';
 import { ImageProcessorService } from '../services/image-processor.service';
 
 @Component({
@@ -13,6 +13,15 @@ export class CoverInputComponent {
   private readonly processor = inject(ImageProcessorService);
   protected readonly preview = signal<string | null>(null);
   protected readonly error = signal<string | null>(null);
+  @ViewChild('coverFile') private coverFile?: ElementRef<HTMLInputElement>;
+
+  clear(): void {
+    const previewUrl = this.preview();
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    this.preview.set(null);
+    this.error.set(null);
+    if (this.coverFile) this.coverFile.nativeElement.value = '';
+  }
 
   protected async select(event: Event): Promise<void> {
     const file = (event.target as HTMLInputElement).files?.[0];

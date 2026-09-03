@@ -19,7 +19,7 @@
                     <td class="p-3" colspan="5">ยังไม่มีข้อมูลทีมแปล</td>
                 </tr>}</tbody>
         </table>
-    </div>@if(open){<div class="system-dialog-backdrop" (click)="close()">
+    </div>@if(open){<div class="system-dialog-backdrop">
         <section class="system-dialog" role="dialog" (click)="$event.stopPropagation()">
             <h2>{{id?'แก้ไขทีมแปล':'เพิ่มทีมแปล'}}</h2><label>ชื่อย่อ<input class="admin-input"
                     [(ngModel)]="shortName"></label><label>ชื่อเต็ม<input class="admin-input"

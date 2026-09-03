@@ -103,10 +103,11 @@
   <section class="app-content min-w-0 bg-[#343568]">
     @if (statusMessage(); as message) {
     <div class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
-      [class.bg-arcade]="message.tone === 'error'" [class.text-white]="message.tone === 'error'" role="status"
+      [class.bg-arcade]="message.tone === 'error'" [class.status-message--success]="message.tone === 'success'"
+      [class.text-white]="message.tone !== 'info'" role="status"
       aria-live="polite">
       <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
-        message.tone === 'error' ? '!' : 'i' }}</span>
+        message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}
       <button class="ml-auto text-xl leading-none" type="button" (click)="statusMessageService.clear()"
         aria-label="Dismiss message">x</button>
