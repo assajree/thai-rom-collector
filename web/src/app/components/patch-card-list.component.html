@@ -4,8 +4,9 @@
 
     <div class="patch-cover-wrap">
       <div class="patch-cover-placeholder" aria-hidden="true"></div>
-      <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)" loading="lazy" decoding="async" [src]="imageUrl(patch)"
-        [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
+      <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
+        loading="lazy" decoding="async" [src]="imageUrl(patch)" [alt]="'ปกเกม ' + patch.gameTitle"
+        (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
       @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
@@ -23,24 +24,31 @@
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
       </div>
       @if (patch.tags.length > 0) {
-      <span>แท็ก: </span>
+      <span class="patch-card__tags-label">แท็ก: </span>
       <ul class="patch-card__tags">@for (tag of patch.tags; track tag) { @if (tag.trim()) { <li>{{ tag }}</li> } }</ul>
       }
+      @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
-        @if (patch.coverUrl) {
-        <a class="download-button" [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ภาพปก</a>
-        }
-        @if (patch.patchTool) {
-        <a class="download-button" [href]="patch.patchTool">Patch Tool</a>
-        }
-        @if (patch.patchFileUrl) {
-        <a class="download-button" [href]="patch.patchFileUrl">Patch</a>
-        }
-        @if (patch.haveRom && patch.patchedRomUrl) {
-        <a class="download-button" [href]="patch.patchedRomUrl" target="_blank" rel="noopener noreferrer">รอมแปลไทย</a>
-        }
+        <div class="patch-card__links-label">ดาวน์โหลด</div>
+        <div class="patch-card__download-list">
+          @if (patch.coverUrl) {
+          <a class="download-button" [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ภาพปก</a>
+          }
+          @if (patch.patchTool) {
+          <a class="download-button" [href]="patch.patchTool">Patch Tool</a>
+          }
+          @if (patch.patchFileUrl) {
+          <a class="download-button" [href]="patch.patchFileUrl">Patch</a>
+          }
+          @if (patch.haveRom && patch.patchedRomUrl) {
+          <a class="download-button" [href]="patch.patchedRomUrl" target="_blank"
+            rel="noopener noreferrer">รอมแปลไทย</a>
+          }
+        </div>
+
       </div>
-      
+      }
+
 
     </div>
 

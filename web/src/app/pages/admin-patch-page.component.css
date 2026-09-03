@@ -8,3 +8,13 @@ label.required::before{
   content: '* ';
   font-weight: 700;
 }
+
+.tag-autocomplete { position: relative; }
+.tag-autocomplete__list { position: absolute; z-index: 10; width: 100%; margin-top: .25rem; border: 1px solid #8890bd; background: #171d35; }
+.tag-autocomplete__list button { display: block; width: 100%; padding: .55rem .65rem; color: #fff; text-align: left; }
+.tag-autocomplete__list button:hover, .tag-autocomplete__list button:focus { background: #c7ff3a; color: #11162a; }
+.tag-autocomplete__empty { position: absolute; z-index: 10; width: 100%; margin-top: .25rem; border: 1px solid #8890bd; background: #171d35; padding: .55rem .65rem; color: #cbd5e1; }
+.selected-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; }
+.selected-tags li { display: inline-flex; align-items: center; gap: .35rem; border: 1px solid #c7ff3a; padding: .25rem .5rem; color: #c7ff3a; }
+.selected-tags button { color: #ff4d67; font-size: 1.1rem; font-weight: 700; line-height: 1; }
+.selected-tags button:hover, .selected-tags button:focus { color: #ff8a9a; }

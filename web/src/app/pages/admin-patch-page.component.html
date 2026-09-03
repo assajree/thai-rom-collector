@@ -29,12 +29,30 @@
     <label>ข้อความอ้างอิง<textarea class="admin-input" formControlName="referenceText" rows="3"></textarea></label>
     <label>Reference URL<input class="admin-input" formControlName="referenceUrl" type="url" /></label>
     <fieldset class="border border-slate-600 p-3">
-      <legend>หมวดหมู่</legend>@for (tag of tags | async; track tag.id) { <label class="mr-3 inline-flex gap-1"><input
-          type="checkbox" [checked]="selectedTags.includes(tag.name)" (change)="toggleTag(tag.name)">{{ tag.name
-        }}</label> }<div class="mt-3"><input class="admin-input" placeholder="สร้าง tag ใหม่" [value]="newTagName"
-          (input)="newTagName = $any($event.target).value"><button
-          class="mt-2 border border-signal px-3 py-2 font-bold text-signal" type="button" (click)="createTag()">เพิ่ม
-          tag</button></div>
+      <legend>หมวดหมู่</legend>
+      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหา tag" [value]="newTagName"
+          (focus)="openTagAutocomplete()" (input)="onTagInput($any($event.target).value)"
+          (keydown.enter)="$event.preventDefault(); createTag()" autocomplete="off" />
+        @if (tagAutocompleteOpen && filteredTagSuggestions().length > 0) {
+        <ul class="tag-autocomplete__list" role="listbox">
+          @for (tag of filteredTagSuggestions(); track tag.id) {
+          <li><button type="button" role="option" (click)="selectTag(tag)">{{ tag.name }}</button></li>
+          }
+        </ul>
+        } @else if (tagAutocompleteOpen && newTagName.trim()) {
+        <p class="tag-autocomplete__empty">ไม่พบ tag ที่ตรงกัน — กด “เพิ่ม tag” เพื่อสร้างใหม่</p>
+        }
+      </div>
+      @if (selectedTags.length > 0) {
+      <ul class="selected-tags" aria-label="tag ที่เลือก">
+        @for (tag of selectedTags; track tag) {
+        <li>{{ tag }} <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'ลบ tag ' + tag">x</button></li>
+        }
+      </ul>
+      }
+      <button class="mt-3 border border-signal px-3 py-2 font-bold text-signal" type="button" (click)="createTag()"
+        [disabled]="!newTagName.trim()">เพิ่ม tag ใหม่</button>
     </fieldset>
 
     <label>ชื่อไฟล์<input class="admin-input" formControlName="fileName" readonly /></label>
