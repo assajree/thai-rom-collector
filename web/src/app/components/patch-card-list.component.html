@@ -20,8 +20,11 @@
           {{ patch.translatedBy }}
           }
         </div>
+
         <div>ระบบ: <a [routerLink]="systemLink(patch.system)">{{ systemName(patch.system) }}</a></div>
+
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
+        
       </div>
       @if (cardTags(patch).length > 0) {
       <span class="patch-card__tags-label">แท็ก: </span>

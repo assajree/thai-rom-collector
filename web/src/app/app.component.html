@@ -41,6 +41,7 @@
     </div>
     }
 
+    @if (platforms().length > 0) {
     <div class="retro-system-section">
       <p class="retro-rail-heading">ระบบเกม</p>
       <div>
@@ -53,7 +54,9 @@
         }
       </div>
     </div>
+    }
 
+    @if (translators().length > 0) {
     <div class="retro-tag-section">
       <p class="retro-rail-heading">ทีมแปล</p>
       <div>
@@ -65,7 +68,9 @@
         }
       </div>
     </div>
+    }
 
+    @if (tags().length > 0) {
     <div class="retro-tag-section">
       <p class="retro-rail-heading">Tags</p>
       <div>
@@ -77,6 +82,7 @@
         }
       </div>
     </div>
+    }
 
     <div class="retro-tag-section">
       <p class="retro-rail-heading">อื่นๆ</p>
