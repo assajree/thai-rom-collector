@@ -1,38 +1,4 @@
-<main class="min-h-full p-4 text-white sm:p-6 lg:p-8">
-    <p class="font-bold uppercase tracking-[0.16em] text-signal">Admin area</p>
-    <div class="mt-1 flex flex-wrap items-center justify-between gap-3">
-        <h1 class="font-black">จัดการ master tag</h1><button
-            class="border-2 border-signal bg-signal px-4 py-2 font-bold text-ink" (click)="add()">เพิ่ม tag</button>
-    </div>
-    <div class="mt-6 overflow-x-auto border border-slate-500">
-        <table class="w-full min-w-[28rem] text-left">
-            <thead class="bg-[#171d35]">
-                <tr>
-                    <th class="p-3">ชื่อ tag</th>
-                    <th class="p-3">จัดการ</th>
-                </tr>
-            </thead>
-            <tbody>@for(x of items | async;track x.id){<tr class="border-t border-slate-600">
-                    <td class="p-3">{{x.name}}</td>
-                    <td class="flex gap-2 p-3">
-                        <button class="border border-signal px-3 py-1 text-signal"
-                            (click)="edit(x)">แก้ไข</button> 
-                            <button class="border border-arcade px-3 py-1 text-white"
-                            (click)="remove(x)">ลบ</button>
-                            </td>
-                </tr>}@empty{<tr>
-                    <td class="p-4" colspan="2">ยังไม่มีข้อมูล tag</td>
-                </tr>}</tbody>
-        </table>
-    </div>@if(open){<div class="system-dialog-backdrop">
-        <section class="system-dialog" role="dialog" aria-modal="true" (click)="$event.stopPropagation()">
-            <h2 class="font-black">{{id?'แก้ไข tag':'เพิ่ม tag'}}</h2><label class="mt-4 block">ชื่อ tag<input
-                    class="admin-input" [(ngModel)]="name"></label>
-            <div class="mt-5 flex gap-2">
-                <button class="border border-signal bg-signal px-3 py-2 font-bold text-ink"
-                    (click)="save()">บันทึก</button>
-                <button class="border border-slate-300 px-3 py-2 text-white" (click)="close()">ยกเลิก</button>
-            </div>
-        </section>
-    </div>}<button class="mt-6 border border-slate-300 px-4 py-2 text-white" (click)="signOut()">ออกจากระบบ</button>
-</main>
+<app-admin-master-page [items]="(items | async) ?? []" title="จัดการ master tag" addLabel="เพิ่ม tag" emptyText="ยังไม่มีข้อมูล tag" [dialogOpen]="open" [dialogTitle]="id ? 'แก้ไข tag' : 'เพิ่ม tag'" (create)="add()" (edit)="edit($event)" (remove)="remove($event)" (save)="save()" (close)="close()" (signOut)="signOut()">
+  <ng-template #card let-item><h2 class="font-black text-lg">{{ item.name }}</h2></ng-template>
+  <ng-template #editor><label class="mt-4 block">ชื่อ tag<input class="admin-input" type="text" autocomplete="off" spellcheck="false" [(ngModel)]="name" /></label></ng-template>
+</app-admin-master-page>

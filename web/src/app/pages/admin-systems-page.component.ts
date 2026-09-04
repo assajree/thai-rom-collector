@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { StatusMessageService } from '../shared/status-message.service';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
+import { AdminMasterPageComponent } from './admin-master-page.component';
 
 @Component({
   selector: 'app-admin-systems-page', standalone: true,
-  imports: [AsyncPipe, FormsModule],
+  imports: [AsyncPipe, FormsModule, AdminMasterPageComponent],
   templateUrl: './admin-systems-page.component.html',
   styleUrl: './admin-systems-page.component.css'
 })

@@ -1,31 +1,4 @@
-<main class="min-h-full p-4 text-white sm:p-6 lg:p-8">
-    <h1 class="font-black">จัดการ master ทีมแปล</h1><button
-        class="mt-3 border-2 border-signal bg-signal px-4 py-2 font-bold text-ink" (click)="add()">เพิ่มทีมแปล</button>
-    <div class="mt-6 overflow-x-auto border border-slate-500">
-        <table class="w-full min-w-[40rem] text-left">
-            <thead class="bg-[#171d35]">
-                <tr>
-                    <th class="p-3">ชื่อ</th>
-                    <th class="p-3">จัดการ</th>
-                </tr>
-            </thead>
-            <tbody>@for(x of items | async;track x.id){<tr>
-                    <td class="p-3">{{x.name}}</td>                  
-                    <td class="flex gap-2 p-3">
-                        <button (click)="edit(x)" class="border border-signal px-3 py-1 text-signal">แก้ไข</button> 
-                        <button (click)="remove(x)" class="border border-signal px-3 py-1 text-signal">ลบ</button>
-                    </td>
-                </tr>}@empty{<tr>
-                    <td class="p-3" colspan="5">ยังไม่มีข้อมูลทีมแปล</td>
-                </tr>}</tbody>
-        </table>
-    </div>@if(open){<div class="system-dialog-backdrop">
-        <section class="system-dialog" role="dialog" (click)="$event.stopPropagation()">
-            <h2>{{id?'แก้ไขทีมแปล':'เพิ่มทีมแปล'}}</h2><label>ชื่อย่อ<input class="admin-input"
-                    [(ngModel)]="shortName"></label><label>ชื่อเต็ม<input class="admin-input"
-                    [(ngModel)]="name"></label><label>Mod tool<input class="admin-input"
-                    [(ngModel)]="modTool"></label><label>ลิงก์ (ถ้ามี)<input class="admin-input" [(ngModel)]="link"
-                    type="url"></label><button (click)="save()">บันทึก</button><button (click)="close()">ยกเลิก</button>
-        </section>
-    </div>}<button (click)="signOut()">ออกจากระบบ</button>
-</main>
+<app-admin-master-page [items]="(items | async) ?? []" title="จัดการ master ทีมแปล" addLabel="เพิ่มทีมแปล" emptyText="ยังไม่มีข้อมูลทีมแปล" [dialogOpen]="open" [dialogTitle]="id ? 'แก้ไขทีมแปล' : 'เพิ่มทีมแปล'" (create)="add()" (edit)="edit($event)" (remove)="remove($event)" (save)="save()" (close)="close()" (signOut)="signOut()">
+  <ng-template #card let-item><h2 class="font-black text-lg">{{ item.name }}</h2></ng-template>
+  <ng-template #editor><label class="mt-4 block">ชื่อย่อ<input class="admin-input" [(ngModel)]="shortName" /></label><label class="mt-3 block">ชื่อเต็ม<input class="admin-input" [(ngModel)]="name" /></label><label class="mt-3 block">Mod tool<input class="admin-input" [(ngModel)]="modTool" /></label><label class="mt-3 block">ลิงก์ (ถ้ามี)<input class="admin-input" [(ngModel)]="link" type="url" /></label></ng-template>
+</app-admin-master-page>
