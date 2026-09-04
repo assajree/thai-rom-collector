@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PatchRepository } from '../repositories/patch.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
@@ -38,6 +38,7 @@ export class BrowsePageComponent {
   private readonly systemsLoaded = signal(false);
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
+  protected readonly showBackToTop = signal(false);
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
   protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | null>(null);
@@ -147,6 +148,9 @@ export class BrowsePageComponent {
     this.unavailable.set(false);
     this.loadPatches();
   }
+  @HostListener('window:scroll')
+  protected updateBackToTopVisibility(): void { this.showBackToTop.set(window.scrollY > 320); }
+  protected backToTop(): void { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   private loadPatches(): void {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
   }

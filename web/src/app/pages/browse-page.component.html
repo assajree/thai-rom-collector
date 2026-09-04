@@ -20,4 +20,10 @@
   @if (!loading() && !unavailable() && sortedPatches().length > 0) {
     <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [systems]="systemMasters()" [canEdit]="auth.isAdmin()" />
   }
+
+  @if (showBackToTop()) {
+    <button class="back-to-top" type="button" (click)="backToTop()" aria-label="กลับไปด้านบน">
+      <span aria-hidden="true">↑</span> กลับด้านบน
+    </button>
+  }
 </main>

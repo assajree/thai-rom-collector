@@ -18,5 +18,29 @@
 .patch-skeleton { animation: skeleton-pulse 1.2s ease-in-out infinite alternate; background: #16184c; border: 1px solid #001414; display: grid; gap: .45rem; grid-template-columns: 250px 1fr; margin-bottom: .7rem; padding: .3rem; }
 .patch-skeleton > span { background: #303269; display: block; height: 180px; }
 .patch-skeleton i { background: #303269; display: block; height: 1rem; margin: .7rem; }
+.back-to-top {
+  align-items: center;
+  background: #c7ff3a;
+  border: 3px solid #080808;
+  bottom: 1rem;
+  box-shadow: 3px 3px 0 #080808, inset 2px 2px rgba(255, 255, 255, .65), inset -2px -2px rgba(0, 0, 0, .35);
+  color: #080808;
+  cursor: pointer;
+  display: flex;
+  font: inherit;
+  font-weight: 800;
+  gap: .4rem;
+  padding: .55rem .8rem;
+  position: fixed;
+  right: 1rem;
+  z-index: 10;
+}
+.back-to-top:hover { background: #e0ff92; }
+.back-to-top:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+.back-to-top span { font-size: 1.35rem; line-height: 1; }
 @keyframes skeleton-pulse { from { opacity: .55; } to { opacity: 1; } }
-@media (max-width: 34rem) { .patch-skeleton { grid-template-columns: 1fr; } .patch-skeleton > span { height: 180px; } }
+@media (max-width: 34rem) {
+  .patch-skeleton { grid-template-columns: 1fr; }
+  .patch-skeleton > span { height: 180px; }
+  .back-to-top { bottom: .75rem; right: .75rem; }
+}
