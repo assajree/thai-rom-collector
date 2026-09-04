@@ -113,6 +113,40 @@ web\_deploy_storage_cors.bat
 
 ควรตรวจสอบ Rules ใน Firebase Console ก่อนเปิดใช้งาน production
 
+### ตั้งค่า Storage CORS ผ่านหน้าเว็บ
+
+Firebase Console ยังไม่มีหน้าสำหรับแก้ CORS ของ Storage โดยตรง ให้เปิด Google Cloud Console ของ project เดียวกัน แล้วใช้ Cloud Shell ซึ่งเปิดได้จากปุ่ม `Activate Cloud Shell` ด้านบนขวา
+
+1. เปิด [Google Cloud Console](https://console.cloud.google.com/) และเลือก Firebase project ใหม่
+2. เปิด Cloud Shell
+3. สร้างไฟล์ `storage.cors.json` ใน Cloud Shell ด้วยค่า origin ของเว็บ เช่น:
+
+```json
+[
+  {
+    "origin": [
+      "https://thairomdb.web.app",
+      "https://thairomdb.firebaseapp.com",
+      "http://localhost:4200"
+    ],
+    "method": ["GET", "HEAD", "OPTIONS"],
+    "responseHeader": ["Content-Type"],
+    "maxAgeSeconds": 3600
+  }
+]
+```
+
+4. ใช้ชื่อ bucket ที่แสดงใน Firebase Console > Storage > Files แล้วรันคำสั่งนี้ใน Cloud Shell:
+
+```bash
+gcloud storage buckets update gs://NEW_STORAGE_BUCKET \
+  --cors-file=storage.cors.json
+```
+
+แทนที่ `NEW_STORAGE_BUCKET` ด้วยชื่อ bucket จริง เช่น `thairomdb.firebasestorage.app` ห้ามใส่ `https://` นำหน้า
+
+หลังตั้งค่าแล้วให้รอให้การเปลี่ยนแปลงกระจาย จากนั้นทดสอบในหน้าต่าง Incognito หรือเคลียร์ cache หากเว็บยังแสดง CORS error อยู่
+
 ## 5. ย้ายข้อมูล Firestore
 
 ### วิธีแนะนำ: ใช้หน้า Admin ของโปรเจกต์

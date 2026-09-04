@@ -1,8 +1,9 @@
-import { Component, Input, signal } from '@angular/core';
+import { Component, Input, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Patch, Translator } from '../models/patch.models';
 import { browseRoute } from '../shared/browse-route.util';
 import { SystemMaster } from '../repositories/system.repository';
+import { StatusMessageService } from '../shared/status-message.service';
 
 @Component({
   selector: 'app-patch-card-list',
@@ -12,6 +13,7 @@ import { SystemMaster } from '../repositories/system.repository';
   styleUrl: './patch-card-list.component.css'
 })
 export class PatchCardListComponent {
+  private readonly status = inject(StatusMessageService);
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
   @Input() systems: SystemMaster[] = [];
@@ -69,13 +71,19 @@ export class PatchCardListComponent {
     const card = (event.currentTarget as HTMLElement).closest('.patch-card');
     const image = card?.querySelector<HTMLImageElement>('.patch-cover-image');
     const imageUrl = image?.currentSrc || patch.coverUrl;
-    const response = await fetch(imageUrl);
-    if (!response.ok) throw new Error(`ไม่สามารถดาวน์โหลดรูปได้ (${response.status})`);
-    const blobUrl = URL.createObjectURL(await response.blob());
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = patch.fileName;
-    link.click();
-    URL.revokeObjectURL(blobUrl);
+    this.status.show('กำลังดาวน์โหลดภาพปก…');
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) throw new Error(`ไม่สามารถดาวน์โหลดรูปได้ (${response.status})`);
+      const blobUrl = URL.createObjectURL(await response.blob());
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = patch.fileName;
+      link.click();
+      URL.revokeObjectURL(blobUrl);
+      this.status.show('ดาวน์โหลดภาพปกสำเร็จ', 'success');
+    } catch (error) {
+      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถดาวน์โหลดภาพปกได้', 'error');
+    }
   }
 }

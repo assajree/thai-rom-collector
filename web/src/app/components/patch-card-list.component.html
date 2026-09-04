@@ -37,16 +37,16 @@
       }
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
-        <div class="patch-card__links-label">ดาวน์โหลด</div>
+        <div class="patch-card__links-label">ลิ้ง:</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
-          <a [href]="patch.coverUrl" (click)="downloadCover($event, patch)">ภาพปก</a>
+          <a [href]="patch.coverUrl" [download]="patch.fileName" (click)="downloadCover($event, patch)">ภาพปก</a>
           }
           @if (patch.patchTool) {
-          <a [href]="patch.patchTool">Patch Tool</a>
+          <a [href]="patch.patchTool" target="_blank">Patch Tool</a>
           }
           @if (patch.patchFileUrl) {
-          <a [href]="patch.patchFileUrl">Patch</a>
+          <a [href]="patch.patchFileUrl" target="_blank">Patch</a>
           }
           @if (patch.haveRom && patch.patchedRomUrl) {
           <a [href]="patch.patchedRomUrl" target="_blank"

@@ -2,6 +2,8 @@
   {
     "origin": [
       "http://localhost:4200",
+      "https://thairomdb.web.app",
+      "https://thairomdb.firebaseapp.com",
       "https://thai-rom-db.web.app",
       "https://thai-rom-db.firebaseapp.com"
     ],
