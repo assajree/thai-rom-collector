@@ -1,7 +1,7 @@
 .retro-rail {
   box-sizing: border-box;
   border-right: 1px solid #a8abd9;
-  min-height: 100%;  
+  min-height: 100%;
   min-width: 16rem;
   padding: 0.45rem 1rem 1rem 0.5rem;
 }
@@ -46,11 +46,16 @@
     z-index: 30;
   }
 
-  :host-context(body.sidebar-open) .app-shell { padding-top: 2.5rem; }
+  :host-context(body.sidebar-open) .app-shell {
+    padding-top: 2.5rem;
+  }
 }
 
 @media (max-width: 1023px) {
-  .mobile-menu-button { display: inline-block; }
+  .mobile-menu-button {
+    display: inline-block;
+  }
+
   .mobile-sidebar-backdrop {
     background: rgba(0, 0, 0, 0.55);
     border: 0;
@@ -58,6 +63,7 @@
     position: fixed;
     z-index: 15;
   }
+
   .retro-rail {
     background: #35006c;
     display: none;
@@ -69,7 +75,30 @@
     width: min(18rem, 85vw);
     z-index: 20;
   }
-  .retro-rail.mobile-sidebar-open { display: block; }
+
+  .retro-rail.mobile-sidebar-open {
+    display: block;
+    padding-bottom: 5rem;
+  }
+
+  .retro-rail-link,
+  .retro-system-button {
+    min-height: 44px;
+    padding: 0.65rem 0.75rem;
+    line-height: 1.2;
+    touch-action: manipulation;
+  }
+
+  .retro-rail nav,
+  .retro-system-section>div,
+  .retro-tag-section>div {
+    padding-top: 0.35rem;
+  }
+
+  .retro-rail-link+.retro-rail-link,
+  .retro-system-button+.retro-system-button {
+    margin-top: 0.15rem;
+  }
 }
 
 .site-title {
@@ -102,11 +131,15 @@
 }
 
 .retro-system-section {
+  border-top: 1px solid #a8abd9;
   margin-top: 0.65rem;
+  padding-top: 0.55rem;
 }
 
 .retro-tag-section {
+  border-top: 1px solid #a8abd9;
   margin-top: 0.65rem;
+  padding-top: 0.55rem;
 }
 
 .retro-system-button {
