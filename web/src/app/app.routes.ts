@@ -8,6 +8,7 @@ import { LogoutPageComponent } from './pages/logout-page.component';
 import { AdminSystemsPageComponent } from './pages/admin-systems-page.component';
 import { AdminTranslatorsPageComponent } from './pages/admin-translators-page.component';
 import { AdminTagsPageComponent } from './pages/admin-tags-page.component';
+import { AdminFirestoreDataPageComponent } from './pages/admin-firestore-data-page.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,7 @@ export const routes: Routes = [
   },
   { path: 'admin/translators', component: AdminTranslatorsPageComponent, canActivate: [adminGuard] },
   { path: 'admin/tags', component: AdminTagsPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/firestore-data', component: AdminFirestoreDataPageComponent, canActivate: [adminGuard] },
   {
     path: 'login',
     pathMatch: 'full',
