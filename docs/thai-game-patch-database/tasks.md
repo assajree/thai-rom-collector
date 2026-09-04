@@ -94,7 +94,7 @@
 
 - [ ] 6. Implement cover-image processing and upload
   - [x] 6.1 Implement `ImageProcessorService.process` to validate an image blob, decode it, calculate the aspect-ratio-preserving 250px maximum scale, and export JPEG at 0.82 compression.
-    - Return `ProcessedCover` with the JPEG blob, resulting dimensions, and `cover_max250px_<timestamp>.jpg` filename.
+    - Return `ProcessedCover` with the PNG blob, resulting dimensions, and `cover_max250px_<timestamp>.png` filename.
     - _Requirements: 7.3–7.5_
   - [x] 6.2 Implement `CoverInputComponent` file-input selection, Ctrl+V clipboard-image capture, local preview, and retryable validation/processing errors.
     - Supports file selection and image clipboard paste; non-image clipboard content is ignored.

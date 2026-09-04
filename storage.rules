@@ -13,7 +13,7 @@ service firebase.storage {
         && request.resource != null
         && request.resource.contentType in ['image/jpeg', 'image/png']
         && request.resource.size < 2 * 1024 * 1024
-        && filename.matches('cover_max250px_[0-9]+\\.(jpg|png)');
+        && filename.matches('cover_max250px_[0-9]+\\.png');
       allow delete: if isAdmin();
     }
 

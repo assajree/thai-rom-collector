@@ -105,11 +105,11 @@ Build a public, static single-page web application that lets Thai game players d
 
 7.2 The patch-entry form accepts an image pasted from the clipboard using Ctrl+V while the form is active.
 
-7.3 Before upload, the client preserves aspect ratio and resizes the image so that neither width nor height exceeds 250 pixels.
+7.3 Before upload, the client preserves aspect ratio and resizes the image so that its width does not exceed 250 pixels; narrower images are not enlarged.
 
 7.4 Before upload, the client converts the processed image to JPEG with compression suitable for a lightweight web payload.
 
-7.5 The uploaded image filename follows the convention `cover_max250px_<timestamp>.jpg`.
+7.5 The uploaded image filename follows the convention `cover_max250px_<timestamp>.png`.
 
 7.6 After a successful upload, the patch record stores the resulting Cloud Storage download URL as `coverUrl`.
 

@@ -38,7 +38,7 @@ flowchart LR
 | Page and presentational components | Render public table/cards, filters, sign-in state, and reactive admin forms. Keep Firebase calls out of templates and presentational components. |
 | Repositories | Encapsulate Firestore collection access and DTO mapping. Return observable streams or signals that pages consume. |
 | Auth and guard | Starts Google sign-in, exposes auth state and admin status, and blocks protected routes when either is absent. |
-| Image processor | Converts a selected or clipboard image to a maximum-250px JPEG blob before any Storage upload begins. |
+| Image processor | Converts a selected or clipboard image to a PNG whose width is at most 250px, without upscaling, before any Storage upload begins. |
 | Firebase | Authentication identifies users; Firestore holds data and the admin allowlist; Storage holds processed covers. Rules independently enforce access. |
 
 ### Visual system
@@ -186,7 +186,7 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
 
 | Path | Content | Rule intent |
 |---|---|---|
-| `covers/{patchId}/cover_max250px_<timestamp>.jpg` | One processed JPEG cover per upload | Public read; only an approved admin may write or delete. |
+| `covers/{patchId}/cover_max250px_<timestamp>.png` | One processed PNG cover per upload | Public read; only an approved admin may write or delete. |
 
 The Firestore patch ID is allocated before Storage upload so the cover can be written beneath a stable patch path. If the image upload fails, the allocated Firestore document is not created. For a new patch with no cover selected, `coverUrl` is stored as an empty string and the public UI shows a deliberate placeholder; the form may make a cover required later only if requirements change.
 
@@ -229,10 +229,10 @@ Until the Firestore repository is connected, `src/app/mock-data/mock-patches.ts`
 ## Image processing algorithm
 
 1. Receive an image blob from file input or clipboard, and reject non-image MIME types.
-2. Decode it in the browser and calculate `scale = min(1, 250 / width, 250 / height)`.
+2. Decode it in the browser and calculate `scale = min(1, 250 / width)`.
 3. Draw the scaled image to a canvas using dimensions rounded to positive integers.
 4. Export `canvas.toBlob` as `image/jpeg` with a documented compression setting (initial implementation: `0.82`).
-5. Create the filename `cover_max250px_<Date.now()>.jpg`, show the result as a local preview, then upload only that JPEG blob.
+5. Create the filename `cover_max250px_<Date.now()>.png`, show the result as a local preview, then upload only that PNG blob.
 
 ## Authorization and Security Rules
 
@@ -261,7 +261,7 @@ The deployable Cloud Storage rules are maintained in the repository root at `sto
 |---|---|---|
 | CP-1 | The visible patch set is exactly the intersection of the local keyword predicate (game title, file name, system, translator), optional selected-tag predicate, optional selected-translator-ID predicate, and optional selected-system predicate. | 2.1–2.5, 3.3, 9.4–9.8 |
 | CP-2 | A saved patch's `translatorId`, `translatedBy`, and `tags` originate from selected master records; `translatedBy` equals the selected translator's current name at save time. | 5.1–5.7, 6.3 |
-| CP-3 | Every uploaded cover is a JPEG whose width and height are each at most 250 pixels, and `coverUrl` is saved only after its corresponding Storage upload succeeds. | 1.4, 7.3–7.7 |
+| CP-3 | Every uploaded cover is a PNG whose width is at most 250 pixels, without upscaling narrower covers, and `coverUrl` is saved only after its corresponding Storage upload succeeds. | 1.4, 7.3–7.7 |
 | CP-4 | The same computed patch array feeds both the desktop table and mobile card view, so responsive layout cannot change filtering or sorting results. | 1.2–1.5, 3.1–3.3, 9.9 |
 | CP-5 | A Firestore or Storage mutation succeeds only when Firebase rules can prove the requester is an allowlisted administrator; the route guard does not grant authorization by itself. | 4.1–4.4, 8.3–8.5 |
 | CP-6 | Keyword, tag, translator, system, and sort interactions do not issue a new Firestore read after the initial live streams have loaded, unless the underlying collection changes. | 2.1, 2.3–2.5, 8.7, 9.1–9.8 |

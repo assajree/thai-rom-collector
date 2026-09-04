@@ -56,9 +56,9 @@ Support selecting image files via standard File Input or pasting directly from C
 
 Automatic client-side image processing before upload:
 
-Dynamic resizing to ensure maximum width or height does not exceed 250 pixels (maintaining aspect ratio).
+Dynamic resizing to ensure the width does not exceed 250 pixels (maintaining aspect ratio and never upscaling).
 
-Automatic file renaming using standard conventions (e.g., cover_max250px_<timestamp>.jpg).
+Automatic file renaming using standard conventions (e.g., cover_max250px_<timestamp>.png).
 
 Conversion to JPEG format with optimized compression.
 
@@ -90,7 +90,7 @@ Fast initial page rendering optimized for static deployment on GitHub Pages.
 
 Efficient Angular State Management (Signals / RxJS) for instant search and tag filtering without triggering unnecessary database reads.
 
-Lightweight image payloads resulting from mandatory client-side max 250px image resizing.
+Lightweight image payloads resulting from mandatory client-side maximum-width 250px image resizing.
 
 User Experience & Aesthetic:
 
@@ -138,7 +138,7 @@ translatedBy (String): Denormalized translator name for fast querying
 
 patchTool (String): Software or tool needed for applying the patch
 
-coverUrl (String): Direct URL to the max 250px resized image in Cloud Storage
+coverUrl (String): Direct URL to the maximum-width 250px resized image in Cloud Storage
 
 patchFileUrl (String): Download link for the patch file
 
