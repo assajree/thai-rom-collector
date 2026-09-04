@@ -15,9 +15,9 @@
 
         <div>โดย:
           @if (translatorLink(patch); as link) {
-          <a [href]="link" target="_blank" rel="noopener noreferrer">{{ patch.translatedBy }}</a>
+          <a [href]="link" target="_blank" rel="noopener noreferrer">{{ translatorName(patch) }}</a>
           } @else {
-          {{ patch.translatedBy }}
+          {{ translatorName(patch) }}
           }
         </div>
 

@@ -23,6 +23,9 @@ export class PatchCardListComponent {
   protected translatorShortName(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.shortName;
   }
+  protected translatorName(patch: Patch): string {
+    return this.translators.find((translator) => translator.id === patch.translatorId)?.name ?? patch.translatedBy;
+  }
   protected cardTags(patch: Patch): string[] {
     const translatorShortName = this.translatorShortName(patch);
     return translatorShortName ? [translatorShortName, ...patch.tags] : patch.tags;
