@@ -1,6 +1,6 @@
 import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
@@ -27,6 +27,7 @@ export class AppComponent implements OnDestroy {
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly systemRepository = inject(SystemRepository);
   private readonly patchCache = inject(PatchCacheService);
+  private readonly router = inject(Router);
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
   protected readonly platforms = signal<SystemMaster[]>([]);
@@ -68,6 +69,9 @@ export class AppComponent implements OnDestroy {
   }
 
   constructor() {
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) this.statusMessageService.clear();
+    });
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
     this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });

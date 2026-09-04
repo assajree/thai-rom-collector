@@ -57,7 +57,7 @@ export class BrowsePageComponent {
   protected readonly activeRouteLabel = computed(() => {
     if (this.routeKind() === 'rom') return 'รอมแปลไทย';
     const slug = this.routeSlug();
-    if (!slug) return null;
+    if (!slug) return 'เกมทั้งหมด';
     const value = decodeURIComponent(slug);
     const kind = this.routeKind();
     if (kind === 'system') {
