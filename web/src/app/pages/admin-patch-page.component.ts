@@ -95,8 +95,12 @@ export class AdminPatchPageComponent {
       const draft = { ...value, updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
       let coverUrl = '';
       const patchId = this.editId ?? crypto.randomUUID();
+      const existingCoverUrl = this.editId ? (await this.patchRepository.getById(this.editId))?.coverUrl ?? '' : '';
       if (this.cover) coverUrl = await this.coverStorage.upload(patchId, this.cover, `cover_max250px_${Date.now()}.png`);
-      if (this.editId) await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
+      if (this.editId) {
+        await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
+        if (this.cover && existingCoverUrl && existingCoverUrl !== coverUrl) await this.coverStorage.remove(existingCoverUrl);
+      }
       else await this.patchRepository.create(draft, coverUrl, patchId);
       this.status.show('บันทึกแพตช์สำเร็จ', 'success');
       this.form.reset({

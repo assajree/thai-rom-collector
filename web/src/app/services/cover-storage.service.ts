@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Storage, getDownloadURL, ref, uploadBytes } from '@angular/fire/storage';
+import { deleteObject, ref as firebaseRef } from 'firebase/storage';
 import { RepositoryError } from '../repositories/repository-error';
 
 @Injectable({ providedIn: 'root' })
@@ -17,6 +18,15 @@ export class CoverStorageService {
       return await getDownloadURL(coverRef);
     } catch {
       throw new RepositoryError('ไม่สามารถอัปโหลดรูปปกได้', 'create');
+    }
+  }
+
+  async remove(downloadUrl: string): Promise<void> {
+    if (!downloadUrl) return;
+    try {
+      await deleteObject(firebaseRef(this.storage, downloadUrl));
+    } catch {
+      throw new RepositoryError('ไม่สามารถลบรูปปกเก่าได้', 'update');
     }
   }
 }

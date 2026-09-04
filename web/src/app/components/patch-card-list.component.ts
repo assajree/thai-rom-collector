@@ -27,11 +27,10 @@ export class PatchCardListComponent {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.name ?? patch.translatedBy;
   }
   protected cardTags(patch: Patch): string[] {
-    const translatorShortName = this.translatorShortName(patch);
-    return translatorShortName ? [translatorShortName, ...patch.tags] : patch.tags;
+    return patch.tags;
   }
-  protected translatorRoute(shortName: string): string {
-    return browseRoute('translator', shortName);
+  protected translatorRoute(patch: Patch): string {
+    return browseRoute('translator', this.translatorShortName(patch) ?? this.translatorName(patch));
   }
   protected browseRoute = browseRoute;
   protected systemLink(system: string): string {

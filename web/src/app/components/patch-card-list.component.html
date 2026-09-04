@@ -15,7 +15,10 @@
 
         <div>โดย:
           @if (translatorLink(patch); as link) {
-          <a [href]="link" target="_blank" rel="noopener noreferrer">{{ translatorName(patch) }}</a>
+          <a [routerLink]="translatorRoute(patch)">{{ translatorName(patch) }}</a>
+          <a [href]="link" target="_blank" rel="noopener noreferrer">
+            <img class="translator-link-icon" src="assets/images/browser.png" alt="เปิดลิงก์ทีมแปล" />
+          </a>
           } @else {
           {{ translatorName(patch) }}
           }
@@ -29,11 +32,7 @@
       @if (cardTags(patch).length > 0) {
       <span class="patch-card__tags-label">แท็ก: </span>
       <ul class="patch-card__tags">@for (tag of cardTags(patch); track $index) { @if (tag.trim()) { <li>
-        @if ($first && translatorShortName(patch)) {
-        <a [routerLink]="translatorRoute(tag)">{{ tag }}</a>
-        } @else {
         <a [routerLink]="browseRoute('tag', tag)">{{ tag }}</a>
-        }
       </li> } }</ul>
       }
       @if (hasDownloadLinks(patch)) {
