@@ -1,4 +1,4 @@
 @echo off
-echo firebase deploy --project rom_db --only hosting
-firebase deploy --project rom_db --only hosting
+echo npm run deploy:hosting
+npm run deploy:hosting
 pause
