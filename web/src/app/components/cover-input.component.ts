@@ -9,6 +9,7 @@ import { ImageProcessorService } from '../services/image-processor.service';
 })
 export class CoverInputComponent {
   @Input() gameTitle = '';
+  @Input() system = '';
   @Output() selected = new EventEmitter<Blob>();
   private readonly processor = inject(ImageProcessorService);
   protected readonly preview = signal<string | null>(null);
@@ -57,7 +58,8 @@ export class CoverInputComponent {
       this.error.set('กรุณาระบุชื่อเกมก่อนค้นหารูปภาพ');
       return;
     }
-    const query = encodeURIComponent(`${title} box art launchbox`);
+    const system = this.system.trim();
+    const query = encodeURIComponent(`${title}${system ? ` ${system}` : ''} box art launchbox`);
     window.open(`https://www.google.com/search?tbm=isch&q=${query}`, '_blank', 'noopener,noreferrer');
   }
 

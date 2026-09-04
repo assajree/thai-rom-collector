@@ -20,7 +20,8 @@
     </div>
     <div>
       <label>ภาพปก</label>
-      <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value" (selected)="cover = $event" />
+      <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value"
+        [system]="form.controls.system.value" (selected)="cover = $event" />
     </div>
     <label>Patch tool<input class="admin-input" formControlName="patchTool" /></label>
     <label>Patch file URL<input class="admin-input" formControlName="patchFileUrl" type="url" /></label>

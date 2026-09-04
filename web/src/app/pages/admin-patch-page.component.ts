@@ -99,7 +99,20 @@ export class AdminPatchPageComponent {
       if (this.editId) await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
       else await this.patchRepository.create(draft, coverUrl, patchId);
       this.status.show('บันทึกแพตช์สำเร็จ', 'success');
-      this.form.reset(); this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
+      this.form.reset({
+        updateDate: this.todayInputDate(),
+        fileName: '',
+        gameTitle: '',
+        system: value.system,
+        translatorId: value.translatorId,
+        patchTool: value.patchTool,
+        patchFileUrl: '',
+        haveRom: false,
+        patchedRomUrl: '',
+        referenceText: '',
+        referenceUrl: ''
+      });
+      this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกแพตช์ได้', 'error');
     } finally {
