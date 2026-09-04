@@ -1,6 +1,7 @@
 import { Component, DestroyRef, HostListener, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { TagRepository } from '../repositories/tag.repository';
@@ -11,16 +12,18 @@ import { CoverStorageService } from '../services/cover-storage.service';
 import { StatusMessageService } from '../shared/status-message.service';
 import { Tag, Translator } from '../models/patch.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ConfirmDialogComponent } from '../components/confirm-dialog.component';
 
 @Component({
   selector: 'app-admin-patch-page', styleUrl: './admin-patch-page.component.css',
   standalone: true,
-  imports: [ReactiveFormsModule, AsyncPipe, CoverInputComponent],
+  imports: [ReactiveFormsModule, AsyncPipe, CoverInputComponent, ConfirmDialogComponent],
   templateUrl: './admin-patch-page.component.html'
 })
 export class AdminPatchPageComponent {
   @ViewChild(CoverInputComponent) private coverInput?: CoverInputComponent;
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly patchRepository = inject(PatchRepository);
@@ -35,6 +38,7 @@ export class AdminPatchPageComponent {
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
+  protected deleteConfirmOpen = false;
   protected editId: string | null = null;
   protected newTranslatorName = '';
   protected newTranslatorShortName = '';
@@ -98,6 +102,29 @@ export class AdminPatchPageComponent {
       this.form.reset(); this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกแพตช์ได้', 'error');
+    } finally {
+      this.saving = false;
+    }
+  }
+
+  protected async deletePatch(): Promise<void> {
+    if (!this.editId || this.saving) return;
+    this.deleteConfirmOpen = true;
+  }
+
+  protected cancelDelete(): void { this.deleteConfirmOpen = false; }
+
+  protected async confirmDelete(): Promise<void> {
+    if (!this.editId || this.saving) return;
+    this.deleteConfirmOpen = false;
+    this.saving = true;
+    this.status.show('กำลังลบแพตช์…');
+    try {
+      await this.patchRepository.delete(this.editId);
+      this.status.show('ลบแพตช์สำเร็จ', 'success');
+      await this.router.navigateByUrl('/', { replaceUrl: true });
+    } catch (error) {
+      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถลบแพตช์ได้', 'error');
     } finally {
       this.saving = false;
     }

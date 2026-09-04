@@ -1,6 +1,6 @@
 {
   "projects": {
-    "rom_db": "thai-rom-db"
+    "rom_db": "thairomdb"
   },
   "targets": {},
   "etags": {}

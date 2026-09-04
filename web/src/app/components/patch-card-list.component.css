@@ -74,10 +74,14 @@
 
 .patch-cover-image {
   width: 250px;
+  max-width: 100%;
   height: auto;
 }
 
 .patch-cover-wrap {
+  align-items: flex-start;
+  display: flex;
+  justify-content: center;
   min-height: 170px;
   position: relative;
 }

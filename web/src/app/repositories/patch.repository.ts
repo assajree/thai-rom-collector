@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData, deleteDoc, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
 import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Patch, PatchDraft, Translator, Tag } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
@@ -83,6 +83,18 @@ export class PatchRepository {
         throw new RepositoryError('ไม่มีสิทธิ์แก้ไขแพตช์: ตรวจสอบว่า UID นี้อยู่ใน admins และ deploy Firestore Rules แล้ว', 'update');
       }
       throw new RepositoryError('ไม่สามารถแก้ไขแพตช์ได้', 'update');
+    }
+  }
+
+  async delete(id: string): Promise<void> {
+    try {
+      await deleteDoc(doc(this.patches, id));
+      this.patchCache.requestForceRefresh();
+    } catch (error) {
+      if (this.isPermissionDenied(error)) {
+        throw new RepositoryError('ไม่มีสิทธิ์ลบแพตช์: ตรวจสอบว่า UID นี้อยู่ใน admins และ deploy Firestore Rules แล้ว', 'delete');
+      }
+      throw new RepositoryError('ไม่สามารถลบแพตช์ได้', 'delete');
     }
   }
 

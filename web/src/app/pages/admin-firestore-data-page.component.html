@@ -13,3 +13,8 @@
   </div>
   @if (result) { <section class="data-card mt-6"><h2 class="font-black">ผลการ Import</h2><p class="mt-2">เขียนสำเร็จ: {{ result.written }} รายการ · ล้มเหลว: {{ result.failed.length }} รายการ</p>@if (result.failed.length) { <ul class="mt-3 text-red-200">@for (failure of result.failed; track failure.collection + failure.id) { <li>{{ failure.collection }}/{{ failure.id }}: {{ failure.reason }}</li> }</ul> }</section> }
 </main>
+@if (importConfirmOpen) {
+<app-confirm-dialog title="ยืนยันการ Import ข้อมูล"
+  message="ข้อมูลจะถูกเพิ่มหรืออัปเดตแบบ Merge ข้อมูลเดิมที่ไม่มีในไฟล์จะไม่ถูกลบ"
+  confirmLabel="ยืนยัน Import" (confirmed)="confirmImport()" (cancelled)="cancelImport()" />
+}

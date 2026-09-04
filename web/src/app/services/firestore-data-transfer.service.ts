@@ -50,14 +50,29 @@ export class FirestoreDataTransferService {
 
   async importBackup(backup: FirestoreBackup): Promise<ImportResult> {
     const result: ImportResult = { written: 0, failed: [] };
-    for (const name of FIRESTORE_BACKUP_COLLECTIONS) {
+    // Patches reference translator documents in Firestore Rules, so masters
+    // must be written first when importing a complete backup.
+    const importOrder: readonly FirestoreBackupCollection[] = ['translators', 'systems', 'tags', 'patches'];
+    for (const name of importOrder) {
       const rows = backup.collections[name];
       for (let start = 0; start < rows.length; start += 500) {
         const chunk = rows.slice(start, start + 500);
         const batch = writeBatch(this.firestore);
-        chunk.forEach((row) => batch.set(doc(this.firestore, name, row.id), this.documentWithoutId(row), { merge: true }));
+        chunk.forEach((row) => batch.set(doc(this.firestore, name, row.id), this.documentForImport(name, row, backup), { merge: true }));
         try { await batch.commit(); result.written += chunk.length; }
-        catch (error) { const reason = this.userError(error); chunk.forEach((row) => result.failed.push({ collection: name, id: row.id, reason })); }
+        catch {
+          // A batch failure hides which document violated a Firestore rule.
+          // Retry individually so valid documents still import and the UI
+          // can identify only the records that actually failed.
+          for (const row of chunk) {
+            try {
+              await setDoc(doc(this.firestore, name, row.id), this.documentForImport(name, row, backup), { merge: true });
+              result.written++;
+            } catch (error) {
+              result.failed.push({ collection: name, id: row.id, reason: this.importError(name, row, backup, error) });
+            }
+          }
+        }
       }
     }
     if (result.written) this.patchCache.requestForceRefresh();
@@ -65,6 +80,15 @@ export class FirestoreDataTransferService {
   }
 
   private documentWithoutId(row: BackupDocument): Record<string, unknown> { const { id: _id, ...data } = row; return data; }
+
+  private documentForImport(name: FirestoreBackupCollection, row: BackupDocument, backup: FirestoreBackup): Record<string, unknown> {
+    const data = this.documentWithoutId(row);
+    if (name === 'patches') {
+      const translator = backup.collections.translators.find((item) => item['id'] === row['translatorId']);
+      if (translator && typeof translator['name'] === 'string') data['translatedBy'] = translator['name'];
+    }
+    return data;
+  }
 
   private validateDocument(name: FirestoreBackupCollection, row: BackupDocument, index: number): void {
     const fail = (field: string) => { throw new Error(`${name}[${index}].${field} มีชนิดข้อมูลไม่ถูกต้อง`); };
@@ -82,5 +106,19 @@ export class FirestoreDataTransferService {
   private userError(error: unknown): string {
     const code = isRecord(error) ? String(error['code'] ?? '') : '';
     return code.includes('permission-denied') ? 'ไม่มีสิทธิ์เขียนข้อมูล กรุณาตรวจสอบบัญชี admin' : 'ไม่สามารถเขียนข้อมูลชุดนี้ได้';
+  }
+
+  private importError(name: FirestoreBackupCollection, row: BackupDocument, backup: FirestoreBackup, error: unknown): string {
+    if (name === 'patches') {
+      const translators = backup.collections.translators;
+      const translator = translators.find((item) => item['id'] === row['translatorId']);
+      if (!translator) return 'ไม่พบ translatorId ในข้อมูล translators';
+      if (Array.isArray(row['tags']) && row['tags'].length > 30) return 'มี tags มากกว่า 30 รายการ';
+      if (typeof row['coverUrl'] === 'string' && row['coverUrl'] !== '' && !row['coverUrl'].startsWith('https://firebasestorage.googleapis.com/')) return 'coverUrl ต้องเป็นลิงก์ Firebase Storage ที่อนุญาต';
+      const required = ['updateDate','fileName','gameTitle','system','translatorId','translatedBy'];
+      const empty = required.find((field) => typeof row[field] !== 'string' || !String(row[field]).trim());
+      if (empty) return `${empty} ต้องไม่เป็นค่าว่าง`;
+    }
+    return this.userError(error);
   }
 }

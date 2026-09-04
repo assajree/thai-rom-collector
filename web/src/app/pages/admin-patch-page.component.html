@@ -59,6 +59,10 @@
     <label>วันที่อัปเดต<input class="admin-input" formControlName="updateDate" type="date" /></label>
     <button class="w-fit border-2 border-signal bg-signal px-5 py-3 font-bold text-ink disabled:opacity-50"
       type="submit" [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' : 'บันทึกแพตช์' }}</button>
+    @if (editId) {
+    <button class="w-fit border-2 border-arcade px-5 py-3 font-bold text-white disabled:opacity-50" type="button"
+      [disabled]="saving" (click)="deletePatch()">ลบแพตช์</button>
+    }
   </form>
   @if (systemDialogOpen) {
   <div class="system-dialog-backdrop" role="presentation">
@@ -97,5 +101,10 @@
           (click)="closeTranslatorDialog()">ยกเลิก</button></div>
     </section>
   </div>
+  }
+  @if (deleteConfirmOpen) {
+  <app-confirm-dialog title="ยืนยันการลบแพตช์"
+    message="แพตช์นี้จะถูกลบออกจากระบบอย่างถาวร และไม่สามารถย้อนกลับได้"
+    confirmLabel="ยืนยันลบแพตช์" [danger]="true" (confirmed)="confirmDelete()" (cancelled)="cancelDelete()" />
   }
 </main>

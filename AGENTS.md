@@ -10,3 +10,13 @@ Split a section out of this file into its own `rules/*.md` file (referenced back
 - **Not relevant to every task** — it only matters for a specific sub-area of work (e.g. HANA SQLScript syntax), not the project as a whole.
 
 Keep a section inline in `AGENTS.md` when it's short and stable (a one-off convention or constraint that doesn't keep growing) and broadly relevant to most tasks in this repo — splitting those out just fragments the file without saving tokens.
+
+## Async Task Feedback
+
+For any task that performs asynchronous processing or changes user data—such as save, import/export, delete, upload, or similar operations—provide visible toast/status feedback for the full operation:
+
+- Show a progress message before starting the awaited operation, using wording such as `กำลัง...`.
+- Show a success message after the operation completes successfully, using the shared success tone so the message is displayed in green.
+- If the operation fails, show an error message and do not show a success message.
+- Disable the triggering button or control while the operation is running to prevent duplicate submissions.
+- Use `finally` to restore loading/busy state regardless of success or failure.

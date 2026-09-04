@@ -1,0 +1,13 @@
+<div class="confirm-dialog-backdrop" role="presentation" (click)="cancelled.emit()">
+  <section class="confirm-dialog" [class.confirm-dialog--danger]="danger" role="alertdialog" aria-modal="true"
+    aria-labelledby="confirm-dialog-title" aria-describedby="confirm-dialog-message" (click)="$event.stopPropagation()">
+    <h2 id="confirm-dialog-title" class="font-black">{{ title }}</h2>
+    <p id="confirm-dialog-message" class="mt-3 text-slate-200">{{ message }}</p>
+    <div class="mt-5 flex justify-end gap-2">
+      <button class="border border-slate-300 px-3 py-2 font-bold text-slate-100" type="button"
+        (click)="cancelled.emit()">ยกเลิก</button>
+      <button class="confirm-dialog-action" [class.confirm-dialog-action--danger]="danger" type="button"
+        (click)="confirmed.emit()">{{ confirmLabel }}</button>
+    </div>
+  </section>
+</div>
