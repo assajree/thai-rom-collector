@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { TagRepository } from '../repositories/tag.repository';
-import { SystemRepository } from '../repositories/system.repository';
+import { SystemMaster, SystemRepository } from '../repositories/system.repository';
 import { CoverInputComponent } from '../components/cover-input.component';
 import { PatchRepository } from '../repositories/patch.repository';
 import { CoverStorageService } from '../services/cover-storage.service';
@@ -13,6 +13,9 @@ import { StatusMessageService } from '../shared/status-message.service';
 import { Tag, Translator } from '../models/patch.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmDialogComponent } from '../components/confirm-dialog.component';
+
+const compareDropdownLabels = (a: { shortName: string; name: string }, b: { shortName: string; name: string }): number =>
+  a.shortName.localeCompare(b.shortName, 'th', { sensitivity: 'base' }) || a.name.localeCompare(b.name, 'th', { sensitivity: 'base' });
 
 @Component({
   selector: 'app-admin-patch-page', styleUrl: './admin-patch-page.component.css',
@@ -35,6 +38,7 @@ export class AdminPatchPageComponent {
   protected readonly translators = this.translatorRepository.watchAll();
   protected readonly tags = this.tagRepository.watchAll();
   protected readonly systems = this.systemRepository.watchAll();
+  protected systemOptions: SystemMaster[] = [];
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
@@ -64,9 +68,12 @@ export class AdminPatchPageComponent {
   private initializeFilenameGeneration(): void {
     this.translators.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (translators) => {
-        this.translatorOptions = translators;
+        this.translatorOptions = [...translators].sort(compareDropdownLabels);
         this.updateGeneratedFilename();
       }
+    });
+    this.systems.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((systems) => {
+      this.systemOptions = [...systems].sort(compareDropdownLabels);
     });
     this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
@@ -77,7 +84,7 @@ export class AdminPatchPageComponent {
   }
 
   private updateGeneratedFilename(): void {
-    const gameTitle = this.form.controls.gameTitle.value.trim().replace(/\s+/g, ' ');
+    const gameTitle = this.form.controls.gameTitle.value.trim().replace(/:/g, ' -').replace(/\s+/g, ' ');
     const translator = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
     const fileName = gameTitle && translator?.shortName
       ? `${gameTitle} (Thai by ${translator.shortName.trim().replace(/\s+/g, ' ')})`
@@ -92,7 +99,7 @@ export class AdminPatchPageComponent {
     this.status.show('กำลังบันทึกแพตช์…');
     try {
       const value = this.form.getRawValue();
-      const draft = { ...value, updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
+      const draft = { ...value, gameTitle: value.gameTitle.trim(), updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
       let coverUrl = '';
       const patchId = this.editId ?? crypto.randomUUID();
       const existingCoverUrl = this.editId ? (await this.patchRepository.getById(this.editId))?.coverUrl ?? '' : '';
@@ -103,13 +110,14 @@ export class AdminPatchPageComponent {
       }
       else await this.patchRepository.create(draft, coverUrl, patchId);
       this.status.show('บันทึกแพตช์สำเร็จ', 'success');
+      const translatorModTool = this.translatorOptions.find((item) => item.id === value.translatorId)?.modTool ?? '';
       this.form.reset({
         updateDate: this.todayInputDate(),
         fileName: '',
         gameTitle: '',
         system: value.system,
         translatorId: value.translatorId,
-        patchTool: value.patchTool,
+        patchTool: translatorModTool,
         patchFileUrl: '',
         haveRom: false,
         patchedRomUrl: '',
@@ -117,6 +125,7 @@ export class AdminPatchPageComponent {
         referenceUrl: ''
       });
       this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกแพตช์ได้', 'error');
     } finally {
@@ -197,7 +206,7 @@ export class AdminPatchPageComponent {
       this.savingTranslator = true;
       this.status.show('กำลังบันทึกทีมแปล…');
       const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink, this.newTranslatorModTool);
-      this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator];
+      this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator].sort(compareDropdownLabels);
       this.form.controls.translatorId.setValue(translator.id);
       this.newTranslatorName = '';
       this.newTranslatorShortName = '';

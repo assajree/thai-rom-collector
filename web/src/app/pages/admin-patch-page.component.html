@@ -4,7 +4,7 @@
     <label class="required">ชื่อเกม<input class="admin-input" formControlName="gameTitle" /></label>
     <div>
       <label class="required">เครื่องเกม<select class="admin-input" formControlName="system">
-          <option value="">เลือกเครื่องเกม</option>@for (system of systems | async; track system.id) { <option
+          <option value="">เลือกเครื่องเกม</option>@for (system of systemOptions; track system.id) { <option
             [value]="system.shortName">{{ system.shortName }} — {{ system.name }}</option> }
         </select></label>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink"
