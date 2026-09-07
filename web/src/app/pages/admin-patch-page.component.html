@@ -27,7 +27,15 @@
       <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value"
         [system]="form.controls.system.value" (selected)="cover = $event" />
     </div>
-    <label>Patch tool<input class="admin-input" formControlName="patchTool" /></label>
+    <div>
+      <label>Patch tool<input class="admin-input" formControlName="patchTool" /></label>
+      <div class="mt-2 flex flex-wrap gap-2">
+        <button class="border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
+          (click)="setDefaultPatchTool()">Default</button>
+        <button class="border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
+          (click)="setRomPatcherTool()">RomPatcher.js</button>
+      </div>
+    </div>
     <label>Patch file URL<input class="admin-input" formControlName="patchFileUrl" type="url" /></label>
     <label class="inline-flex items-center gap-2"><input formControlName="haveRom" type="checkbox" /> มี ROM</label>
     <label>Patched ROM URL<input class="admin-input" formControlName="patchedRomUrl" type="url" /></label>

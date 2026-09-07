@@ -220,6 +220,13 @@ export class AdminPatchPageComponent {
     }
   }
   protected setUpdateDateNow(): void { this.form.controls.updateDate.setValue(this.todayInputDate()); }
+  protected setDefaultPatchTool(): void {
+    const translator = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
+    this.form.controls.patchTool.setValue(translator?.modTool ?? '');
+  }
+  protected setRomPatcherTool(): void {
+    this.form.controls.patchTool.setValue('https://www.marcrobledo.com/RomPatcher.js');
+  }
   protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
   protected filteredTagSuggestions(): Tag[] {
     const query = this.newTagName.trim().toLocaleLowerCase();
