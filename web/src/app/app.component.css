@@ -1,3 +1,6 @@
+.app-topbar{
+  background-color: #280a61;
+}
 .retro-rail {
   box-sizing: border-box;
   border-right: 1px solid #a8abd9;
@@ -48,7 +51,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 30;
+    z-index: 30;    
   }
 
   :host-context(body.sidebar-open) .app-shell {
@@ -107,9 +110,17 @@
 }
 
 .site-title {
+  align-items: center;
+  display: inline-flex;
   text-decoration: none;
-  font-size: 18pt;
   color: #00ff00;
+}
+
+.site-title img {
+  display: block;
+  height: 2rem;
+  object-fit: contain;
+  width: auto;
 }
 
 .retro-rail-heading {
