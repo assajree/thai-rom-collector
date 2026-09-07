@@ -79,7 +79,9 @@ export class AdminPatchPageComponent {
     this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
       this.updateGeneratedFilename();
-      if (!this.editId) this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
+      if (!this.form.controls.patchTool.value.trim()) {
+        this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
+      }
     });
     this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
   }
@@ -237,6 +239,7 @@ export class AdminPatchPageComponent {
       const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink, this.newTranslatorModTool);
       this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator].sort(compareDropdownLabels);
       this.form.controls.translatorId.setValue(translator.id);
+      if (!this.editId) this.form.controls.patchTool.setValue(translator.modTool ?? '');
       this.newTranslatorName = '';
       this.newTranslatorShortName = '';
       this.newTranslatorLink = '';
