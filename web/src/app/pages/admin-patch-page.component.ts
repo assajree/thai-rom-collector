@@ -102,7 +102,16 @@ export class AdminPatchPageComponent {
     this.status.show('กำลังบันทึกแพตช์…');
     try {
       const value = this.form.getRawValue();
-      const draft = { ...value, gameTitle: value.gameTitle.trim(), updateDate: this.toIsoDate(value.updateDate), tags: this.selectedTags };
+      const draft = {
+        ...value,
+        gameTitle: value.gameTitle.trim(),
+        updateDate: this.toIsoDate(value.updateDate),
+        patchTool: this.removeFacebookReference(value.patchTool),
+        patchFileUrl: this.removeFacebookReference(value.patchFileUrl),
+        patchedRomUrl: this.removeFacebookReference(value.patchedRomUrl),
+        referenceUrl: this.removeFacebookReference(value.referenceUrl),
+        tags: this.selectedTags
+      };
       let coverUrl = '';
       const patchId = this.editId ?? crypto.randomUUID();
       const existingCoverUrl = this.editId ? (await this.patchRepository.getById(this.editId))?.coverUrl ?? '' : '';
@@ -197,6 +206,18 @@ export class AdminPatchPageComponent {
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) throw new Error('กรุณาระบุวันที่อัปเดตให้ถูกต้อง');
     return date.toISOString();
+  }
+  private removeFacebookReference(value: string): string {
+    const urlValue = value.trim();
+    if (!urlValue) return '';
+    try {
+      const url = new URL(urlValue);
+      if (!url.searchParams.has('fbclid')) return urlValue;
+      url.searchParams.delete('fbclid');
+      return url.toString();
+    } catch {
+      return urlValue;
+    }
   }
   protected setUpdateDateNow(): void { this.form.controls.updateDate.setValue(this.todayInputDate()); }
   protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
