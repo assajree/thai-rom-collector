@@ -42,6 +42,7 @@ export class AdminPatchPageComponent {
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
+  protected pastingGameTitle = false;
   protected deleteConfirmOpen = false;
   protected editId: string | null = null;
   protected newTranslatorName = '';
@@ -133,6 +134,19 @@ export class AdminPatchPageComponent {
     }
   }
 
+  protected async pasteGameTitle(): Promise<void> {
+    if (this.pastingGameTitle) return;
+    this.pastingGameTitle = true;
+    try {
+      const text = (await navigator.clipboard.readText()).trim();
+      if (text) this.form.controls.gameTitle.setValue(text);
+    } catch {
+      // Clipboard access can be denied by the browser; leave the current value unchanged.
+    } finally {
+      this.pastingGameTitle = false;
+    }
+  }
+
   protected async deletePatch(): Promise<void> {
     if (!this.editId || this.saving) return;
     this.deleteConfirmOpen = true;
@@ -165,9 +179,24 @@ export class AdminPatchPageComponent {
     this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' });
     this.selectedTags = [...patch.tags];
   }
-  private todayInputDate(): string { return new Date().toISOString().slice(0, 10); }
-  private toInputDate(value: string): string { const timestamp = Date.parse(value); return Number.isNaN(timestamp) ? this.todayInputDate() : new Date(timestamp).toISOString().slice(0, 10); }
-  private toIsoDate(value: string): string { const timestamp = Date.parse(`${value}T00:00:00.000Z`); if (Number.isNaN(timestamp)) throw new Error('กรุณาระบุวันที่อัปเดตให้ถูกต้อง'); return new Date(timestamp).toISOString(); }
+  private todayInputDate(): string {
+    const now = new Date();
+    const pad = (value: number): string => String(value).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  }
+  private toInputDate(value: string): string {
+    const timestamp = Date.parse(value);
+    if (Number.isNaN(timestamp)) return this.todayInputDate();
+    const date = new Date(timestamp);
+    const pad = (part: number): string => String(part).padStart(2, '0');
+    return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+  private toIsoDate(value: string): string {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) throw new Error('กรุณาระบุวันที่อัปเดตให้ถูกต้อง');
+    return date.toISOString();
+  }
+  protected setUpdateDateNow(): void { this.form.controls.updateDate.setValue(this.todayInputDate()); }
   protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
   protected filteredTagSuggestions(): Tag[] {
     const query = this.newTagName.trim().toLocaleLowerCase();

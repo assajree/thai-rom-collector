@@ -50,7 +50,7 @@ export class PatchCardListComponent {
   protected formatUpdateDate(value: string): string {
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? '' : new Intl.DateTimeFormat('th-TH', {
-      day: 'numeric', month: 'short', year: 'numeric'
+      day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
     }).format(date);
   }
   protected onImageError(event: Event): void {

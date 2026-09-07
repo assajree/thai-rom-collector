@@ -15,6 +15,8 @@ Keep a section inline in `AGENTS.md` when it's short and stable (a one-off conve
 
 For any task that performs asynchronous processing or changes user data—such as save, import/export, delete, upload, or similar operations—provide visible toast/status feedback for the full operation:
 
+For short-lived operations that complete immediately and do not perform long-running processing or persist user data, visible toast/status feedback is not required.
+
 - Show a progress message before starting the awaited operation, using wording such as `กำลัง...`.
 - Show a success message after the operation completes successfully, using the shared success tone so the message is displayed in green.
 - If the operation fails, show an error message and do not show a success message.

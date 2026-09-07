@@ -1,7 +1,11 @@
 <main class="min-h-full p-4 text-white sm:p-6 lg:p-8">
   <h1 class="mt-1 font-black">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
   <form class="mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
-    <label class="required">ชื่อเกม<input class="admin-input" formControlName="gameTitle" /></label>
+    <div>
+      <label class="required">ชื่อเกม<input class="admin-input" formControlName="gameTitle" /></label>
+      <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
+        (click)="pasteGameTitle()" [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' : 'วางจาก Clipboard' }}</button>
+    </div>
     <div>
       <label class="required">เครื่องเกม<select class="admin-input" formControlName="system">
           <option value="">เลือกเครื่องเกม</option>@for (system of systemOptions; track system.id) { <option
@@ -57,7 +61,11 @@
     </fieldset>
 
     <label>ชื่อไฟล์<input class="admin-input" formControlName="fileName" readonly /></label>
-    <label>วันที่อัปเดต<input class="admin-input" formControlName="updateDate" type="date" /></label>
+    <div>
+      <label>วันที่และเวลาอัปเดต<input class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
+      <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
+        (click)="setUpdateDateNow()">ตอนนี้</button>
+    </div>
     <button class="w-fit border-2 border-signal bg-signal px-5 py-3 font-bold text-ink disabled:opacity-50"
       type="submit" [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' : 'บันทึกแพตช์' }}</button>
     @if (editId) {
