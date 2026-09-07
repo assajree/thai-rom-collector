@@ -18,6 +18,11 @@
   background: #16a34a;
 }
 
+.status-message--offline {
+  background: #ffd92b;
+  color: #111827;
+}
+
 .app-content {
   padding-bottom: 5rem;
 }

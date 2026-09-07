@@ -1,6 +1,7 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { SwUpdate } from '@angular/service-worker';
 
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
@@ -28,6 +29,7 @@ export class AppComponent implements OnDestroy {
   private readonly systemRepository = inject(SystemRepository);
   private readonly patchCache = inject(PatchCacheService);
   private readonly router = inject(Router);
+  private readonly swUpdate = inject(SwUpdate, { optional: true });
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
   protected readonly platforms = signal<SystemMaster[]>([]);
@@ -38,6 +40,9 @@ export class AppComponent implements OnDestroy {
   });
   protected readonly sidebarOpen = signal(false);
   protected readonly browseRoute = browseRoute;
+  protected readonly isOffline = signal(false);
+  private readonly onlineHandler = () => this.isOffline.set(false);
+  private readonly offlineHandler = () => this.isOffline.set(true);
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
   protected closeSidebar(): void { this.sidebarOpen.set(false); }
@@ -69,6 +74,10 @@ export class AppComponent implements OnDestroy {
   }
 
   constructor() {
+    this.isOffline.set(typeof navigator !== 'undefined' && !navigator.onLine);
+    window.addEventListener('online', this.onlineHandler);
+    window.addEventListener('offline', this.offlineHandler);
+    this.watchForAppUpdates();
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart) this.statusMessageService.clear();
     });
@@ -78,8 +87,20 @@ export class AppComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    window.removeEventListener('online', this.onlineHandler);
+    window.removeEventListener('offline', this.offlineHandler);
     this.document.body.classList.remove('sidebar-open');
     this.sidebarScrollLock.destroy();
+  }
+
+  private watchForAppUpdates(): void {
+    if (!this.swUpdate?.isEnabled) return;
+    this.swUpdate.versionUpdates.subscribe((event) => {
+      if (event.type === 'VERSION_READY') {
+        this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กำลังโหลดเวอร์ชันล่าสุด…');
+        void this.swUpdate?.activateUpdate().then(() => window.location.reload());
+      }
+    });
   }
 
   protected async signIn(): Promise<void> {

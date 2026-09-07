@@ -105,6 +105,12 @@
   }
 
   <section class="app-content min-w-0 bg-[#343568]">
+    @if (isOffline()) {
+    <div class="status-message status-message--offline border-b border-black px-4 py-2 font-bold sm:px-6" role="status"
+      aria-live="polite">
+      ออฟไลน์อยู่ ข้อมูลล่าสุดและการบันทึกต้องเชื่อมต่ออินเทอร์เน็ต
+    </div>
+    }
     @if (statusMessage(); as message) {
     <div class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
       [class.bg-arcade]="message.tone === 'error'" [class.status-message--success]="message.tone === 'success'"
