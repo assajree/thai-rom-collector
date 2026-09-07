@@ -76,7 +76,11 @@ export class AdminPatchPageComponent {
     this.systems.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((systems) => {
       this.systemOptions = [...systems].sort(compareDropdownLabels);
     });
-    this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => this.updateGeneratedFilename());
+    this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameTitle) => {
+      const normalizedTitle = this.normalizeGameTitle(gameTitle);
+      if (normalizedTitle !== gameTitle) this.form.controls.gameTitle.setValue(normalizedTitle, { emitEvent: false });
+      this.updateGeneratedFilename();
+    });
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
       this.updateGeneratedFilename();
       if (!this.form.controls.patchTool.value.trim()) {
@@ -94,6 +98,7 @@ export class AdminPatchPageComponent {
       : '';
     this.form.controls.fileName.setValue(fileName, { emitEvent: false });
   }
+  private normalizeGameTitle(value: string): string { return value.replace(/é/g, 'e'); }
 
   protected async save(): Promise<void> {
     if (this.saving) return;
@@ -104,7 +109,7 @@ export class AdminPatchPageComponent {
       const value = this.form.getRawValue();
       const draft = {
         ...value,
-        gameTitle: value.gameTitle.trim(),
+        gameTitle: this.normalizeGameTitle(value.gameTitle.trim()),
         updateDate: this.toIsoDate(value.updateDate),
         patchTool: this.removeFacebookReference(value.patchTool),
         patchFileUrl: this.removeFacebookReference(value.patchFileUrl),
@@ -187,7 +192,8 @@ export class AdminPatchPageComponent {
     const patch = await this.patchRepository.getById(id);
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' });
+    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' }, { emitEvent: false });
+    this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
   }
   private todayInputDate(): string {

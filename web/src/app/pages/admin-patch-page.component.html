@@ -74,12 +74,14 @@
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
         (click)="setUpdateDateNow()">ตอนนี้</button>
     </div>
-    <button class="w-fit border-2 border-signal bg-signal px-5 py-3 font-bold text-ink disabled:opacity-50"
-      type="submit" [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' : 'บันทึกแพตช์' }}</button>
-    @if (editId) {
-    <button class="w-fit border-2 border-arcade px-5 py-3 font-bold text-white disabled:opacity-50" type="button"
-      [disabled]="saving" (click)="deletePatch()">ลบแพตช์</button>
-    }
+    <div class="mt-8 flex w-full items-center justify-between">
+      <button class="w-fit border-2 border-signal bg-signal px-5 py-3 font-bold text-ink disabled:opacity-50"
+        type="submit" [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' : 'บันทึกแพตช์' }}</button>
+      @if (editId) {
+      <button class="w-fit border-2 border-arcade px-5 py-3 font-bold text-white disabled:opacity-50" type="button"
+        [disabled]="saving" (click)="deletePatch()">ลบแพตช์</button>
+      }
+    </div>
   </form>
   @if (systemDialogOpen) {
   <div class="system-dialog-backdrop" role="presentation">
