@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Firestore, collection, doc, getDocsFromServer, setDoc, writeBatch } from '@angular/fire/firestore';
 import { Patch } from '../models/patch.models';
 import { PatchCacheService } from './patch-cache.service';
+import { FirestoreCacheService } from './firestore-cache.service';
 
 export const FIRESTORE_BACKUP_COLLECTIONS = ['patches', 'translators', 'tags', 'systems'] as const;
 export type FirestoreBackupCollection = typeof FIRESTORE_BACKUP_COLLECTIONS[number];
@@ -15,6 +16,7 @@ const isRecord = (value: unknown): value is Record<string, unknown> => typeof va
 export class FirestoreDataTransferService {
   private readonly firestore = inject(Firestore);
   private readonly patchCache = inject(PatchCacheService);
+  private readonly cache = inject(FirestoreCacheService);
 
   async exportBackup(): Promise<FirestoreBackup> {
     const collections = {} as FirestoreBackup['collections'];
@@ -75,7 +77,7 @@ export class FirestoreDataTransferService {
         }
       }
     }
-    if (result.written) this.patchCache.requestForceRefresh();
+    if (result.written) { this.cache.clearAll(); this.patchCache.requestForceRefresh(); }
     return result;
   }
 

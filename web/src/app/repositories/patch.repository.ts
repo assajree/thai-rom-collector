@@ -1,9 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, collectionData, deleteDoc, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
+import { Firestore, collection, deleteDoc, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
 import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Patch, PatchDraft, Translator, Tag } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
 import { PatchCacheService } from '../services/patch-cache.service';
+import { FirestoreCacheService } from '../services/firestore-cache.service';
 
 type PatchDocument = Omit<Patch, 'id'>;
 
@@ -13,6 +14,7 @@ const clean = (value: string): string => value.trim().replace(/\s+/g, ' ');
 export class PatchRepository {
   private readonly firestore = inject(Firestore);
   private readonly patchCache = inject(PatchCacheService);
+  private readonly cache = inject(FirestoreCacheService);
   private readonly patches = collection(this.firestore, 'patches');
   private readonly translators = collection(this.firestore, 'translators');
   private readonly tags = collection(this.firestore, 'tags');
@@ -57,6 +59,7 @@ export class PatchRepository {
     const data = await this.buildDocument(draft, coverUrl, draft.updateDate);
     try {
       await setDoc(ref, data);
+      this.patchCache.requestForceRefresh();
       return ref.id;
     } catch (error) {
       if (this.isPermissionDenied(error)) {
@@ -77,6 +80,7 @@ export class PatchRepository {
       if (!existing) throw new RepositoryError('ไม่พบแพตช์ที่ต้องการแก้ไข', 'update');
       const data = await this.buildDocument(draft, coverUrl ?? existing.coverUrl, draft.updateDate || existing.updateDate);
       await setDoc(doc(this.patches, id), data);
+      this.patchCache.requestForceRefresh();
     } catch (error) {
       if (error instanceof RepositoryError) throw error;
       if (this.isPermissionDenied(error)) {
@@ -115,7 +119,7 @@ export class PatchRepository {
   private getSystem(name: string): Promise<{ shortName: string }> {
     const normalized = clean(name);
     return new Promise((resolve, reject) => {
-      collectionData(this.systems).subscribe({
+      this.cache.get('systems', () => from(getDocsFromServer(this.systems)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
         next: (rows) => {
           const row = rows.find((item) => {
             const shortName = clean(String(item['shortName'] ?? '')).toLocaleLowerCase('th');
@@ -131,8 +135,8 @@ export class PatchRepository {
 
   private getTranslator(id: string): Promise<Translator> {
     return new Promise((resolve, reject) => {
-      docData(doc(this.translators, id), { idField: 'id' }).subscribe({
-        next: (row) => row ? resolve({ id, shortName: clean(String((row as Record<string, unknown>)['shortName'] ?? '')), name: clean(String((row as Record<string, unknown>)['name'] ?? '')) }) : reject(new RepositoryError('ไม่พบทีมแปลที่เลือก', 'create')),
+      this.cache.get('translators', () => from(getDocsFromServer(this.translators)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
+        next: (rows) => { const row = rows.find((item) => String(item['id']) === id) as Record<string, unknown> | undefined; row ? resolve({ id, shortName: clean(String(row['shortName'] ?? '')), name: clean(String(row['name'] ?? '')) }) : reject(new RepositoryError('ไม่พบทีมแปลที่เลือก', 'create')); },
         error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบทีมแปลได้', 'create'))
       });
     });
@@ -140,7 +144,7 @@ export class PatchRepository {
 
   private getMasterTags(idsOrNames: string[]): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      collectionData(this.tags, { idField: 'id' }).subscribe({
+      this.cache.get('tags', () => from(getDocsFromServer(this.tags)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
         next: (rows) => {
           const selected = new Set(idsOrNames);
           const names = rows.filter((row) => selected.has(String(row['id'])) || selected.has(String(row['name'])))
