@@ -23,10 +23,26 @@ export class CoverStorageService {
 
   async remove(downloadUrl: string): Promise<void> {
     if (!downloadUrl) return;
+    // Covers imported during the Firebase project migration can still point to
+    // the old bucket. The current app cannot delete objects in that bucket.
+    // Treat them as external legacy assets instead of waiting for a request
+    // that will eventually fail.
+    if (!this.belongsToCurrentBucket(downloadUrl)) return;
     try {
       await deleteObject(firebaseRef(this.storage, downloadUrl));
     } catch {
       throw new RepositoryError('ไม่สามารถลบรูปปกเก่าได้', 'update');
+    }
+  }
+
+  private belongsToCurrentBucket(downloadUrl: string): boolean {
+    try {
+      const url = new URL(downloadUrl);
+      const bucket = this.storage.app.options.storageBucket;
+      return Boolean(bucket) && url.hostname === 'firebasestorage.googleapis.com' &&
+        decodeURIComponent(url.pathname).startsWith(`/v0/b/${bucket}/o/covers/`);
+    } catch {
+      return false;
     }
   }
 }

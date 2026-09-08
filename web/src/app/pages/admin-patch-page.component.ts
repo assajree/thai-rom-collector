@@ -45,6 +45,7 @@ export class AdminPatchPageComponent {
   protected pastingGameTitle = false;
   protected deleteConfirmOpen = false;
   protected editId: string | null = null;
+  private existingCoverUrl = '';
   protected newTranslatorName = '';
   protected newTranslatorShortName = '';
   protected newTranslatorLink = '';
@@ -119,11 +120,15 @@ export class AdminPatchPageComponent {
       };
       let coverUrl = '';
       const patchId = this.editId ?? crypto.randomUUID();
-      const existingCoverUrl = this.editId ? (await this.patchRepository.getById(this.editId))?.coverUrl ?? '' : '';
       if (this.cover) coverUrl = await this.coverStorage.upload(patchId, this.cover, `cover_max250px_${Date.now()}.png`);
       if (this.editId) {
         await this.patchRepository.update(this.editId, draft, this.cover ? coverUrl : undefined);
-        if (this.cover && existingCoverUrl && existingCoverUrl !== coverUrl) await this.coverStorage.remove(existingCoverUrl);
+        if (this.cover && this.existingCoverUrl && this.existingCoverUrl !== coverUrl) {
+          // Removing an old cover is cleanup only. It must never turn a
+          // successful patch save into a failure (especially for migrated
+          // covers that belong to the former Firebase project).
+          void this.coverStorage.remove(this.existingCoverUrl).catch(() => undefined);
+        }
       }
       else await this.patchRepository.create(draft, coverUrl, patchId);
       this.status.show('บันทึกแพตช์สำเร็จ', 'success');
@@ -192,6 +197,7 @@ export class AdminPatchPageComponent {
     const patch = await this.patchRepository.getById(id);
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
+    this.existingCoverUrl = patch.coverUrl ?? '';
     this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' }, { emitEvent: false });
     this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
