@@ -29,11 +29,13 @@
     </div>
     <div>
       <label>Patch tool<input class="admin-input" formControlName="patchTool" /></label>
-      <div class="mt-2 flex flex-wrap gap-2">
+      <div class="mt-2 flex flex-wrap gap-2">       
         <button class="border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
           (click)="setDefaultPatchTool()">Default</button>
         <button class="border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
           (click)="setRomPatcherTool()">RomPatcher.js</button>
+           <button class="border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
+          (click)="pastePatchTool()" [disabled]="pastingPatchTool">{{ pastingPatchTool ? 'กำลังวาง…' : 'วางจาก Clipboard' }}</button>
       </div>
     </div>
     <label>Patch file URL<input class="admin-input" formControlName="patchFileUrl" type="url" /></label>

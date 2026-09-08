@@ -34,16 +34,6 @@
     padding: 0.3rem 0.6rem;
 }
 
-.search-clear {
-    background: transparent;
-    border: 0;
-    color: #111;
-    cursor: pointer;
-    font-size: 1.4rem;
-    line-height: 1;
-    padding: 0.1rem 0.25rem;
-}
-
 .search-console input::placeholder {
     color: #5d5d5d;
     opacity: 1;

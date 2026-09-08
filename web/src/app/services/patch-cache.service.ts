@@ -6,6 +6,7 @@ import { FirestoreCacheService } from './firestore-cache.service';
 export class PatchCacheService {
   readonly refreshRequested = signal(0);
   private readonly cache = inject(FirestoreCacheService);
+  readonly lastUpdated = this.cache.timestampSignal('patches');
 
   get<T>(loadFresh: () => Observable<T>): Observable<T> {
     return this.cache.get('patches', loadFresh);

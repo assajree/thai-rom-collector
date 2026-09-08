@@ -5,8 +5,9 @@
     <a class="site-title" routerLink="/"><img src="assets/images/logo.png" alt="THAI ROM DB"></a>
   </div>
 
-  <div align=center><a href='https://www.counter12.com'><img src='https://www.counter12.com/img-bB421aAaaxd09BA4-9.gif'
-        border='0' alt='free web counter'></a></div>
+  <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด: ' + patchCacheLastUpdatedLabel()">
+    อัปเดตล่าสุด: {{ patchCacheLastUpdatedLabel() }}
+  </div>
 
 
 </header>
@@ -14,8 +15,8 @@
 <div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
   <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col"
     [class.mobile-sidebar-open]="sidebarOpen()" (click)="$event.stopPropagation()" aria-label="Main navigation">
-    <p class="retro-rail-heading">THAI ROM DB</p>
 
+    <p class="retro-rail-heading">THAI ROM DB</p>
     <nav aria-label="Main navigation">
       <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
@@ -72,12 +73,14 @@
           </a>
           <span class="sidebar-translator-links">
             @if (translator.link) {
-            <a [href]="translator.link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="fa-link">
+            <a [href]="translator.link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล"
+              class="fa-link">
               <i class="fa-brands fa-square-facebook" aria-hidden="true"></i>
             </a>
             }
             @if (translator.modTool) {
-            <a [href]="translator.modTool" target="_blank" rel="noopener noreferrer" aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link">
+            <a [href]="translator.modTool" target="_blank" rel="noopener noreferrer"
+              aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link">
               <i class="fa-solid fa-globe" aria-hidden="true"></i>
             </a>
             }
@@ -107,13 +110,24 @@
       <div>
         <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
           (click)="closeSidebar()">ช่วยค่าเซิร์ฟเวอร์</a>
-         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/" >Facebook Page</a>
+        <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">Facebook Page</a>
         <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
           Refresh
         </button>
-       
+
       </div>
     </div>
+
+    <div class="retro-tag-section">
+      <div class="hit-counter" align=center>
+        <div class="retro-rail-heading">จำนวนผู้เข้าชม</div>
+        <a href='https://www.counter12.com'><img src='https://www.counter12.com/img-00y4C51BcA675b33-1.gif' border='0'
+            alt='free counter'></a>
+        <script type='text/javascript' src='https://www.counter12.com/ad.js?id=00y4C51BcA675b33'></script>
+      </div>
+    </div>
+
+
 
   </aside>
 
@@ -130,10 +144,10 @@
     </div>
     }
     @if (statusMessage(); as message) {
-    <div class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
+    <div
+      class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
       [class.bg-arcade]="message.tone === 'error'" [class.status-message--success]="message.tone === 'success'"
-      [class.text-white]="message.tone !== 'info'" role="status"
-      aria-live="polite">
+      [class.text-white]="message.tone !== 'info'" role="status" aria-live="polite">
       <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
         message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}

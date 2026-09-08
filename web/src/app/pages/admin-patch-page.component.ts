@@ -43,6 +43,7 @@ export class AdminPatchPageComponent {
   protected cover?: Blob;
   protected saving = false;
   protected pastingGameTitle = false;
+  protected pastingPatchTool = false;
   protected deleteConfirmOpen = false;
   protected editId: string | null = null;
   private existingCoverUrl = '';
@@ -167,6 +168,19 @@ export class AdminPatchPageComponent {
       // Clipboard access can be denied by the browser; leave the current value unchanged.
     } finally {
       this.pastingGameTitle = false;
+    }
+  }
+
+  protected async pastePatchTool(): Promise<void> {
+    if (this.pastingPatchTool) return;
+    this.pastingPatchTool = true;
+    try {
+      const text = (await navigator.clipboard.readText()).trim();
+      if (text) this.form.controls.patchTool.setValue(text);
+    } catch {
+      // Clipboard access can be denied by the browser; leave the current value unchanged.
+    } finally {
+      this.pastingPatchTool = false;
     }
   }
 

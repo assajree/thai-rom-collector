@@ -62,8 +62,15 @@ h1 span {
   max-width: 34rem;
 }
 
-.server-cost { color: #ff4d5d; font-size: 1.1rem; margin-bottom: 1.4rem; }
-.server-cost strong { color: #c7ff3a; font-size: 1.35em; }
+.server-cost {
+  color: #ff4d5d;
+  font-size: 1.1rem;
+}
+
+.server-cost strong {
+  color: #c7ff3a;
+  font-size: 1.35em;
+}
 
 .back-link {
   color: #ffd92b;

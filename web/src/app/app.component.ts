@@ -41,6 +41,13 @@ export class AppComponent implements OnDestroy {
   protected readonly sidebarOpen = signal(false);
   protected readonly browseRoute = browseRoute;
   protected readonly isOffline = signal(false);
+  protected readonly patchCacheLastUpdated = this.patchCache.lastUpdated;
+  protected readonly patchCacheLastUpdatedLabel = () => {
+    const timestamp = this.patchCacheLastUpdated();
+    return timestamp === null ? 'ยังไม่มีข้อมูล cache' : new Intl.DateTimeFormat('th-TH', {
+      dateStyle: 'medium', timeStyle: 'short'
+    }).format(timestamp);
+  };
   private readonly onlineHandler = () => this.isOffline.set(false);
   private readonly offlineHandler = () => this.isOffline.set(true);
 
