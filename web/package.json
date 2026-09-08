@@ -9,6 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "backfill:create-date": "node scripts/backfill-create-date.mjs"
+    ,"migrate:firestore-to-rtdb": "node scripts/migrate-firestore-to-rtdb.mjs"
   },
   "private": true,
   "dependencies": {

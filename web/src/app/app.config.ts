@@ -2,6 +2,7 @@ import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideRouter, withHashLocation } from '@angular/router';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideServiceWorker } from '@angular/service-worker';
@@ -16,6 +17,8 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withHashLocation()),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),
+    // Kept during the cutover for the legacy backup/import screen and rollback.
+    provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
     provideServiceWorker('ngsw-worker.js', {
