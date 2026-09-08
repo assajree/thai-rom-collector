@@ -6,13 +6,20 @@
   </div>
 
   <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด:' + patchCacheLastUpdatedLabel()">
-    อัปเดตล่าสุด 
+    อัปเดตล่าสุด
     <br />
     {{ patchCacheLastUpdatedLabel() }}
   </div>
 
 
 </header>
+
+<div class="marquee border-b-2 border-slate-300 px-4 py-1 flex items-center">
+  <marquee scrollamount="5">
+    <span>⚠️ เว็บไซต์นี้ใช้ระบบแคช เพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย</span>
+    @if (serverCost() !== null) { | ค่าเซิร์ฟเวอร์เดือนนี้: {{ serverCost() }} บาท }
+  </marquee>
+</div>
 
 <div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
   <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col"
@@ -112,7 +119,8 @@
       <div>
         <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
           (click)="closeSidebar()">ช่วยค่าเซิร์ฟเวอร์</a>
-        <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">Facebook Page</a>
+        <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on Facebook</a>
+        <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
         <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
           Refresh
         </button>

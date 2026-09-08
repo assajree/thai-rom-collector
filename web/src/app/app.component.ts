@@ -9,6 +9,7 @@ import { Tag, Translator } from './models/patch.models';
 import { SystemMaster, SystemRepository } from './repositories/system.repository';
 import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
+import { ServerCostRepository } from './repositories/server-cost.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
 import { browseRoute } from './shared/browse-route.util';
 import { PatchCacheService } from './services/patch-cache.service';
@@ -27,6 +28,7 @@ export class AppComponent implements OnDestroy {
   private readonly tagRepository = inject(TagRepository);
   private readonly translatorRepository = inject(TranslatorRepository);
   private readonly systemRepository = inject(SystemRepository);
+  private readonly serverCostRepository = inject(ServerCostRepository);
   private readonly patchCache = inject(PatchCacheService);
   private readonly router = inject(Router);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
@@ -35,6 +37,7 @@ export class AppComponent implements OnDestroy {
   protected readonly platforms = signal<SystemMaster[]>([]);
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
+  protected readonly serverCost = signal<number | null>(null);
   private readonly sidebarScrollLock = effect(() => {
     this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
   });
@@ -91,6 +94,7 @@ export class AppComponent implements OnDestroy {
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
     this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });
+    this.serverCostRepository.read().then(cost => this.serverCost.set(cost)).catch(console.error);
   }
 
   ngOnDestroy(): void {

@@ -13,6 +13,10 @@
   text-align: right;
 }
 
+.marquee{
+  background-color: #ffd92b;
+  color: #280a61;
+}
 @media (max-width: 480px) {
   #last-update {
     max-width: 9rem;
