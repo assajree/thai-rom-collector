@@ -194,10 +194,10 @@
     background: #35006c;
     display: none;
     left: 0;
-    max-height: calc(100vh - 3.5rem);
+    max-height: calc(100vh - 6rem);
     overflow-y: auto;
     position: fixed;
-    top: 3.5rem;
+    top: 6rem;
     width: min(18rem, 85vw);
     z-index: 20;
   }
