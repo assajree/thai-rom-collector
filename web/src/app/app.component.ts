@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -37,7 +37,12 @@ export class AppComponent implements OnDestroy {
   protected readonly platforms = signal<SystemMaster[]>([]);
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
-  protected readonly serverCost = signal<number | null>(null);
+  protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
+  protected readonly marqueeText = computed(() => {
+    const cost = this.serverCost();
+    const costText = cost !== null ? `  ค่าเซิร์ฟเวอร์เดือนนี้: ${cost.toLocaleString('th-TH')} บาท` : '';
+    return `⚠️ เว็บไซต์นี้ใช้ระบบแคชเพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย${costText}`;
+  });
   private readonly sidebarScrollLock = effect(() => {
     this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
   });
@@ -51,7 +56,10 @@ export class AppComponent implements OnDestroy {
       dateStyle: 'medium', timeStyle: 'short'
     }).format(timestamp);
   };
-  private readonly onlineHandler = () => this.isOffline.set(false);
+  private readonly onlineHandler = () => {
+    this.isOffline.set(false);
+    this.loadServerCost();
+  };
   private readonly offlineHandler = () => this.isOffline.set(true);
 
   protected toggleSidebar(): void { this.sidebarOpen.update((open) => !open); }
@@ -80,7 +88,21 @@ export class AppComponent implements OnDestroy {
   }
   protected forceRefreshPatches(): void {
     this.patchCache.requestForceRefresh();
+    this.tagRepository.refreshAll();
+    this.translatorRepository.refreshAll();
+    this.systemRepository.refreshAll();
+    this.loadServerCost();
+    this.statusMessageService.show('รีเฟรชข้อมูลล่าสุดเรียบร้อยแล้ว', 'success');
     this.closeSidebar();
+  }
+
+  private loadServerCost(): void {
+    this.serverCostRepository.read()
+      .then((cost) => this.serverCost.set(cost))
+      .catch(() => {
+        const cached = this.serverCostRepository.getCached();
+        if (cached !== null) this.serverCost.set(cached);
+      });
   }
 
   constructor() {
@@ -94,7 +116,7 @@ export class AppComponent implements OnDestroy {
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
     this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });
-    this.serverCostRepository.read().then(cost => this.serverCost.set(cost)).catch(console.error);
+    this.loadServerCost();
   }
 
   ngOnDestroy(): void {

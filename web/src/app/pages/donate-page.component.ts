@@ -13,7 +13,7 @@ import { ServerCostRepository } from '../repositories/server-cost.repository';
 export class DonatePageComponent {
   private readonly serverCostRepository = inject(ServerCostRepository);
   protected readonly selectedMethod = signal<'promptpay' | 'truemoney'>('promptpay');
-  protected readonly serverCost = signal<number | null>(null);
+  protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
 
   constructor() { void this.loadServerCost(); }
 

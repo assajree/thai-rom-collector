@@ -14,10 +14,10 @@
 
 </header>
 
-<div class="marquee border-b-2 border-slate-300 px-4 py-1 flex items-center">
+<div class="marquee border-b-2 border-slate-300 py-1 flex items-center">
   <marquee scrollamount="5">
-    <span>⚠️ เว็บไซต์นี้ใช้ระบบแคช เพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย</span>
-    @if (serverCost() !== null) { | ค่าเซิร์ฟเวอร์เดือนนี้: {{ serverCost() }} บาท }
+    {{ marqueeText() }}
+
   </marquee>
 </div>
 
@@ -98,6 +98,7 @@
         }
       </div>
     </div>
+    
     }
 
     @if (tags().length > 0) {
@@ -127,6 +128,7 @@
 
       </div>
     </div>
+
 
     <div class="retro-tag-section">
       <div class="hit-counter" align=center>

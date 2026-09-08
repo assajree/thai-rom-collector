@@ -13,10 +13,11 @@
   text-align: right;
 }
 
-.marquee{
+.marquee {
   background-color: #ffd92b;
   color: #280a61;
 }
+
 @media (max-width: 480px) {
   #last-update {
     max-width: 9rem;
@@ -28,7 +29,7 @@
   border-right: 1px solid #a8abd9;
   min-height: 100%;
   min-width: 16rem;
-  padding: 0.45rem 1rem 1rem 0.5rem;
+  padding: 1rem 1rem 1rem 0.5rem;
 }
 
 .status-message {
@@ -50,6 +51,7 @@
 
 .app-content {
   padding-bottom: 5rem;
+  background-image: url("https://theoldnet.com/images/chatbg2.gif");
 }
 
 .mobile-menu-button {
@@ -119,16 +121,11 @@
   color: #c7ff3a;
 }
 
-.retro-system-section {
-  border-top: 1px solid #a8abd9;
-  margin-top: 0.65rem;
-  padding-top: 0.55rem;
-}
-
+.retro-system-section,
 .retro-tag-section {
-  border-top: 1px solid #a8abd9;
-  margin-top: 0.65rem;
-  padding-top: 0.55rem;
+  margin-top: 1rem;
+  padding-top: 2rem;
+  background: url(https://theoldnet.com/images/pagedivider6.gif) top center no-repeat;
 }
 
 .retro-system-button {
@@ -190,10 +187,10 @@
     background: #35006c;
     display: none;
     left: 0;
-    max-height: calc(100vh - 2.5rem);
+    max-height: calc(100vh - 3.5rem);
     overflow-y: auto;
     position: fixed;
-    top: 2.5rem;
+    top: 3.5rem;
     width: min(18rem, 85vw);
     z-index: 20;
   }
