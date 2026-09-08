@@ -9,6 +9,8 @@ import { AdminSystemsPageComponent } from './pages/admin-systems-page.component'
 import { AdminTranslatorsPageComponent } from './pages/admin-translators-page.component';
 import { AdminTagsPageComponent } from './pages/admin-tags-page.component';
 import { AdminFirestoreDataPageComponent } from './pages/admin-firestore-data-page.component';
+import { DonatePageComponent } from './pages/donate-page.component';
+import { AdminServerCostPageComponent } from './pages/admin-server-cost-page.component';
 
 export const routes: Routes = [
   {
@@ -20,6 +22,8 @@ export const routes: Routes = [
   { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator' } },
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
   { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' } },
+  { path: 'donate', component: DonatePageComponent },
+  { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },
   {
     path: 'add-patch',
     component: AdminPatchPageComponent,

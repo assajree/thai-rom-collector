@@ -37,6 +37,8 @@
           (click)="closeSidebar()">จัดการแท็ก</a>
         <a class="retro-rail-link" routerLink="/admin/firestore-data" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการข้อมูล</a>
+        <a class="retro-rail-link" routerLink="/admin/server-cost" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">ค่าเซิร์ฟเวอร์เดือนนี้</a>
         <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active"
           (click)="signOut()">ออกจากระบบ</a>
       </nav>
@@ -103,7 +105,9 @@
     <div class="retro-tag-section">
       <p class="retro-rail-heading">อื่นๆ</p>
       <div>
-         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/" >Facebook</a>
+        <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
+          (click)="closeSidebar()">ช่วยค่าเซิร์ฟเวอร์</a>
+         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/" >Facebook Page</a>
         <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
           Refresh
         </button>
