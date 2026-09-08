@@ -1,4 +1,4 @@
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -38,11 +38,6 @@ export class AppComponent implements OnDestroy {
   protected readonly tags = signal<Tag[]>([]);
   protected readonly translators = signal<Translator[]>([]);
   protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
-  protected readonly marqueeText = computed(() => {
-    const cost = this.serverCost();
-    const costText = cost !== null ? `  ค่าเซิร์ฟเวอร์เดือนนี้: ${cost.toLocaleString('th-TH')} บาท` : '';
-    return `⚠️ เว็บไซต์นี้ใช้ระบบแคชเพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย${costText}`;
-  });
   private readonly sidebarScrollLock = effect(() => {
     this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
   });

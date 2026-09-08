@@ -14,8 +14,7 @@
 }
 
 .marquee {
-  background-color: #ffd92b;
-  color: #280a61;
+  background-color: #610101;
 }
 
 @media (max-width: 480px) {
@@ -78,8 +77,16 @@
     z-index: 30;
   }
 
+  :host-context(body.sidebar-open) .marquee {
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 4rem;
+    z-index: 30;
+  }
+
   :host-context(body.sidebar-open) .app-shell {
-    padding-top: 2.5rem;
+    padding-top: 6rem;
   }
 }
 
@@ -124,8 +131,8 @@
 .retro-system-section,
 .retro-tag-section {
   margin-top: 1rem;
-  padding-top: 2rem;
-  background: url(https://theoldnet.com/images/pagedivider6.gif) top center no-repeat;
+  padding-top: 1rem;
+  background: url("https://theoldnet.com/images/anibar.gif") top center no-repeat;
 }
 
 .retro-system-button {

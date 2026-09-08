@@ -16,8 +16,18 @@
 
 <div class="marquee border-b-2 border-slate-300 py-1 flex items-center">
   <marquee scrollamount="5">
-    {{ marqueeText() }}
-
+    <span class="inline-flex items-center align-middle">
+      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+      <span>เว็บไซต์นี้ใช้ระบบแคชเพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย</span>
+      @if (serverCost(); as cost) {
+      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+      <span>ค่าเซิร์ฟเวอร์เดือนนี้: {{ cost.toLocaleString('th-TH') }} บาท</span>
+      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+      <img src="https://theoldnet.com/images/pointer.gif" />
+      <a routerLink="/donate">ช่วยเหลือค่าเซิร์ฟเวอร์</a>
+      }
+      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+    </span>
   </marquee>
 </div>
 
@@ -98,7 +108,7 @@
         }
       </div>
     </div>
-    
+
     }
 
     @if (tags().length > 0) {
@@ -118,9 +128,12 @@
     <div class="retro-tag-section">
       <p class="retro-rail-heading">อื่นๆ</p>
       <div>
+        <a class="retro-system-button" target="_blank" href="https://thairomdb.atabook.org/">สมุดเยี่ยม</a>
         <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
           (click)="closeSidebar()">ช่วยค่าเซิร์ฟเวอร์</a>
-        <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on Facebook</a>
+
+        <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on
+          Facebook</a>
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
         <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
           Refresh
