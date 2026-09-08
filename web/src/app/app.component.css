@@ -1,6 +1,7 @@
-.app-topbar{
+.app-topbar {
   background-color: #280a61;
 }
+
 .retro-rail {
   box-sizing: border-box;
   border-right: 1px solid #a8abd9;
@@ -51,7 +52,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 30;    
+    z-index: 30;
   }
 
   :host-context(body.sidebar-open) .app-shell {
@@ -59,55 +60,6 @@
   }
 }
 
-@media (max-width: 1023px) {
-  .mobile-menu-button {
-    display: inline-block;
-  }
-
-  .mobile-sidebar-backdrop {
-    background: rgba(0, 0, 0, 0.55);
-    border: 0;
-    inset: 0;
-    position: fixed;
-    z-index: 15;
-  }
-
-  .retro-rail {
-    background: #35006c;
-    display: none;
-    left: 0;
-    max-height: calc(100vh - 2.5rem);
-    overflow-y: auto;
-    position: fixed;
-    top: 2.5rem;
-    width: min(18rem, 85vw);
-    z-index: 20;
-  }
-
-  .retro-rail.mobile-sidebar-open {
-    display: block;
-    padding-bottom: 5rem;
-  }
-
-  .retro-rail-link,
-  .retro-system-button {
-    min-height: 44px;
-    padding: 0.65rem 0.75rem;
-    line-height: 1.2;
-    touch-action: manipulation;
-  }
-
-  .retro-rail nav,
-  .retro-system-section>div,
-  .retro-tag-section>div {
-    padding-top: 0.35rem;
-  }
-
-  .retro-rail-link+.retro-rail-link,
-  .retro-system-button+.retro-system-button {
-    margin-top: 0.15rem;
-  }
-}
 
 .site-title {
   align-items: center;
@@ -174,7 +126,82 @@
   width: 100%;
 }
 
+.sidebar-translator-row {
+  align-items: center;
+  display: flex;
+  gap: .35rem;
+}
+
+.sidebar-translator-links {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: .3rem;
+  line-height: 1;
+}
+
+.sidebar-translator-links a {
+  align-items: center;
+  display: inline-flex;
+  line-height: 1;
+}
+
 .retro-system-button:hover,
 .retro-system-button--active {
   color: #c7ff3a;
+}
+
+
+@media (max-width: 1023px) {
+  .mobile-menu-button {
+    display: inline-block;
+  }
+
+  .mobile-sidebar-backdrop {
+    background: rgba(0, 0, 0, 0.55);
+    border: 0;
+    inset: 0;
+    position: fixed;
+    z-index: 15;
+  }
+
+  .retro-rail {
+    background: #35006c;
+    display: none;
+    left: 0;
+    max-height: calc(100vh - 2.5rem);
+    overflow-y: auto;
+    position: fixed;
+    top: 2.5rem;
+    width: min(18rem, 85vw);
+    z-index: 20;
+  }
+
+  .retro-rail.mobile-sidebar-open {
+    display: block;
+    padding-bottom: 5rem;
+  }
+
+  .retro-rail-link,
+  .retro-system-button {
+    min-height: 44px;
+    padding: 0.65rem 0.75rem;
+    line-height: 1.2;
+    touch-action: manipulation;
+  }
+
+  .retro-rail nav,
+  .retro-system-section>div,
+  .retro-tag-section>div {
+    padding-top: 0.35rem;
+  }
+
+  .retro-rail-link+.retro-rail-link,
+  .retro-system-button+.retro-system-button {
+    margin-top: 0.15rem;
+  }
+
+  .sidebar-translator-links {
+    gap: 1rem;
+  }
 }

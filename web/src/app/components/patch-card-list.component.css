@@ -130,11 +130,23 @@
 
 .translator-link-icon {
   display: inline-block;
-  height: 1rem;
-  margin-left: .25rem;
-  object-fit: contain;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.translator-links {
+  align-items: center;
+  display: inline-flex;
+  gap: .3rem;
+  line-height: 1;
   vertical-align: middle;
-  width: 1rem;
+}
+
+.translator-tool-link {
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .patch-card__tags-label{

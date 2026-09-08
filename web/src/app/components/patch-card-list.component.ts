@@ -22,6 +22,9 @@ export class PatchCardListComponent {
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
   }
+  protected translatorTool(patch: Patch): string | undefined {
+    return this.translators.find((translator) => translator.id === patch.translatorId)?.modTool;
+  }
   protected translatorShortName(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.shortName;
   }

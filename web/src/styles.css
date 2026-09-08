@@ -70,3 +70,8 @@ a {
 a:hover{
   color: #ffd92b;
 }
+
+.fa-link{
+  text-decoration: none;
+  color: #0500ac;
+}

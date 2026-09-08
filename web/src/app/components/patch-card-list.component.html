@@ -13,15 +13,24 @@
       <h2>{{ patch.gameTitle }}</h2>
       <div class="patch-card__description">
 
-        <div>โดย:
-          @if (translatorLink(patch); as link) {
-          <a [routerLink]="translatorRoute(patch)">{{ translatorName(patch) }}</a>
-          <a [href]="link" target="_blank" rel="noopener noreferrer">
-            <img class="translator-link-icon" src="assets/images/browser.png" alt="เปิดลิงก์ทีมแปล" />
-          </a>
-          } @else {
-          {{ translatorName(patch) }}
-          }
+        <div>
+          โดย:
+          <span class="translator-links">
+            <a [routerLink]="translatorRoute(patch)">{{ translatorName(patch) }}</a>
+
+            @if (translatorLink(patch); as link) {
+            <a [href]="link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="fa-link">
+              <i class="fa-brands fa-square-facebook translator-link-icon" aria-hidden="true"></i>
+            </a>
+            }
+
+            @if (translatorTool(patch); as tool) {
+            <a class="translator-tool-link" [href]="tool" target="_blank" rel="noopener noreferrer"
+              aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link">
+              <i class="fa-solid fa-globe" aria-hidden="true"></i>
+            </a>
+            }
+          </span>
         </div>
 
         <div>ระบบ: <a [routerLink]="systemLink(patch.system)">{{ systemName(patch.system) }}</a></div>

@@ -63,10 +63,24 @@
       <p class="retro-rail-heading">ทีมแปล</p>
       <div>
         @for (translator of translators(); track translator.id) {
-        <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.shortName)"
-          routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
-          {{ translator.name }}
-        </a>
+        <div class="sidebar-translator-row">
+          <a class="retro-system-button" [routerLink]="browseRoute('translator', translator.shortName)"
+            routerLinkActive="retro-system-button--active" (click)="selectTranslator(translator.id)">
+            {{ translator.name }}
+          </a>
+          <span class="sidebar-translator-links">
+            @if (translator.link) {
+            <a [href]="translator.link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="fa-link">
+              <i class="fa-brands fa-square-facebook" aria-hidden="true"></i>
+            </a>
+            }
+            @if (translator.modTool) {
+            <a [href]="translator.modTool" target="_blank" rel="noopener noreferrer" aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link">
+              <i class="fa-solid fa-globe" aria-hidden="true"></i>
+            </a>
+            }
+          </span>
+        </div>
         }
       </div>
     </div>
