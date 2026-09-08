@@ -33,6 +33,7 @@ export interface Patch {
   patchedRomUrl: string;
   referenceText: string;
   referenceUrl: string;
+  walkthroughUrl: string;
 }
 
 export interface AdminProfile {
@@ -53,6 +54,7 @@ export interface PatchDraft {
   patchedRomUrl: string;
   referenceText: string;
   referenceUrl: string;
+  walkthroughUrl: string;
   coverFile?: File;
 }
 

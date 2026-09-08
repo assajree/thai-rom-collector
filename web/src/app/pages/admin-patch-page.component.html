@@ -39,8 +39,9 @@
     <label>Patch file URL<input class="admin-input" formControlName="patchFileUrl" type="url" /></label>
     <label class="inline-flex items-center gap-2"><input formControlName="haveRom" type="checkbox" /> มี ROM</label>
     <label>Patched ROM URL<input class="admin-input" formControlName="patchedRomUrl" type="url" /></label>
-    <label>ข้อความอ้างอิง<textarea class="admin-input" formControlName="referenceText" rows="3"></textarea></label>
+    <label>ข้อความอ้างอิง<input class="admin-input" formControlName="referenceText" type="text" /></label>
     <label>Reference URL<input class="admin-input" formControlName="referenceUrl" type="url" /></label>
+    <label>ลิงก์บทสรุป<input class="admin-input" formControlName="walkthroughUrl" type="url" placeholder="https://" /></label>
     <fieldset class="border border-slate-600 p-3">
       <legend>หมวดหมู่</legend>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">

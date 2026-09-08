@@ -45,7 +45,7 @@ export class PatchCardListComponent {
     return tags.some((tag) => tag.trim().length > 0);
   }
   protected hasDownloadLinks(patch: Patch): boolean {
-    return Boolean(patch.coverUrl || patch.patchTool || patch.patchFileUrl || (patch.haveRom && patch.patchedRomUrl));
+    return Boolean(patch.coverUrl || patch.patchTool || patch.patchFileUrl || patch.referenceUrl || patch.walkthroughUrl || (patch.haveRom && patch.patchedRomUrl));
   }
   protected formatUpdateDate(value: string): string {
     const date = new Date(value);

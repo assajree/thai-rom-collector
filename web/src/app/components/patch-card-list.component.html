@@ -48,9 +48,15 @@
           @if (patch.patchFileUrl) {
           <a [href]="patch.patchFileUrl" target="_blank">Patch</a>
           }
+          @if (patch.referenceUrl) {
+          <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'Reference' }}</a>
+          }
           @if (patch.haveRom && patch.patchedRomUrl) {
           <a [href]="patch.patchedRomUrl" target="_blank"
             rel="noopener noreferrer">รอมแปลไทย</a>
+          }
+          @if (patch.walkthroughUrl) {
+          <a [href]="patch.walkthroughUrl" target="_blank" rel="noopener noreferrer">บทสรุป</a>
           }
         </div>
 

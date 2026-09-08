@@ -22,3 +22,7 @@ For short-lived operations that complete immediately and do not perform long-run
 - If the operation fails, show an error message and do not show a success message.
 - Disable the triggering button or control while the operation is running to prevent duplicate submissions.
 - Use `finally` to restore loading/busy state regardless of success or failure.
+
+## Firestore Schema Changes
+
+When adding or changing a Firestore document field, update the corresponding validation and allowed-field list in `firestore.rules` in the same change. Verify that the client document shape and deployed Firestore Rules remain in sync, and mention the required rules deployment command when handing off the change.

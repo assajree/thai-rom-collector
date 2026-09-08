@@ -95,7 +95,7 @@ export class FirestoreDataTransferService {
   private validateDocument(name: FirestoreBackupCollection, row: BackupDocument, index: number): void {
     const fail = (field: string) => { throw new Error(`${name}[${index}].${field} มีชนิดข้อมูลไม่ถูกต้อง`); };
     if (name === 'patches') {
-      for (const field of ['updateDate','fileName','gameTitle','system','translatorId','translatedBy','patchTool','coverUrl','patchFileUrl','patchedRomUrl','referenceText','referenceUrl']) if (typeof row[field] !== 'string') fail(field);
+      for (const field of ['updateDate','fileName','gameTitle','system','translatorId','translatedBy','patchTool','coverUrl','patchFileUrl','patchedRomUrl','referenceText','referenceUrl','walkthroughUrl']) if (typeof row[field] !== 'string') fail(field);
       if (!Array.isArray(row['tags']) || !row['tags'].every((tag) => typeof tag === 'string')) fail('tags');
       if (typeof row['haveRom'] !== 'boolean') fail('haveRom');
     } else if (name === 'tags') { if (typeof row['name'] !== 'string') fail('name'); }

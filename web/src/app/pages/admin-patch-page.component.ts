@@ -39,7 +39,7 @@ export class AdminPatchPageComponent {
   protected readonly tags = this.tagRepository.watchAll();
   protected readonly systems = this.systemRepository.watchAll();
   protected systemOptions: SystemMaster[] = [];
-  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''] });
+  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
   protected pastingGameTitle = false;
@@ -116,6 +116,7 @@ export class AdminPatchPageComponent {
         patchFileUrl: this.removeFacebookReference(value.patchFileUrl),
         patchedRomUrl: this.removeFacebookReference(value.patchedRomUrl),
         referenceUrl: this.removeFacebookReference(value.referenceUrl),
+        walkthroughUrl: this.removeFacebookReference(value.walkthroughUrl),
         tags: this.selectedTags
       };
       let coverUrl = '';
@@ -144,7 +145,8 @@ export class AdminPatchPageComponent {
         haveRom: false,
         patchedRomUrl: '',
         referenceText: '',
-        referenceUrl: ''
+        referenceUrl: '',
+        walkthroughUrl: ''
       });
       this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -198,7 +200,7 @@ export class AdminPatchPageComponent {
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
     this.existingCoverUrl = patch.coverUrl ?? '';
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '' }, { emitEvent: false });
+    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
     this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
   }
