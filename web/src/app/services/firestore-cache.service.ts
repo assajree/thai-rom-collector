@@ -35,7 +35,7 @@ export class FirestoreCacheService {
     (['patches', 'translators', 'tags', 'systems'] as const).forEach((key) => this.clear(key));
   }
 
-  private storageKey(key: CacheKey): string { return `rom-collector:firestore:${key}`; }
+  private storageKey(key: CacheKey): string { return `rom-collector:realtime-database:${key}`; }
 
   private read<T>(key: CacheKey): T | undefined {
     try {

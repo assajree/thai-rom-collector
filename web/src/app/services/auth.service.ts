@@ -1,14 +1,14 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Auth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, user } from '@angular/fire/auth';
-import { Firestore, doc, docData } from '@angular/fire/firestore';
-import { Subscription } from 'rxjs';
+import { Database, get, ref } from '@angular/fire/database';
+import { Subscription, from } from 'rxjs';
 import type { User } from 'firebase/auth';
 import { AdminProfile } from '../models/patch.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly auth = inject(Auth);
-  private readonly firestore = inject(Firestore);
+  private readonly database = inject(Database);
   private readonly currentUser = signal<User | null>(null);
   private readonly adminState = signal(false);
   private readonly adminCheckComplete = signal(false);
@@ -25,9 +25,9 @@ export class AuthService {
       this.adminState.set(false);
       this.adminCheckComplete.set(!currentUser);
       if (!currentUser) return;
-      this.adminSubscription = docData(doc(this.firestore, `admins/${currentUser.uid}`)).subscribe({
+      this.adminSubscription = from(get(ref(this.database, `admins/${currentUser.uid}`))).subscribe({
         next: (profile) => {
-          this.adminState.set(Boolean(profile));
+          this.adminState.set(profile.exists());
           this.adminCheckComplete.set(true);
         },
         error: () => {

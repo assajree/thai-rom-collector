@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Firestore, collection, deleteDoc, doc, docData, getDocsFromServer, setDoc } from '@angular/fire/firestore';
+import { Database, get, ref, remove, set } from '@angular/fire/database';
 import { Observable, catchError, from, map, throwError } from 'rxjs';
 import { Patch, PatchDraft, Translator, Tag } from '../models/patch.models';
 import { RepositoryError } from './repository-error';
@@ -12,16 +12,13 @@ const clean = (value: string): string => value.trim().replace(/\s+/g, ' ');
 
 @Injectable({ providedIn: 'root' })
 export class PatchRepository {
-  private readonly firestore = inject(Firestore);
+  private readonly database = inject(Database);
   private readonly patchCache = inject(PatchCacheService);
   private readonly cache = inject(FirestoreCacheService);
-  private readonly patches = collection(this.firestore, 'patches');
-  private readonly translators = collection(this.firestore, 'translators');
-  private readonly tags = collection(this.firestore, 'tags');
-  private readonly systems = collection(this.firestore, 'systems');
+  private readonly patches = 'patches';
 
   watchAll(): Observable<Patch[]> {
-    return this.patchCache.get(() => from(getDocsFromServer(this.patches)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).pipe(
+    return this.patchCache.get(() => from(get(ref(this.database, this.patches))).pipe(map((snapshot) => Object.entries((snapshot.val() ?? {}) as Record<string, unknown>).map(([id, data]) => ({ id, ...(data as Record<string, unknown>) } as Record<string, unknown>))))).pipe(
       map((rows) => rows.map((row) => ({
         id: String(row['id']),
         updateDate: String(row['updateDate'] ?? ''),
@@ -48,20 +45,20 @@ export class PatchRepository {
 
   getById(id: string): Promise<Patch | undefined> {
     return new Promise((resolve, reject) => {
-      docData(doc(this.patches, id), { idField: 'id' }).pipe(
-        map((row) => row ? ({ ...row, id: String(row['id']) } as unknown as Patch) : undefined),
+      from(get(ref(this.database, `${this.patches}/${id}`))).pipe(
+        map((snapshot) => snapshot.exists() ? ({ ...(snapshot.val() as Record<string, unknown>), id } as unknown as Patch) : undefined),
         catchError(() => throwError(() => new RepositoryError('ไม่สามารถโหลดข้อมูลแพตช์ได้', 'read')))
       ).subscribe({ next: resolve, error: reject, complete: () => resolve(undefined) });
     });
   }
 
   async create(draft: PatchDraft, coverUrl: string, id?: string): Promise<string> {
-    const ref = id ? doc(this.patches, id) : doc(this.patches);
+    const patchId = id ?? crypto.randomUUID();
     const data = await this.buildDocument(draft, coverUrl, draft.updateDate);
     try {
-      await setDoc(ref, data);
+      await set(ref(this.database, `${this.patches}/${patchId}`), data);
       this.patchCache.requestForceRefresh();
-      return ref.id;
+      return patchId;
     } catch (error) {
       if (this.isPermissionDenied(error)) {
         throw new RepositoryError('ไม่มีสิทธิ์บันทึกแพตช์: ตรวจสอบว่า UID นี้อยู่ใน admins และ deploy Firestore Rules แล้ว', 'create');
@@ -80,7 +77,7 @@ export class PatchRepository {
       const existing = await this.getById(id);
       if (!existing) throw new RepositoryError('ไม่พบแพตช์ที่ต้องการแก้ไข', 'update');
       const data = await this.buildDocument(draft, coverUrl ?? existing.coverUrl, draft.updateDate || existing.updateDate);
-      await setDoc(doc(this.patches, id), data);
+      await set(ref(this.database, `${this.patches}/${id}`), data);
       this.patchCache.requestForceRefresh();
     } catch (error) {
       if (error instanceof RepositoryError) throw error;
@@ -93,7 +90,7 @@ export class PatchRepository {
 
   async delete(id: string): Promise<void> {
     try {
-      await deleteDoc(doc(this.patches, id));
+      await remove(ref(this.database, `${this.patches}/${id}`));
       this.patchCache.requestForceRefresh();
     } catch (error) {
       if (this.isPermissionDenied(error)) {
@@ -121,7 +118,7 @@ export class PatchRepository {
   private getSystem(name: string): Promise<{ shortName: string }> {
     const normalized = clean(name);
     return new Promise((resolve, reject) => {
-      this.cache.get('systems', () => from(getDocsFromServer(this.systems)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
+      this.cache.get('systems', () => from(get(ref(this.database, 'systems'))).pipe(map((snapshot) => Object.entries((snapshot.val() ?? {}) as Record<string, unknown>).map(([id, data]) => ({ id, ...(data as Record<string, unknown>) } as Record<string, unknown>))))).subscribe({
         next: (rows) => {
           const row = rows.find((item) => {
             const shortName = clean(String(item['shortName'] ?? '')).toLocaleLowerCase('th');
@@ -137,7 +134,7 @@ export class PatchRepository {
 
   private getTranslator(id: string): Promise<Translator> {
     return new Promise((resolve, reject) => {
-      this.cache.get('translators', () => from(getDocsFromServer(this.translators)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
+      this.cache.get('translators', () => from(get(ref(this.database, 'translators'))).pipe(map((snapshot) => Object.entries((snapshot.val() ?? {}) as Record<string, unknown>).map(([id, data]) => ({ id, ...(data as Record<string, unknown>) } as Record<string, unknown>))))).subscribe({
         next: (rows) => { const row = rows.find((item) => String(item['id']) === id) as Record<string, unknown> | undefined; row ? resolve({ id, shortName: clean(String(row['shortName'] ?? '')), name: clean(String(row['name'] ?? '')) }) : reject(new RepositoryError('ไม่พบทีมแปลที่เลือก', 'create')); },
         error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบทีมแปลได้', 'create'))
       });
@@ -146,7 +143,7 @@ export class PatchRepository {
 
   private getMasterTags(idsOrNames: string[]): Promise<string[]> {
     return new Promise((resolve, reject) => {
-      this.cache.get('tags', () => from(getDocsFromServer(this.tags)).pipe(map((snapshot) => snapshot.docs.map((item) => ({ id: item.id, ...item.data() } as Record<string, unknown>))))).subscribe({
+      this.cache.get('tags', () => from(get(ref(this.database, 'tags'))).pipe(map((snapshot) => Object.entries((snapshot.val() ?? {}) as Record<string, unknown>).map(([id, data]) => ({ id, ...(data as Record<string, unknown>) } as Record<string, unknown>))))).subscribe({
         next: (rows) => {
           const selected = new Set(idsOrNames);
           const names = rows.filter((row) => selected.has(String(row['id'])) || selected.has(String(row['name'])))
