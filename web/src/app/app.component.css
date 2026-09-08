@@ -1,9 +1,10 @@
 .app-topbar {
   background-color: #280a61;
+  height: 4rem;
 }
 
 #last-update {
-  color: #c7ff3a;
+  color: #ffd92b;
   flex: 0 1 auto;
   font-size: 0.75rem;
   font-weight: 700;
