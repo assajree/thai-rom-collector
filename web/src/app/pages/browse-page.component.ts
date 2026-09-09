@@ -42,6 +42,8 @@ export class BrowsePageComponent {
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly showBackToTop = signal(false);
+  protected readonly currentPage = signal(1);
+  protected readonly pageSize = 10;
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
   protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | null>(null);
@@ -101,6 +103,21 @@ export class BrowsePageComponent {
     if (primary !== 0) return primary * (this.direction() === 'asc' ? 1 : -1);
     return a.id.localeCompare(b.id);
   }));
+  protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.sortedPatches().length / this.pageSize)));
+  protected readonly pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, index) => index + 1));
+  protected readonly paginatedPatches = computed(() => {
+    const page = Math.min(this.currentPage(), this.totalPages());
+    const start = (page - 1) * this.pageSize;
+    return this.sortedPatches().slice(start, start + this.pageSize);
+  });
+  private readonly paginationResetEffect = effect(() => {
+    this.sortedPatches();
+    this.currentPage.set(1);
+  }, { allowSignalWrites: true });
+  private readonly paginationClampEffect = effect(() => {
+    const lastPage = this.totalPages();
+    if (this.currentPage() > lastPage) this.currentPage.set(lastPage);
+  }, { allowSignalWrites: true });
   private readonly routeFilterEffect = effect(() => {
     const kind = this.routeKind();
     const slug = this.routeSlug();
@@ -151,6 +168,12 @@ export class BrowsePageComponent {
   protected clearSystem(): void { this.selectedSystem.set(null); }
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
   protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); }
+  protected setPage(page: number): void {
+    const nextPage = Math.max(1, Math.min(page, this.totalPages()));
+    if (nextPage === this.currentPage()) return;
+    this.currentPage.set(nextPage);
+    document.querySelector('.browse-route-label')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
 
   protected retry(): void {
     this.loading.set(true);

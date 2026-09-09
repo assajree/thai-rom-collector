@@ -18,7 +18,23 @@
   }
 
   @if (!loading() && !unavailable() && sortedPatches().length > 0) {
-    <app-patch-card-list [patches]="sortedPatches()" [translators]="translators()" [systems]="systemMasters()" [canEdit]="auth.isAdmin()" />
+    <app-patch-card-list [patches]="paginatedPatches()" [translators]="translators()" [systems]="systemMasters()" [canEdit]="auth.isAdmin()" />
+
+    @if (totalPages() > 1) {
+      <nav class="pagination" aria-label="การแบ่งหน้ารายการแพตช์">
+        <button type="button" class="pagination__button" [disabled]="currentPage() === 1"
+          aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
+        <div class="pagination__pages">
+          @for (page of pageNumbers(); track page) {
+            <button type="button" class="pagination__button pagination__page" [class.pagination__page--active]="page === currentPage()"
+              [attr.aria-current]="page === currentPage() ? 'page' : null" [attr.aria-label]="'ไปหน้าที่ ' + page"
+              (click)="setPage(page)">{{ page }}</button>
+          }
+        </div>
+        <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"
+          aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
+      </nav>
+    }
   }
 
   @if (showBackToTop()) {
