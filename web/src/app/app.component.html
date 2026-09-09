@@ -191,6 +191,11 @@
       <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
         message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}
+      @if (appUpdateReady()) {
+      <button class="retro-system-button ml-auto" type="button" (click)="updateApp()">
+        อัปเดต
+      </button>
+      }
       <button class="ml-auto text-xl leading-none" type="button" (click)="statusMessageService.clear()"
         aria-label="Dismiss message">x</button>
     </div>

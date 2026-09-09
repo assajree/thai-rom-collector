@@ -44,6 +44,7 @@ export class AppComponent implements OnDestroy {
   protected readonly sidebarOpen = signal(false);
   protected readonly browseRoute = browseRoute;
   protected readonly isOffline = signal(false);
+  protected readonly appUpdateReady = signal(false);
   protected readonly browserInfo = this.getBrowserInfo();
   protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
   protected readonly patchCacheLastUpdated = this.patchCache.lastUpdated;
@@ -148,10 +149,16 @@ export class AppComponent implements OnDestroy {
     if (!this.swUpdate?.isEnabled) return;
     this.swUpdate.versionUpdates.subscribe((event) => {
       if (event.type === 'VERSION_READY') {
-        this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กำลังโหลดเวอร์ชันล่าสุด…');
-        void this.swUpdate?.activateUpdate().then(() => window.location.reload());
+        this.appUpdateReady.set(true);
+        this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กดอัปเดตเมื่อสะดวก');
       }
     });
+  }
+
+  protected async updateApp(): Promise<void> {
+    if (!this.swUpdate?.isEnabled) return;
+    await this.swUpdate.activateUpdate();
+    window.location.reload();
   }
 
   protected async signIn(): Promise<void> {
