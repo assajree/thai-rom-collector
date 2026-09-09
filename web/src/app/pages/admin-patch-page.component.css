@@ -5,7 +5,7 @@
 .delete-dialog { border-color: #ff4d67; }
 
 label.required::before{
-  color: #c7ff3a;
+  color: #ff4d5d;
   content: '* ';
   font-weight: 700;
 }

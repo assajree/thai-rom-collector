@@ -122,7 +122,10 @@ export class AdminPatchPageComponent {
     return this.systemOptions.filter((system) =>
       `${system.shortName} ${system.name}`.toLocaleLowerCase().includes(query));
   }
-  protected openSystemAutocomplete(): void { this.systemAutocompleteOpen = true; }
+  protected openSystemAutocomplete(event: FocusEvent): void {
+    this.systemAutocompleteOpen = true;
+    (event.target as HTMLInputElement).select();
+  }
   protected onSystemInput(value: string): void {
     this.systemSearchText = value;
     this.systemAutocompleteOpen = true;
@@ -142,7 +145,10 @@ export class AdminPatchPageComponent {
     return this.translatorOptions.filter((translator) =>
       `${translator.shortName} ${translator.name}`.toLocaleLowerCase().includes(query));
   }
-  protected openTranslatorAutocomplete(): void { this.translatorAutocompleteOpen = true; }
+  protected openTranslatorAutocomplete(event: FocusEvent): void {
+    this.translatorAutocompleteOpen = true;
+    (event.target as HTMLInputElement).select();
+  }
   protected onTranslatorInput(value: string): void {
     this.translatorSearchText = value;
     this.translatorAutocompleteOpen = true;

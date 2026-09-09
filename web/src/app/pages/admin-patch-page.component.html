@@ -10,7 +10,7 @@
       <label class="required">เครื่องเกม</label>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
         <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาเครื่องเกม" [value]="systemSearchText"
-          (focus)="openSystemAutocomplete()" (input)="onSystemInput($any($event.target).value)"
+          (focus)="openSystemAutocomplete($event)" (input)="onSystemInput($any($event.target).value)"
           (keydown.escape)="systemAutocompleteOpen = false" autocomplete="off" role="combobox"
           [attr.aria-expanded]="systemAutocompleteOpen" aria-controls="system-options" />
         <input formControlName="system" type="hidden" />
@@ -31,7 +31,7 @@
       <label class="required">ทีมแปล</label>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
         <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
-          (focus)="openTranslatorAutocomplete()" (input)="onTranslatorInput($any($event.target).value)"
+          (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
           (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
           [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options" />
         <input formControlName="translatorId" type="hidden" />
@@ -69,7 +69,7 @@
     <label>Patched ROM URL<input class="admin-input" formControlName="patchedRomUrl" type="url" /></label>
     <label>ข้อความอ้างอิง<input class="admin-input" formControlName="referenceText" type="text" /></label>
     <label>Reference URL<input class="admin-input" formControlName="referenceUrl" type="url" /></label>
-    <label>ลิงก์บทสรุป<input class="admin-input" formControlName="walkthroughUrl" type="url" placeholder="https://" /></label>
+    <label>ลิงก์บทสรุป<input class="admin-input" formControlName="walkthroughUrl" type="url" /></label>
     <fieldset class="border border-slate-600 p-3">
       <legend>หมวดหมู่</legend>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
@@ -97,7 +97,6 @@
         [disabled]="!newTagName.trim()">เพิ่ม tag ใหม่</button>
     </fieldset>
 
-    <label>ชื่อไฟล์<input class="admin-input" formControlName="fileName" readonly /></label>
     <div>
       <label>วันที่และเวลาอัปเดต<input class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink" type="button"
