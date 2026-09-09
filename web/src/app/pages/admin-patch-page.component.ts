@@ -40,6 +40,8 @@ export class AdminPatchPageComponent {
   protected readonly tags = this.tagRepository.watchAll();
   protected readonly systems = this.systemRepository.watchAll();
   protected systemOptions: SystemMaster[] = [];
+  protected systemSearchText = '';
+  protected systemAutocompleteOpen = false;
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], haveRom: [false], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
@@ -82,6 +84,8 @@ export class AdminPatchPageComponent {
     });
     this.systems.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((systems) => {
       this.systemOptions = [...systems].sort(compareDropdownLabels);
+      const selected = this.systemOptions.find((item) => item.shortName === this.form.controls.system.value);
+      if (selected) this.systemSearchText = this.systemLabel(selected);
     });
     this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameTitle) => {
       const normalizedTitle = this.normalizeGameTitle(gameTitle);
@@ -111,6 +115,26 @@ export class AdminPatchPageComponent {
     this.form.controls.fileName.setValue(fileName, { emitEvent: false });
   }
   private normalizeGameTitle(value: string): string { return value.replace(/é/g, 'e'); }
+  protected systemLabel(system: SystemMaster): string { return `${system.shortName} — ${system.name}`; }
+  protected filteredSystemOptions(): SystemMaster[] {
+    const query = this.systemSearchText.trim().toLocaleLowerCase();
+    if (!query) return this.systemOptions;
+    return this.systemOptions.filter((system) =>
+      `${system.shortName} ${system.name}`.toLocaleLowerCase().includes(query));
+  }
+  protected openSystemAutocomplete(): void { this.systemAutocompleteOpen = true; }
+  protected onSystemInput(value: string): void {
+    this.systemSearchText = value;
+    this.systemAutocompleteOpen = true;
+    if (!this.systemOptions.some((system) => system.shortName === this.form.controls.system.value && this.systemLabel(system) === value)) {
+      this.form.controls.system.setValue('', { emitEvent: false });
+    }
+  }
+  protected selectSystem(system: SystemMaster): void {
+    this.systemSearchText = this.systemLabel(system);
+    this.systemAutocompleteOpen = false;
+    this.form.controls.system.setValue(system.shortName);
+  }
   protected translatorLabel(translator: Translator): string { return `${translator.shortName} — ${translator.name}`; }
   protected filteredTranslatorOptions(): Translator[] {
     const query = this.translatorSearchText.trim().toLocaleLowerCase();
@@ -249,6 +273,8 @@ export class AdminPatchPageComponent {
     this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
     const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
     if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
+    const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
+    if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
     this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
   }
@@ -297,6 +323,7 @@ export class AdminPatchPageComponent {
   protected closeTagAutocomplete(): void {
     this.tagAutocompleteOpen = false;
     this.translatorAutocompleteOpen = false;
+    this.systemAutocompleteOpen = false;
   }
   protected async createTag(): Promise<void> {
     const name = this.newTagName.trim();
@@ -342,6 +369,7 @@ export class AdminPatchPageComponent {
       this.status.show('กำลังบันทึกเครื่องเกม…');
       const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);
       this.form.controls.system.setValue(system.shortName);
+      this.systemSearchText = this.systemLabel(system);
       this.newSystemName = '';
       this.newSystemShortName = '';
       this.systemDialogOpen = false;

@@ -7,10 +7,23 @@
         (click)="pasteGameTitle()" [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' : 'วางจาก Clipboard' }}</button>
     </div>
     <div>
-      <label class="required">เครื่องเกม<select class="admin-input" formControlName="system">
-          <option value="">เลือกเครื่องเกม</option>@for (system of systemOptions; track system.id) { <option
-            [value]="system.shortName">{{ system.shortName }} — {{ system.name }}</option> }
-        </select></label>
+      <label class="required">เครื่องเกม</label>
+      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาเครื่องเกม" [value]="systemSearchText"
+          (focus)="openSystemAutocomplete()" (input)="onSystemInput($any($event.target).value)"
+          (keydown.escape)="systemAutocompleteOpen = false" autocomplete="off" role="combobox"
+          [attr.aria-expanded]="systemAutocompleteOpen" aria-controls="system-options" />
+        <input formControlName="system" type="hidden" />
+        @if (systemAutocompleteOpen && filteredSystemOptions().length > 0) {
+        <ul id="system-options" class="tag-autocomplete__list" role="listbox">
+          @for (system of filteredSystemOptions(); track system.id) {
+          <li><button type="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system) }}</button></li>
+          }
+        </ul>
+        } @else if (systemAutocompleteOpen) {
+        <p class="tag-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</p>
+        }
+      </div>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink"
         type="button" (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
