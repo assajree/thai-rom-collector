@@ -153,12 +153,12 @@
 
 .sidebar-translator-row {
   align-items: center;
-  display: grid;
+  display: flex;
   gap: .35rem;
-  grid-template-columns: minmax(0, 1fr) auto;
 }
 
 .sidebar-translator-row>.retro-system-button {
+  flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -167,11 +167,11 @@
 
 .sidebar-translator-links {
   align-items: center;
-  display: grid;
+  display: flex;
   flex: 0 0 auto;
   gap: .3rem;
-  grid-template-columns: repeat(3, 1.25rem);
   line-height: 1;
+  margin-left: auto;
 }
 
 .sidebar-translator-links a {
@@ -179,20 +179,6 @@
   display: inline-flex;
   line-height: 1;
 }
-
-.sidebar-translator-edit-link {
-  grid-column: 1;
-}
-
-.sidebar-translator-tool-link {
-  grid-column: 2;
-}
-
-.sidebar-translator-external-link {
-  grid-column: 3;
-}
-
-
 
 .retro-system-button:hover,
 .retro-system-button--active {
