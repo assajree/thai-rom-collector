@@ -11,6 +11,9 @@ import { AdminTagsPageComponent } from './pages/admin-tags-page.component';
 import { AdminFirestoreDataPageComponent } from './pages/admin-firestore-data-page.component';
 import { DonatePageComponent } from './pages/donate-page.component';
 import { AdminServerCostPageComponent } from './pages/admin-server-cost-page.component';
+import { ArticlesPageComponent } from './pages/articles-page.component';
+import { ArticlePageComponent } from './pages/article-page.component';
+import { AdminArticlesPageComponent } from './pages/admin-articles-page.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +26,9 @@ export const routes: Routes = [
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
   { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' } },
   { path: 'donate', component: DonatePageComponent },
+  { path: 'articles', component: ArticlesPageComponent },
+  { path: 'article/:slug', component: ArticlePageComponent },
+  { path: 'admin/articles', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },
   {
     path: 'add-patch',

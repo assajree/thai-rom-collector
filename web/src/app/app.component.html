@@ -41,6 +41,9 @@
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
       <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
+      <div class="hidden">
+        <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active">บทความ</a>
+      </div>
     </nav>
 
     @if (authService.isAdmin()) {
@@ -49,6 +52,8 @@
       <nav aria-label="Main navigation">
         <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">เพิ่มเกม</a>
+        <a class="retro-rail-link" routerLink="/admin/articles" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการบทความ</a>
         <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการเครื่องเกม</a>
         <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active"
@@ -69,8 +74,7 @@
     <div class="retro-system-section">
       <p class="retro-rail-heading">ระบบเกม</p>
       @if (authService.isAdmin()) {
-      <a class="retro-rail-admin-link" routerLink="/admin/systems" aria-label="จัดการระบบเกม"
-        (click)="closeSidebar()">
+      <a class="retro-rail-admin-link" routerLink="/admin/systems" aria-label="จัดการระบบเกม" (click)="closeSidebar()">
         <i class="fa-solid fa-user-gear"></i>
       </a>
       }

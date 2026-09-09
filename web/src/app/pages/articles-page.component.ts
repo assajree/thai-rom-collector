@@ -1,0 +1,3 @@
+import { Component, inject } from '@angular/core'; import { CommonModule } from '@angular/common'; import { RouterLink } from '@angular/router'; import { ArticleRepository } from '../repositories/article.repository'; import { Article } from '../models/article.models';
+@Component({ selector:'app-articles-page', standalone:true, imports:[CommonModule,RouterLink], templateUrl:'./articles-page.component.html', styleUrl:'./articles-page.component.css' })
+export class ArticlesPageComponent { private readonly repo=inject(ArticleRepository); protected articles:Article[]=[]; protected loading=true; constructor(){this.repo.all().then(x=>this.articles=x).finally(()=>this.loading=false);} }

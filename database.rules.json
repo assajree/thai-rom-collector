@@ -1,19 +1,31 @@
 {
   "rules": {
-    ".read": true,
+    ".read": false,
     ".write": false,
-    "patches": {
+      "patches": {
+        ".read": true,
       "$id": {
+        ".read": true,
         ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
         ".validate": "newData.hasChildren(['gameTitle','translatorId','translatedBy']) && newData.child('gameTitle').isString() && newData.child('translatorId').isString() && newData.child('translatedBy').isString()"
       }
     },
-    "translators": { "$id": { ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['shortName','name']) && newData.child('shortName').isString() && newData.child('name').isString()" } },
-    "tags": { "$id": { ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['name']) && newData.child('name').isString()" } },
-    "systems": { "$id": { ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['shortName','name']) && newData.child('shortName').isString() && newData.child('name').isString()" } },
+    "translators": { ".read": true, "$id": { ".read": true, ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['shortName','name']) && newData.child('shortName').isString() && newData.child('name').isString()" } },
+    "tags": { ".read": true, "$id": { ".read": true, ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['name']) && newData.child('name').isString()" } },
+    "systems": { ".read": true, "$id": { ".read": true, ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['shortName','name']) && newData.child('shortName').isString() && newData.child('name').isString()" } },
     "settings": {
+      ".read": true,
       ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
       "serverCost": { ".validate": "newData.isNumber() && newData.val() >= 0" }
+    },
+    "articles": {
+      ".indexOn": ["status", "slug"],
+      ".read": "(auth != null && root.child('admins').child(auth.uid).exists()) || (query.orderByChild == 'status' && query.equalTo == 'published')",
+      "$id": {
+        ".read": "data.child('status').val() == 'published' || (auth != null && root.child('admins').child(auth.uid).exists())",
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['title','slug','excerpt','content','coverUrl','category','status','author','createdAt','updatedAt']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('slug').isString() && newData.child('slug').val().matches(/^[a-z0-9ก-๙-]+$/) && newData.child('excerpt').isString() && newData.child('content').isString() && newData.child('coverUrl').isString() && newData.child('category').isString() && (newData.child('status').val() == 'draft' || newData.child('status').val() == 'published') && newData.child('author').isString() && newData.child('createdAt').isString() && newData.child('updatedAt').isString()"
+      }
     },
     "admins": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }
   }
