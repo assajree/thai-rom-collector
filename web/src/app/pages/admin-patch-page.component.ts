@@ -86,9 +86,7 @@ export class AdminPatchPageComponent {
     });
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
       this.updateGeneratedFilename();
-      if (!this.form.controls.patchTool.value.trim()) {
-        this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
-      }
+      this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
     });
     this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
   }
