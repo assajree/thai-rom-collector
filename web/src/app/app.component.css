@@ -184,13 +184,15 @@
   grid-column: 1;
 }
 
-.sidebar-translator-external-link {
+.sidebar-translator-tool-link {
   grid-column: 2;
 }
 
-.sidebar-translator-tool-link {
+.sidebar-translator-external-link {
   grid-column: 3;
 }
+
+
 
 .retro-system-button:hover,
 .retro-system-button--active {

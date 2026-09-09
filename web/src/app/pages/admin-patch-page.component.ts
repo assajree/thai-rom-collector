@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { TagRepository } from '../repositories/tag.repository';
+import { removeFacebookReference } from '../shared/url.util';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
 import { CoverInputComponent } from '../components/cover-input.component';
 import { PatchRepository } from '../repositories/patch.repository';
@@ -113,11 +114,11 @@ export class AdminPatchPageComponent {
         ...value,
         gameTitle: this.normalizeGameTitle(value.gameTitle.trim()),
         updateDate: this.toIsoDate(value.updateDate),
-        patchTool: this.removeFacebookReference(value.patchTool),
-        patchFileUrl: this.removeFacebookReference(value.patchFileUrl),
-        patchedRomUrl: this.removeFacebookReference(value.patchedRomUrl),
-        referenceUrl: this.removeFacebookReference(value.referenceUrl),
-        walkthroughUrl: this.removeFacebookReference(value.walkthroughUrl),
+        patchTool: removeFacebookReference(value.patchTool),
+        patchFileUrl: removeFacebookReference(value.patchFileUrl),
+        patchedRomUrl: removeFacebookReference(value.patchedRomUrl),
+        referenceUrl: removeFacebookReference(value.referenceUrl),
+        walkthroughUrl: removeFacebookReference(value.walkthroughUrl),
         tags: this.selectedTags
       };
       let coverUrl = '';
@@ -235,18 +236,6 @@ export class AdminPatchPageComponent {
     if (Number.isNaN(date.getTime())) throw new Error('กรุณาระบุวันที่อัปเดตให้ถูกต้อง');
     return date.toISOString();
   }
-  private removeFacebookReference(value: string): string {
-    const urlValue = value.trim();
-    if (!urlValue) return '';
-    try {
-      const url = new URL(urlValue);
-      if (!url.searchParams.has('fbclid')) return urlValue;
-      url.searchParams.delete('fbclid');
-      return url.toString();
-    } catch {
-      return urlValue;
-    }
-  }
   protected setUpdateDateNow(): void { this.form.controls.updateDate.setValue(this.todayInputDate()); }
   protected setDefaultPatchTool(): void {
     const translator = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
@@ -292,7 +281,7 @@ export class AdminPatchPageComponent {
       if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
       this.savingTranslator = true;
       this.status.show('กำลังบันทึกทีมแปล…');
-      const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, this.newTranslatorLink, this.newTranslatorModTool);
+      const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, removeFacebookReference(this.newTranslatorLink), this.newTranslatorModTool);
       this.translatorOptions = [...this.translatorOptions.filter((item) => item.id !== translator.id), translator].sort(compareDropdownLabels);
       this.form.controls.translatorId.setValue(translator.id);
       if (!this.editId) this.form.controls.patchTool.setValue(translator.modTool ?? '');

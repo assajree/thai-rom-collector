@@ -91,24 +91,30 @@
             {{ translator.name }}
           </a>
           <span class="sidebar-translator-links">
+
             @if (authService.isAdmin()) {
-            <a class="fa-link sidebar-translator-edit-link" [routerLink]="['/admin/translators']" [queryParams]="{ edit: translator.id }"
-              aria-label="แก้ไขข้อมูลทีมแปล" (click)="$event.stopPropagation(); closeSidebar()">
+            <a class="fa-link sidebar-translator-edit-link" [routerLink]="['/admin/translators']"
+              [queryParams]="{ edit: translator.id }" aria-label="แก้ไขข้อมูลทีมแปล"
+              (click)="$event.stopPropagation(); closeSidebar()">
               <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
             </a>
             }
-            @if (translator.link) {
-            <a [href]="translator.link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล"
-              class="fa-link sidebar-translator-external-link">
-              <i class="fa-brands fa-square-facebook" aria-hidden="true"></i>
-            </a>
-            }
+
             @if (translator.modTool) {
             <a [href]="translator.modTool" target="_blank" rel="noopener noreferrer"
               aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link sidebar-translator-tool-link">
               <i class="fa-solid fa-globe" aria-hidden="true"></i>
             </a>
             }
+
+            @if (translator.link) {
+            <a [href]="translator.link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล"
+              class="fa-link sidebar-translator-external-link">
+              <i class="fa-brands fa-square-facebook" aria-hidden="true"></i>
+            </a>
+            }
+
+
           </span>
         </div>
         }
