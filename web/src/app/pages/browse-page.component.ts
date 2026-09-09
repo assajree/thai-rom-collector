@@ -83,7 +83,7 @@ export class BrowsePageComponent {
   private readonly tagsLoaded = signal(false);
   protected readonly filters = computed(() => ({ keyword: this.keyword(), tag: this.selectedTag(), translatorId: this.selectedTranslatorId(), system: this.selectedSystem(), sortBy: this.sortBy(), sortDirection: this.direction() }));
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
-    if (this.routeKind() === 'rom' && patch.haveRom !== true) return false;
+    if (this.routeKind() === 'rom' && !patch.patchedRomUrl?.trim()) return false;
     const tag = this.selectedTag();
     if (tag && !patch.tags.includes(tag)) return false;
     const translatorId = this.selectedTranslatorId();

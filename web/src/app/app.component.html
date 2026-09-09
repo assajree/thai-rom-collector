@@ -68,6 +68,12 @@
     @if (platforms().length > 0) {
     <div class="retro-system-section">
       <p class="retro-rail-heading">ระบบเกม</p>
+      @if (authService.isAdmin()) {
+      <a class="retro-rail-admin-link" routerLink="/admin/systems" aria-label="จัดการระบบเกม"
+        (click)="closeSidebar()">
+        <i class="fa-solid fa-user-gear"></i>
+      </a>
+      }
       <div>
         @for (platform of platforms(); track platform.id) {
         <a class="retro-system-button" [routerLink]="browseRoute('system', platform.shortName)"
@@ -83,6 +89,12 @@
     @if (translators().length > 0) {
     <div class="retro-tag-section">
       <p class="retro-rail-heading">ทีมแปล</p>
+      @if (authService.isAdmin()) {
+      <a class="retro-rail-admin-link" routerLink="/admin/translators" aria-label="จัดการทีมแปล"
+        (click)="closeSidebar()">
+        <i class="fa-solid fa-user-gear"></i>
+      </a>
+      }
       <div>
         @for (translator of translators(); track translator.id) {
         <div class="sidebar-translator-row">
@@ -129,6 +141,11 @@
     @if (tags().length > 0) {
     <div class="retro-tag-section">
       <p class="retro-rail-heading">Tags</p>
+      @if (authService.isAdmin()) {
+      <a class="retro-rail-admin-link" routerLink="/admin/tags" aria-label="จัดการแท็ก" (click)="closeSidebar()">
+        <i class="fa-solid fa-user-gear"></i>
+      </a>
+      }
       <div>
         @for (tag of tags(); track tag.id) {
         <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)"

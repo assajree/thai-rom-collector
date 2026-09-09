@@ -10,7 +10,7 @@ service cloud.firestore {
     function validPatch(data) {
       return data.keys().hasOnly([
           'updateDate', 'fileName', 'gameTitle', 'system', 'translatorId', 'translatedBy',
-          'patchTool', 'tags', 'coverUrl', 'patchFileUrl', 'haveRom', 'patchedRomUrl', 'referenceText', 'referenceUrl', 'walkthroughUrl'
+          'patchTool', 'tags', 'coverUrl', 'patchFileUrl', 'patchedRomUrl', 'referenceText', 'referenceUrl', 'walkthroughUrl'
         ])
         && data.updateDate is string && data.updateDate.size() > 0
         && data.fileName is string && data.fileName.size() > 0
@@ -20,7 +20,6 @@ service cloud.firestore {
         && data.translatedBy is string && data.translatedBy.size() > 0
         && data.patchTool is string
         && data.patchFileUrl is string
-        && data.haveRom is bool
         && data.patchedRomUrl is string
         && data.referenceText is string
         && data.referenceUrl is string

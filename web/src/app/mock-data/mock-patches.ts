@@ -13,7 +13,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
     tags: ['RPG', 'Adventure'],
     coverUrl: '',
     patchFileUrl: '#mock-download-ocarina',
-    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
+    patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
   },
   {
     id: 'mock-mother-gba',
@@ -27,7 +27,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
     tags: ['RPG', 'Story'],
     coverUrl: '',
     patchFileUrl: '#mock-download-mother',
-    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
+    patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
   },
   {
     id: 'mock-patapon-psp',
@@ -41,6 +41,6 @@ export const MOCK_PATCHES: readonly Patch[] = [
     tags: ['Rhythm', 'Action'],
     coverUrl: '',
     patchFileUrl: '#mock-download-patapon',
-    haveRom: false, patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
+    patchedRomUrl: '', referenceText: '', referenceUrl: '', walkthroughUrl: ''
   }
 ];

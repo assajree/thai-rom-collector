@@ -31,7 +31,6 @@ export class PatchRepository {
         tags: Array.isArray(row['tags']) ? row['tags'].map(String) : [],
         coverUrl: String(row['coverUrl'] ?? ''),
         patchFileUrl: String(row['patchFileUrl'] ?? ''),
-        haveRom: Boolean(row['haveRom'] ?? false),
         patchedRomUrl: String(row['patchedRomUrl'] ?? ''),
         referenceText: String(row['referenceText'] ?? ''),
         referenceUrl: String(row['referenceUrl'] ?? ''),
@@ -109,7 +108,7 @@ export class PatchRepository {
     return {
       updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
-      tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(), haveRom: draft.haveRom,
+      tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(),
       patchedRomUrl: draft.patchedRomUrl.trim(), referenceText: clean(draft.referenceText), referenceUrl: draft.referenceUrl.trim(),
       walkthroughUrl: draft.walkthroughUrl.trim()
     };

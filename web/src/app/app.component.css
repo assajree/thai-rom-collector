@@ -121,9 +121,19 @@
 
 .retro-rail-heading {
   color: #ff4d5d;
+  display: inline-block;
   font-weight: 700;
   line-height: 1.1;
   margin: 0 0 0.2rem;
+}
+
+.retro-rail-admin-link {
+  color: #ff4d5d;
+  margin-left: 0.35rem;
+}
+
+.retro-rail-admin-link:hover {
+  color: #c7ff3a;
 }
 
 .retro-rail-link {

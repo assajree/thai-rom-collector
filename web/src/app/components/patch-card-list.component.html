@@ -60,7 +60,7 @@
           @if (patch.referenceUrl) {
           <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'ที่มา' }}</a>
           }
-          @if (patch.haveRom && patch.patchedRomUrl) {
+          @if (patch.patchedRomUrl) {
           <a [href]="patch.patchedRomUrl" target="_blank"
             rel="noopener noreferrer">รอมแปลไทย</a>
           }

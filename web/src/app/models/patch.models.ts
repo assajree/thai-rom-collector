@@ -29,7 +29,6 @@ export interface Patch {
   tags: string[];
   coverUrl: string;
   patchFileUrl: string;
-  haveRom: boolean;
   patchedRomUrl: string;
   referenceText: string;
   referenceUrl: string;
@@ -50,7 +49,6 @@ export interface PatchDraft {
   patchTool: string;
   tags: string[];
   patchFileUrl: string;
-  haveRom: boolean;
   patchedRomUrl: string;
   referenceText: string;
   referenceUrl: string;
