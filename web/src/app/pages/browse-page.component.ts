@@ -175,11 +175,12 @@ export class BrowsePageComponent {
     // Wait until the page state has rendered before scrolling. This is more
     // reliable on iOS Safari than scrolling an element during the click event.
     requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      // Safari can keep the scroll offset on one of these roots depending on
-      // the document mode, so keep both in sync as a fallback.
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
+      document.querySelector('.browse-route-label')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      // // Safari can keep the scroll offset on one of these roots depending on
+      // // the document mode, so keep both in sync as a fallback.
+      // document.documentElement.scrollTop = 0;
+      // document.body.scrollTop = 0;
     });
   }
 

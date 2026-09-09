@@ -44,6 +44,8 @@ export class AppComponent implements OnDestroy {
   protected readonly sidebarOpen = signal(false);
   protected readonly browseRoute = browseRoute;
   protected readonly isOffline = signal(false);
+  protected readonly browserInfo = this.getBrowserInfo();
+  protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
   protected readonly patchCacheLastUpdated = this.patchCache.lastUpdated;
   protected readonly patchCacheLastUpdatedLabel = () => {
     const timestamp = this.patchCacheLastUpdated();
@@ -51,6 +53,27 @@ export class AppComponent implements OnDestroy {
       dateStyle: 'medium', timeStyle: 'short'
     }).format(timestamp);
   };
+
+  private getBrowserInfo(): string {
+    if (typeof navigator === 'undefined') return 'ไม่ทราบ browser';
+
+    const userAgent = navigator.userAgent;
+    const browser = /EdgA|EdgiOS|Edg\//.test(userAgent) ? 'Edge'
+      : /CriOS|Chrome\//.test(userAgent) ? 'Chrome'
+        : /FxiOS|Firefox\//.test(userAgent) ? 'Firefox'
+          : /OPiOS|OPR\//.test(userAgent) ? 'Opera'
+            : /Safari\//.test(userAgent) ? 'Safari'
+              : 'ไม่ทราบ browser';
+    const os = /iPad|iPhone|iPod/.test(userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1) ? 'iOS'
+      : /Android/.test(userAgent) ? 'Android'
+        : /Windows/.test(userAgent) ? 'Windows'
+          : /Mac OS X/.test(userAgent) ? 'macOS'
+            : /Linux/.test(userAgent) ? 'Linux'
+              : 'ไม่ทราบ OS';
+
+    return `${browser} / ${os}`;
+  }
   private readonly onlineHandler = () => {
     this.isOffline.set(false);
     this.loadServerCost();

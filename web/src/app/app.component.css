@@ -17,6 +17,10 @@
   background-color: #610101;
 }
 
+.app-shell {
+  min-height: calc(100vh - 6rem);
+}
+
 @media (max-width: 480px) {
   #last-update {
     max-width: 9rem;
@@ -24,9 +28,10 @@
 }
 
 .retro-rail {
+  align-self: stretch;
   box-sizing: border-box;
   border-right: 1px solid #a8abd9;
-  min-height: 100%;
+  min-height: calc(100vh - 6rem);
   min-width: 16rem;
   padding: 1rem 1rem 1rem 0.5rem;
 }
@@ -51,6 +56,13 @@
 .app-content {
   padding-bottom: 5rem;
   background-image: url("https://theoldnet.com/images/chatbg2.gif");
+}
+
+.page-footer {
+  border-top: 1px solid #a8abd9;
+  color: #d7d9e4;
+  text-align: center;
+  padding: 0 8rem;
 }
 
 .mobile-menu-button {
@@ -178,6 +190,14 @@
   align-items: center;
   display: inline-flex;
   line-height: 1;
+}
+
+.browser-info {
+  color: #a8abd9;
+  line-height: 1.2;
+  margin-top: .25rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .retro-system-button:hover,

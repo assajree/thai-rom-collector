@@ -31,7 +31,7 @@
   </marquee>
 </div>
 
-<div class="app-shell min-h-[calc(100vh-2.5rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
+<div class="app-shell min-h-[calc(100vh-6rem)] lg:grid lg:grid-cols-[max-content_minmax(0,1fr)]">
   <aside id="system-sidebar" class="retro-rail bg-[#35006c] lg:flex lg:flex-col"
     [class.mobile-sidebar-open]="sidebarOpen()" (click)="$event.stopPropagation()" aria-label="Main navigation">
 
@@ -197,5 +197,10 @@
     }
 
     <router-outlet />
+
+    <footer class="page-footer" aria-label="ข้อมูลหน้าเว็บ">
+      <div class="browser-info" aria-label="ข้อมูล browser">Browser: {{ browserInfo }}</div>
+      <div class="browser-info" aria-label="navigator.userAgent">{{ userAgent }}</div>
+    </footer>
   </section>
 </div>
