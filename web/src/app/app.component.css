@@ -62,8 +62,10 @@
   border-top: 1px solid #a8abd9;
   color: #d7d9e4;
   text-align: center;
-  padding: 0 8rem;
+  padding-bottom: 4rem;
+  margin-top: -4rem;
 }
+
 
 .mobile-menu-button {
   background: transparent;
@@ -258,5 +260,9 @@
   .sidebar-translator-links {
     gap: 1rem;
   }
-}
 
+  .page-footer {
+    padding-bottom: 0;
+    margin-top: 0;
+  }
+}
