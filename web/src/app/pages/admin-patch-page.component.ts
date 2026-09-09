@@ -57,6 +57,8 @@ export class AdminPatchPageComponent {
   protected newTagName = '';
   protected tagSuggestions: Tag[] = [];
   protected tagAutocompleteOpen = false;
+  protected translatorSearchText = '';
+  protected translatorAutocompleteOpen = false;
   protected newSystemName = '';
   protected newSystemShortName = '';
   protected systemDialogOpen = false;
@@ -73,6 +75,8 @@ export class AdminPatchPageComponent {
     this.translators.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
       next: (translators) => {
         this.translatorOptions = [...translators].sort(compareDropdownLabels);
+        const selected = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
+        if (selected) this.translatorSearchText = this.translatorLabel(selected);
         this.updateGeneratedFilename();
       }
     });
@@ -86,7 +90,14 @@ export class AdminPatchPageComponent {
     });
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
       this.updateGeneratedFilename();
-      this.form.controls.patchTool.setValue(this.translatorOptions.find((item) => item.id === translatorId)?.modTool ?? '');
+      const translator = this.translatorOptions.find((item) => item.id === translatorId);
+      if (translator) {
+        this.translatorSearchText = this.translatorLabel(translator);
+        this.form.controls.patchTool.setValue(translator.modTool ?? '');
+      } else if (!translatorId) {
+        this.translatorSearchText = '';
+        this.form.controls.patchTool.setValue('');
+      }
     });
     this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
   }
@@ -100,6 +111,28 @@ export class AdminPatchPageComponent {
     this.form.controls.fileName.setValue(fileName, { emitEvent: false });
   }
   private normalizeGameTitle(value: string): string { return value.replace(/é/g, 'e'); }
+  protected translatorLabel(translator: Translator): string { return `${translator.shortName} — ${translator.name}`; }
+  protected filteredTranslatorOptions(): Translator[] {
+    const query = this.translatorSearchText.trim().toLocaleLowerCase();
+    if (!query) return this.translatorOptions;
+    return this.translatorOptions.filter((translator) =>
+      `${translator.shortName} ${translator.name}`.toLocaleLowerCase().includes(query));
+  }
+  protected openTranslatorAutocomplete(): void { this.translatorAutocompleteOpen = true; }
+  protected onTranslatorInput(value: string): void {
+    this.translatorSearchText = value;
+    this.translatorAutocompleteOpen = true;
+    if (!this.translatorOptions.some((translator) => this.form.controls.translatorId.value === translator.id && this.translatorLabel(translator) === value)) {
+      this.form.controls.translatorId.setValue('', { emitEvent: false });
+      this.form.controls.patchTool.setValue('');
+      this.updateGeneratedFilename();
+    }
+  }
+  protected selectTranslator(translator: Translator): void {
+    this.translatorSearchText = this.translatorLabel(translator);
+    this.translatorAutocompleteOpen = false;
+    this.form.controls.translatorId.setValue(translator.id);
+  }
 
   protected async save(): Promise<void> {
     if (this.saving) return;
@@ -214,6 +247,8 @@ export class AdminPatchPageComponent {
     this.editId = id;
     this.existingCoverUrl = patch.coverUrl ?? '';
     this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, haveRom: patch.haveRom ?? false, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
+    const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
+    if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
     this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
   }
@@ -259,7 +294,10 @@ export class AdminPatchPageComponent {
   protected onTagInput(value: string): void { this.newTagName = value; this.tagAutocompleteOpen = true; }
   protected openTagAutocomplete(): void { this.tagAutocompleteOpen = true; }
   @HostListener('document:click')
-  protected closeTagAutocomplete(): void { this.tagAutocompleteOpen = false; }
+  protected closeTagAutocomplete(): void {
+    this.tagAutocompleteOpen = false;
+    this.translatorAutocompleteOpen = false;
+  }
   protected async createTag(): Promise<void> {
     const name = this.newTagName.trim();
     if (!name) return;

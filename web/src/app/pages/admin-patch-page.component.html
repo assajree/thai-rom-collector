@@ -15,10 +15,23 @@
         type="button" (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
     <div>
-      <label class="required">ทีมแปล<select class="admin-input" formControlName="translatorId">
-          <option value="">เลือกทีมแปล</option>@for (translator of translatorOptions; track translator.id) { <option
-            [value]="translator.id">{{ translator.shortName }} — {{ translator.name }}</option> }
-        </select></label>
+      <label class="required">ทีมแปล</label>
+      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
+          (focus)="openTranslatorAutocomplete()" (input)="onTranslatorInput($any($event.target).value)"
+          (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
+          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options" />
+        <input formControlName="translatorId" type="hidden" />
+        @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
+        <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
+          @for (translator of filteredTranslatorOptions(); track translator.id) {
+          <li><button type="button" role="option" (click)="selectTranslator(translator)">{{ translatorLabel(translator) }}</button></li>
+          }
+        </ul>
+        } @else if (translatorAutocompleteOpen) {
+        <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
+        }
+      </div>
       <button class="mt-2 border border-signal px-3 py-2 font-bold text-signal hover:bg-signal hover:text-ink"
         type="button" (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
     </div>
