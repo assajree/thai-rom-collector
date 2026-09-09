@@ -19,14 +19,14 @@
             <a [routerLink]="translatorRoute(patch)">{{ translatorName(patch) }}</a>
 
             @if (translatorLink(patch); as link) {
-            <a [href]="link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="fa-link">
+            <a [href]="link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="my-fa-link">
               <i class="fa-brands fa-square-facebook translator-link-icon" aria-hidden="true"></i>
             </a>
             }
 
             @if (translatorTool(patch); as tool) {
             <a class="translator-tool-link" [href]="tool" target="_blank" rel="noopener noreferrer"
-              aria-label="เปิดเครื่องมือของทีมแปล" class="fa-link">
+              aria-label="เปิดเครื่องมือของทีมแปล" class="my-fa-link">
               <i class="fa-solid fa-globe" aria-hidden="true"></i>
             </a>
             }
@@ -58,7 +58,7 @@
           <a [href]="patch.patchFileUrl" target="_blank">Patch</a>
           }
           @if (patch.referenceUrl) {
-          <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'Reference' }}</a>
+          <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'ที่มา' }}</a>
           }
           @if (patch.haveRom && patch.patchedRomUrl) {
           <a [href]="patch.patchedRomUrl" target="_blank"
