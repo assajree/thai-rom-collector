@@ -34,6 +34,7 @@
         </div>
 
         <div>ระบบ: <a [routerLink]="systemLink(patch.system)">{{ systemName(patch.system) }}</a></div>
+        @if (patch.patchVersion) { <div>เวอร์ชันแพตช์: {{ patch.patchVersion }}</div> }
 
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
         
@@ -49,7 +50,7 @@
         <div class="patch-card__links-label">ลิ้ง:</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
-          <a [href]="patch.coverUrl" [download]="patch.fileName" (click)="downloadCover($event, patch)">ภาพปก</a>
+          <a [href]="patch.coverUrl" [download]="coverFilename(patch)" (click)="downloadCover($event, patch)">ภาพปก</a>
           }
           @if (patch.patchTool) {
           <a [href]="patch.patchTool" target="_blank">Patch Tool</a>

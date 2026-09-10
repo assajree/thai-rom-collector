@@ -1,6 +1,7 @@
 <main class="min-h-full p-4 text-white sm:p-6 lg:p-8">
   <h1 class="mt-1 font-black">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
   <form class="mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
+    
     <div>
       <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
           class="admin-input" formControlName="gameTitle" /></label>
@@ -8,6 +9,8 @@
         type="button" (click)="pasteGameTitle()" [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' :
         'Clipboard' }}</button>
     </div>
+    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<input class="admin-input"
+        formControlName="patchVersion" type="text" /></label>
     <div>
       <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">

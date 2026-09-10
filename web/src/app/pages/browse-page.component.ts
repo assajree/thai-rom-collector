@@ -92,7 +92,7 @@ export class BrowsePageComponent {
     if (system && normalizeBrowseName(patch.system).toLocaleLowerCase('th') !== normalizeBrowseName(system).toLocaleLowerCase('th')) return false;
     const query = this.keyword().trim().toLocaleLowerCase('th');
     if (!query) return true;
-    return [patch.gameTitle, patch.fileName, patch.system, patch.translatedBy]
+    return [patch.gameTitle, patch.patchVersion, patch.system, patch.translatedBy]
       .some((value) => value.trim().toLocaleLowerCase('th').includes(query));
   }).sort((a, b) => {
     const field = this.sortBy();

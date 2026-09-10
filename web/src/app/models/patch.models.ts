@@ -20,7 +20,7 @@ export interface SystemMaster {
 export interface Patch {
   id: string;
   updateDate: string;
-  fileName: string;
+  patchVersion: string;
   gameTitle: string;
   system: string;
   translatorId: string;
@@ -42,7 +42,7 @@ export interface AdminProfile {
 
 export interface PatchDraft {
   updateDate: string;
-  fileName: string;
+  patchVersion: string;
   gameTitle: string;
   system: string;
   translatorId: string;

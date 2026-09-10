@@ -31,6 +31,11 @@ export class PatchCardListComponent {
   protected translatorName(patch: Patch): string {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.name ?? patch.translatedBy;
   }
+  protected coverFilename(patch: Patch): string {
+    const gameTitle = patch.gameTitle.trim().replace(/:/g, ' -').replace(/\s+/g, ' ');
+    const shortName = this.translators.find((item) => item.id === patch.translatorId)?.shortName.trim().replace(/\s+/g, ' ');
+    return `${shortName ? `${gameTitle} (Thai by ${shortName})` : gameTitle || 'cover'}.png`;
+  }
   protected cardTags(patch: Patch): string[] {
     return patch.tags;
   }
@@ -81,7 +86,7 @@ export class PatchCardListComponent {
       const blobUrl = URL.createObjectURL(await response.blob());
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = patch.fileName;
+      link.download = this.coverFilename(patch);
       link.click();
       URL.revokeObjectURL(blobUrl);
       this.status.show('ดาวน์โหลดภาพปกสำเร็จ', 'success');

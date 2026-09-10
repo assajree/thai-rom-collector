@@ -7,7 +7,7 @@
       "$id": {
         ".read": true,
         ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
-        ".validate": "newData.hasChildren(['gameTitle','translatorId','translatedBy']) && newData.child('gameTitle').isString() && newData.child('translatorId').isString() && newData.child('translatedBy').isString()"
+        ".validate": "newData.hasChildren(['gameTitle','translatorId','translatedBy']) && newData.child('gameTitle').isString() && newData.child('translatorId').isString() && newData.child('translatedBy').isString() && (!newData.hasChild('patchVersion') || newData.child('patchVersion').isString())"
       }
     },
     "translators": { ".read": true, "$id": { ".read": true, ".write": "auth != null && root.child('admins').child(auth.uid).exists()", ".validate": "newData.hasChildren(['shortName','name']) && newData.child('shortName').isString() && newData.child('name').isString()" } },

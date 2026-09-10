@@ -22,7 +22,7 @@ export class PatchRepository {
       map((rows) => rows.map((row) => ({
         id: String(row['id']),
         updateDate: String(row['updateDate'] ?? ''),
-        fileName: String(row['fileName'] ?? ''),
+        patchVersion: String(row['patchVersion'] ?? ''),
         gameTitle: String(row['gameTitle'] ?? ''),
         system: String(row['system'] ?? ''),
         translatorId: String(row['translatorId'] ?? ''),
@@ -103,10 +103,10 @@ export class PatchRepository {
     const translator = await this.getTranslator(draft.translatorId);
     const system = await this.getSystem(draft.system);
     const tags = await this.getMasterTags(draft.tags);
-    const fields = [draft.fileName, draft.gameTitle, draft.system];
+    const fields = [draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      updateDate, fileName: clean(draft.fileName), gameTitle: clean(draft.gameTitle), system: system.shortName,
+      updateDate, patchVersion: clean(draft.patchVersion), gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(),
       patchedRomUrl: draft.patchedRomUrl.trim(), referenceText: clean(draft.referenceText), referenceUrl: draft.referenceUrl.trim(),

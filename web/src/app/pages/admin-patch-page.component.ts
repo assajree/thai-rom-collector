@@ -42,7 +42,7 @@ export class AdminPatchPageComponent {
   protected systemOptions: SystemMaster[] = [];
   protected systemSearchText = '';
   protected systemAutocompleteOpen = false;
-  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], fileName: ['', Validators.required], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
+  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
   protected pastingGameTitle = false;
@@ -79,7 +79,6 @@ export class AdminPatchPageComponent {
         this.translatorOptions = [...translators].sort(compareDropdownLabels);
         const selected = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
         if (selected) this.translatorSearchText = this.translatorLabel(selected);
-        this.updateGeneratedFilename();
       }
     });
     this.systems.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((systems) => {
@@ -90,10 +89,8 @@ export class AdminPatchPageComponent {
     this.form.controls.gameTitle.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((gameTitle) => {
       const normalizedTitle = this.normalizeGameTitle(gameTitle);
       if (normalizedTitle !== gameTitle) this.form.controls.gameTitle.setValue(normalizedTitle, { emitEvent: false });
-      this.updateGeneratedFilename();
     });
     this.form.controls.translatorId.valueChanges.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((translatorId) => {
-      this.updateGeneratedFilename();
       const translator = this.translatorOptions.find((item) => item.id === translatorId);
       if (translator) {
         this.translatorSearchText = this.translatorLabel(translator);
@@ -106,14 +103,6 @@ export class AdminPatchPageComponent {
     this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
   }
 
-  private updateGeneratedFilename(): void {
-    const gameTitle = this.form.controls.gameTitle.value.trim().replace(/:/g, ' -').replace(/\s+/g, ' ');
-    const translator = this.translatorOptions.find((item) => item.id === this.form.controls.translatorId.value);
-    const fileName = gameTitle && translator?.shortName
-      ? `${gameTitle} (Thai by ${translator.shortName.trim().replace(/\s+/g, ' ')})`
-      : '';
-    this.form.controls.fileName.setValue(fileName, { emitEvent: false });
-  }
   private normalizeGameTitle(value: string): string { return value.replace(/é/g, 'e'); }
   protected systemLabel(system: SystemMaster): string { return `${system.shortName} — ${system.name}`; }
   protected filteredSystemOptions(): SystemMaster[] {
@@ -155,7 +144,6 @@ export class AdminPatchPageComponent {
     if (!this.translatorOptions.some((translator) => this.form.controls.translatorId.value === translator.id && this.translatorLabel(translator) === value)) {
       this.form.controls.translatorId.setValue('', { emitEvent: false });
       this.form.controls.patchTool.setValue('');
-      this.updateGeneratedFilename();
     }
   }
   protected selectTranslator(translator: Translator): void {
@@ -199,7 +187,7 @@ export class AdminPatchPageComponent {
       const translatorModTool = this.translatorOptions.find((item) => item.id === value.translatorId)?.modTool ?? '';
       this.form.reset({
         updateDate: this.todayInputDate(),
-        fileName: '',
+        patchVersion: '',
         gameTitle: '',
         system: value.system,
         translatorId: value.translatorId,
@@ -275,12 +263,11 @@ export class AdminPatchPageComponent {
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
     this.existingCoverUrl = patch.coverUrl ?? '';
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), fileName: patch.fileName, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
+    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
     const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
     if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
     const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
     if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
-    this.updateGeneratedFilename();
     this.selectedTags = [...patch.tags];
   }
   private todayInputDate(): string {
