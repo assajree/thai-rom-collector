@@ -13,6 +13,7 @@ import { StatusMessageService } from '../shared/status-message.service';
   styleUrl: './patch-card-list.component.css'
 })
 export class PatchCardListComponent {
+  private static readonly newGameWindowMs = 7 * 24 * 60 * 60 * 1000;
   private readonly status = inject(StatusMessageService);
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
@@ -93,5 +94,12 @@ export class PatchCardListComponent {
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถดาวน์โหลดภาพปกได้', 'error');
     }
+  }
+  protected isNewGame(updateDate: string): boolean {
+    const timestamp = Date.parse(updateDate);
+    const now = Date.now();
+    return !Number.isNaN(timestamp)
+      && timestamp >= now - PatchCardListComponent.newGameWindowMs
+      && timestamp <= now;
   }
 }

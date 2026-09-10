@@ -133,8 +133,9 @@
   background: #35006c;
   border-left: 1px solid #a8abd9;
   box-sizing: border-box;
+  display: none;
   min-height: calc(100vh - 6rem);
-  min-width: 0;
+  width: 288px;
   padding: 1rem;
 }
 
@@ -314,7 +315,7 @@
 
 @media (min-width: 1200px) {
   .app-shell {
-    grid-template-columns: max-content minmax(0, 1fr) minmax(180px, 18rem);
+    grid-template-columns: max-content minmax(0, 1fr) 288px;
   }
 
   .right-ad-sidebar {

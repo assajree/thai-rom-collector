@@ -86,6 +86,21 @@
   position: relative;
 }
 
+.new-game-badge {
+  background: #ff3b30;
+  border: 2px solid #111;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: 900;
+  left: .25rem;
+  line-height: 1;
+  padding: .25rem .4rem;
+  position: absolute;
+  text-transform: uppercase;
+  top: .25rem;
+  z-index: 2;
+}
+
 @media (min-width: 34.01rem) {
   .patch-cover-image {
     justify-self: center;
