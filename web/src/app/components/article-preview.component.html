@@ -1,0 +1,8 @@
+<article class="article-preview">
+  <a *ngIf="backLink" class="back-link" routerLink="/articles">← บทความทั้งหมด</a>
+  <img *ngIf="article.coverUrl" class="article-cover" [src]="article.coverUrl" [alt]="article.title">
+  <p class="article-meta">{{ article.category || 'ความรู้' }}<span *ngIf="article.publishedAt"> · {{ article.publishedAt | date:'d MMM yyyy' }}</span></p>
+  <h1>{{ article.title || 'ยังไม่มีชื่อบทความ' }}</h1>
+  <p class="excerpt">{{ article.excerpt }}</p>
+  <div class="markdown-body" [innerHTML]="rendered()"></div>
+</article>

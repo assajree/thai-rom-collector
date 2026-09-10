@@ -20,7 +20,8 @@ import { TagRepository } from '../repositories/tag.repository';
   templateUrl: './browse-page.component.html'
 })
 export class BrowsePageComponent {
-  private static readonly newGameWindowMs = 7 * 24 * 60 * 60 * 1000;
+  private static readonly todayWindowMs = 24 * 60 * 60 * 1000;
+  private static readonly weekWindowMs = 7 * 24 * 60 * 60 * 1000;
   private readonly patchRepository = inject(PatchRepository);
   private readonly filterState = inject(BrowseFilterStateService);
   private readonly translatorRepository = inject(TranslatorRepository);
@@ -47,7 +48,7 @@ export class BrowsePageComponent {
   protected readonly pageSize = 10;
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
-  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | 'new' | null>(null);
+  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | null>(null);
   private readonly routeSlug = signal<string | null>(null);
   private readonly clearAllEffect = effect(() => {
     this.filterState.clearAllRequested();
@@ -69,7 +70,8 @@ export class BrowsePageComponent {
     const kind = this.routeKind();
     const selectedLabels = this.selectedRouteLabels();
     if (kind === 'rom') return this.joinRouteLabels('รอมแปลไทย', ...selectedLabels);
-    if (kind === 'new') return this.joinRouteLabels('เกมมาใหม่', ...selectedLabels);
+    if (kind === 'today') return this.joinRouteLabels('เกมใหม่วันนี้', ...selectedLabels);
+    if (kind === 'week') return this.joinRouteLabels('เกมใหม่สัปดาห์นี้', ...selectedLabels);
     if (kind === 'tag') {
       const slug = this.routeSlug();
       return this.joinRouteLabels(slug ? decodeURIComponent(slug) : '', ...selectedLabels) || 'เกมทั้งหมด';
@@ -86,7 +88,8 @@ export class BrowsePageComponent {
   protected readonly filters = computed(() => ({ keyword: this.keyword(), tag: this.selectedTag(), translatorId: this.selectedTranslatorId(), system: this.selectedSystem(), sortBy: this.sortBy(), sortDirection: this.direction() }));
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
     if (this.routeKind() === 'rom' && !patch.patchedRomUrl?.trim()) return false;
-    if (this.routeKind() === 'new' && !this.isNewGame(patch.updateDate)) return false;
+    const kind = this.routeKind();
+    if ((kind === 'today' || kind === 'week') && !this.isInRecentWindow(patch.updateDate, kind)) return false;
     const tag = this.selectedTag();
     if (tag && !patch.tags.includes(tag)) return false;
     const translatorId = this.selectedTranslatorId();
@@ -161,11 +164,11 @@ export class BrowsePageComponent {
     }
   }, { allowSignalWrites: true });
   protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
-  protected isNewGame(updateDate: string): boolean {
+  protected isInRecentWindow(updateDate: string, window: 'today' | 'week'): boolean {
     const timestamp = Date.parse(updateDate);
     const now = Date.now();
     return !Number.isNaN(timestamp)
-      && timestamp >= now - BrowsePageComponent.newGameWindowMs
+      && timestamp >= now - (window === 'today' ? BrowsePageComponent.todayWindowMs : BrowsePageComponent.weekWindowMs)
       && timestamp <= now;
   }
   protected toggleDirection(): void { this.direction.update((value) => value === 'asc' ? 'desc' : 'asc'); }
@@ -200,7 +203,7 @@ export class BrowsePageComponent {
     this.loadPatches();
   }
   @HostListener('window:scroll')
-  protected updateBackToTopVisibility(): void { this.showBackToTop.set(window.scrollY > 320); }
+  protected updateBackToTopVisibility(): void { this.showBackToTop.set(window.scrollY > 400); }
   protected backToTop(): void { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   private loadPatches(): void {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
@@ -211,7 +214,7 @@ export class BrowsePageComponent {
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.tagRepository.watchAll().subscribe({ next: (tags) => { this.tags.set(tags); this.tagsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
-      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | 'new' | undefined) ?? null);
+      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | undefined) ?? null);
     });
     this.route.paramMap.subscribe((params) => {
       this.routeSlug.set(params.get('slug'));

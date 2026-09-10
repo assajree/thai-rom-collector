@@ -38,7 +38,7 @@
   background: #001414;
   padding: .15rem .35rem;
   position: absolute;
-  right: .2rem;
+  left: .2rem;
   top: .2rem;
 }
 
@@ -87,18 +87,16 @@
 }
 
 .new-game-badge {
-  background: #ff3b30;
-  border: 2px solid #111;
-  color: #fff;
   font-size: .8rem;
   font-weight: 900;
-  left: .25rem;
+  right: .25rem;
   line-height: 1;
   padding: .25rem .4rem;
   position: absolute;
   text-transform: uppercase;
   top: .25rem;
   z-index: 2;
+  background-color: #000;
 }
 
 @media (min-width: 34.01rem) {

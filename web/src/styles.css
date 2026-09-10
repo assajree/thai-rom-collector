@@ -11,13 +11,19 @@
 }
 
 @layer base {
+
+  *,
+  code,
+  pre {
+    font-family: 'RD Chulajaruek', serif;
+  }
+
   html {
     @apply bg-ink;
   }
 
   body {
     @apply min-h-screen bg-ink text-slate-100;
-    font-family: 'RD Chulajaruek', serif;
     font-size: 1rem;
     background-image: linear-gradient(rgba(199, 255, 58, 0.025) 1px, transparent 1px);
     background-size: 100% 4px;
@@ -67,15 +73,15 @@ a {
   color: #00ffff;
 }
 
-a:hover{
+a:hover {
   color: #ffd92b;
 }
 
-.my-fa-link{
+.my-fa-link {
   text-decoration: none;
   color: #0500ac;
 }
 
-.main-content{
-  padding-bottom: 5rem;
+.article-container{
+  background-color: #35006c;
 }

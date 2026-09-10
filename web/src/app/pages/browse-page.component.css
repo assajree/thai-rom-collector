@@ -70,7 +70,7 @@
   align-items: center;
   background: #c7ff3a;
   border: 3px solid #080808;
-  bottom: 1rem;
+  top: 1rem;
   box-shadow: 3px 3px 0 #080808, inset 2px 2px rgba(255, 255, 255, .65), inset -2px -2px rgba(0, 0, 0, .35);
   color: #080808;
   cursor: pointer;
@@ -185,7 +185,7 @@
   }
 
   .back-to-top {
-    bottom: .75rem;
+    top: .75rem;
     right: .75rem;
   }
 }

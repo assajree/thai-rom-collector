@@ -1,7 +1,7 @@
 {
   "name": "THAI ROM DB",
   "short_name": "THAI ROM DB",
-  "description": "ฐานข้อมูลเกมและรอมแปลไทย",
+  "description": "เว็บรวมเกมแปลไทย เกมย้อนยุค ROM Hack และปกเกมสำหรับ Game Boy, Famicom, SNES, PS1, PS2, Nintendo DS, Nintendo 3DS, GameCube และ PSP",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

@@ -21,7 +21,8 @@ export const routes: Routes = [
     pathMatch: 'full',
     component: BrowsePageComponent
   },
-  { path: 'new', component: BrowsePageComponent, data: { browseKind: 'new' } },
+  { path: 'today', component: BrowsePageComponent, data: { browseKind: 'today' } },
+  { path: 'new', component: BrowsePageComponent, data: { browseKind: 'week' } },
   { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system' } },
   { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator' } },
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
@@ -30,6 +31,8 @@ export const routes: Routes = [
   { path: 'articles', component: ArticlesPageComponent },
   { path: 'article/:slug', component: ArticlePageComponent },
   { path: 'admin/articles', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/articles/edit/new', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/articles/edit/:id', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },
   {
     path: 'add-patch',

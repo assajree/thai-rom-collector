@@ -39,11 +39,13 @@
     <nav aria-label="Main navigation">
       <a class="retro-rail-link" routerLink="/" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมทั้งหมด</a>
+      <a class="retro-rail-link" routerLink="/today" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่วันนี้</a>
       <a class="retro-rail-link" routerLink="/new" routerLinkActive="retro-rail-link--active"
-        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมมาใหม่</a>
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่สัปดาห์นี้</a>
       <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
-      <div class="hidden">
+      <div class="">
         <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active">บทความ</a>
       </div>
     </nav>

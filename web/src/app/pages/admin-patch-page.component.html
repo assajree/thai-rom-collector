@@ -1,7 +1,7 @@
 <main class="min-h-full p-4 text-white sm:p-6 lg:p-8">
   <h1 class="mt-1 font-black">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
   <form class="mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
-    
+
     <div>
       <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
           class="admin-input" formControlName="gameTitle" /></label>
@@ -9,8 +9,7 @@
         type="button" (click)="pasteGameTitle()" [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' :
         'Clipboard' }}</button>
     </div>
-    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<input class="admin-input"
-        formControlName="patchVersion" type="text" /></label>
+
     <div>
       <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
@@ -59,6 +58,9 @@
       <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value" [system]="form.controls.system.value"
         (selected)="cover = $event" />
     </div>
+    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<input class="admin-input"
+        formControlName="patchVersion" type="text" />
+    </label>
     <div>
       <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
           formControlName="patchTool" /></label>
@@ -76,11 +78,16 @@
         formControlName="patchFileUrl" type="url" /></label>
     <label><i class="fa-solid fa-file-code mr-1" aria-hidden="true"></i>ROM<input class="admin-input"
         formControlName="patchedRomUrl" type="url" /></label>
-    <label><i class="fa-solid fa-quote-left mr-1" aria-hidden="true"></i>Reference Text<input class="admin-input"
-        formControlName="referenceText" type="text" /></label>
-    <label><i class="fa-solid fa-link mr-1" aria-hidden="true"></i>Reference URL<input class="admin-input"
-        formControlName="referenceUrl" type="url" /></label>
-    <label><i class="fa-solid fa-book-open mr-1" aria-hidden="true"></i>ลบทสรุป<input class="admin-input"
+
+    <label>
+      <i class="fa-solid fa-link mr-1" aria-hidden="true"></i>Reference URL
+      <input class="admin-input" formControlName="referenceUrl" type="url" />
+    </label>
+    <label>
+      <i class="fa-solid fa-quote-left mr-1" aria-hidden="true"></i>Reference Text
+      <input class="admin-input" formControlName="referenceText" type="text" />
+    </label>
+    <label><i class="fa-solid fa-book-open mr-1" aria-hidden="true"></i>บทสรุป<input class="admin-input"
         formControlName="walkthroughUrl" type="url" /></label>
     <fieldset class="border border-slate-600 p-3">
       <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>

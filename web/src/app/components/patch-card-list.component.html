@@ -5,7 +5,7 @@
     <div class="patch-cover-wrap">
       <div class="patch-cover-placeholder" aria-hidden="true"></div>
       @if (isNewGame(patch.updateDate)) {
-      <span class="new-game-badge" aria-label="เกมมาใหม่">new</span>
+      <span class="new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif" alt="new" /></span>
       }
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
         [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)" [alt]="'ปกเกม ' + patch.gameTitle"

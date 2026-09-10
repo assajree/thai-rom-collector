@@ -26,3 +26,7 @@ For short-lived operations that complete immediately and do not perform long-run
 ## Firestore Schema Changes
 
 When adding or changing a Firestore document field, update the corresponding validation and allowed-field list in `firestore.rules` in the same change. Verify that the client document shape and deployed Firestore Rules remain in sync, and mention the required rules deployment command when handing off the change.
+
+## Font Compatibility
+
+Do not use the middle dot character `·` in UI text or source content because the project font does not support it. Use a supported separator such as `-` instead.
