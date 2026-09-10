@@ -189,3 +189,10 @@
     right: .75rem;
   }
 }
+
+
+@media (min-width: 1200px) {
+  .back-to-top{
+    right: 300px
+  }
+}

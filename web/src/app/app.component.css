@@ -54,6 +54,7 @@
 }
 
 .app-content {
+  position: relative;
   padding-bottom: 5rem;
   background-image: url("https://theoldnet.com/images/chatbg2.gif");
 }
@@ -78,7 +79,7 @@
   padding: 0.2rem 0.4rem;
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 768px) {
   .status-message {
     left: 0;
   }
@@ -125,6 +126,22 @@
   font-weight: 700;
   line-height: 1.1;
   margin: 0 0 0.2rem;
+}
+
+.right-ad-sidebar {
+  align-self: stretch;
+  background: #35006c;
+  border-left: 1px solid #a8abd9;
+  box-sizing: border-box;
+  min-height: calc(100vh - 6rem);
+  min-width: 0;
+  padding: 1rem;
+}
+
+.right-ad-slot {
+  min-height: 250px;
+  width: 100%;
+  border: solid 1px #888;
 }
 
 .retro-rail-admin-link {
@@ -218,7 +235,25 @@
 }
 
 
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
+  .right-ad-sidebar {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .app-shell {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+
+  .retro-rail {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 900px) {
   .mobile-menu-button {
     display: inline-block;
   }
@@ -274,5 +309,15 @@
   .page-footer {
     padding-bottom: 0;
     margin-top: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .app-shell {
+    grid-template-columns: max-content minmax(0, 1fr) minmax(180px, 18rem);
+  }
+
+  .right-ad-sidebar {
+    display: block;
   }
 }

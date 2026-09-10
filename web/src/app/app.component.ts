@@ -1,4 +1,4 @@
-import { Component, effect, inject, OnDestroy, signal } from '@angular/core';
+import { AfterViewInit, Component, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
@@ -21,7 +21,7 @@ import { PatchCacheService } from './services/patch-cache.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnDestroy {
+export class AppComponent implements AfterViewInit, OnDestroy {
   private readonly document = inject(DOCUMENT);
   protected readonly statusMessageService = inject(StatusMessageService);
   protected readonly authService = inject(AuthService);
@@ -54,6 +54,11 @@ export class AppComponent implements OnDestroy {
       dateStyle: 'medium', timeStyle: 'short'
     }).format(timestamp);
   };
+
+  ngAfterViewInit(): void {
+    const adsWindow = window as Window & { adsbygoogle?: unknown[] };
+    (adsWindow.adsbygoogle ??= []).push({});
+  }
 
   private getBrowserInfo(): string {
     if (typeof navigator === 'undefined') return 'ไม่ทราบ browser';
