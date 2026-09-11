@@ -82,8 +82,10 @@
   align-items: flex-start;
   display: flex;
   justify-content: center;
+  margin-inline: auto;
   min-height: 170px;
   position: relative;
+  width: min(100%, 250px);
 }
 
 .new-game-badge {
@@ -188,6 +190,10 @@
     padding-top: 18pt;
   }
 
+  .patch-cover-wrap {
+    width: min(100%, 250px);
+  }
+
   .patch-cover-image {
     justify-self: center;
   }
@@ -201,7 +207,4 @@
     flex-direction: row;
   }
 
-  .edit-button {
-    grid-column: 1;
-  }
 }
