@@ -68,7 +68,6 @@ export class BrowsePageComponent {
       relativeTo: this.route,
       queryParams: {
         q: filters.keyword.trim() || null,
-        tag: filters.tag || null,
         translator: this.translators().find((item) => item.id === filters.translatorId)?.shortName || null,
         system: filters.system || null,
         sort: filters.sortBy === 'updateDate' ? null : filters.sortBy,
@@ -262,7 +261,6 @@ export class BrowsePageComponent {
       const sort = params.get('sort');
       const direction = params.get('dir');
       this.keyword.set(params.get('q') ?? '');
-      this.filterState.selectedTag.set(params.get('tag'));
       this.translatorQuery.set(params.get('translator'));
       this.filterState.selectedSystem.set(params.get('system'));
       this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' ? sort : 'updateDate');
