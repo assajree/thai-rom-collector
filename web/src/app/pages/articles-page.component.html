@@ -1,10 +1,8 @@
 <main class="articles-page article-container">
     <h1>บทความ</h1>
     <p *ngIf="loading">กำลังโหลดบทความ...</p>
-    <section class="article-grid">
-        <a class="" *ngFor="let article of articles" [routerLink]="['/article', article.slug]">
-            <h2>+ {{article.title}}</h2>
-        </a>
+    <section class="article-grid">        
+        <a class="" *ngFor="let article of articles" [routerLink]="['/article', article.slug]">+ {{article.title}}</a>
     </section>
     <p *ngIf="!loading && !articles.length">ยังไม่มีบทความ</p>
 </main>

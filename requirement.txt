@@ -122,6 +122,8 @@ id (String): Auto-generated Document ID
 
 name (String): Category tag name (e.g., RPG, แปลจบแล้ว)
 
+slug (String): Public URL slug, initially copied from the tag name and editable by admins
+
 Collection Name: patches
 
 id (String): Auto-generated Document ID

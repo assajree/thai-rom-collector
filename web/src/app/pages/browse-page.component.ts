@@ -95,7 +95,8 @@ export class BrowsePageComponent {
     if (kind === 'week') return this.joinRouteLabels('เกมใหม่สัปดาห์นี้', ...selectedLabels);
     if (kind === 'tag') {
       const slug = this.routeSlug();
-      return this.joinRouteLabels(slug ? decodeURIComponent(slug) : '', ...selectedLabels) || 'เกมทั้งหมด';
+      const tag = this.tags().find((item) => item.slug === (slug ? decodeURIComponent(slug) : ''));
+      return this.joinRouteLabels(tag?.name ?? '', ...selectedLabels) || 'เกมทั้งหมด';
     }
     return this.joinRouteLabels(...selectedLabels) || 'เกมทั้งหมด';
   });
@@ -169,7 +170,7 @@ export class BrowsePageComponent {
       this.filterState.selectedTag.set(null);
     } else if (kind === 'tag') {
       if (!this.patchesLoaded() || !this.tagsLoaded()) return;
-      const tag = this.tags().find((item) => item.name === value);
+      const tag = this.tags().find((item) => item.slug === value);
       if (!tag) return void this.router.navigateByUrl('/');
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);

@@ -154,10 +154,18 @@
       }
       <div>
         @for (tag of tags(); track tag.id) {
-        <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)"
-          routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.id)">
-          {{ tag.name }}
-        </a>
+        <div class="sidebar-translator-row">
+          @if (authService.isAdmin()) {
+          <a class="sidebar-translator-edit-link" [routerLink]="['/admin/tags']" [queryParams]="{ edit: tag.id }"
+            aria-label="แก้ไข tag" (click)="$event.stopPropagation(); closeSidebar()">
+            <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+          </a>
+          }
+          <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.slug)"
+            routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.id)">
+            {{ tag.name }}
+          </a>
+        </div>
         }
       </div>
     </div>

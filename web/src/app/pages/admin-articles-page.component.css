@@ -99,10 +99,6 @@
   flex-wrap: wrap
 }
 
-.danger {
-  color: #ff8aab
-}
-
 .workspace-mode,
 .preview-mode {
   margin-top: 1rem

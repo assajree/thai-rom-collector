@@ -38,8 +38,8 @@ export class PatchCardListComponent {
     const shortName = this.translators.find((item) => item.id === patch.translatorId)?.shortName.trim().replace(/\s+/g, ' ');
     return `${shortName ? `${gameTitle} (Thai by ${shortName})` : gameTitle || 'cover'}.png`;
   }
-  protected cardTags(patch: Patch): string[] {
-    return patch.tags.map((id) => this.tags.find((tag) => tag.id === id)?.name ?? '').filter(Boolean);
+  protected cardTags(patch: Patch): Tag[] {
+    return patch.tags.map((id) => this.tags.find((tag) => tag.id === id)).filter((tag): tag is Tag => Boolean(tag));
   }
   protected browseRoute = browseRoute;
   protected systemName(shortName: string): string {

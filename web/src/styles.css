@@ -67,19 +67,24 @@
   }
 }
 
+.danger {
+  color: #ff5454
+}
+
 a,
-button {
+.link {
   text-decoration: underline;
   color: #00ffff;
 }
 
-a:hover,
-button:hover {
-  color: #ffd92b;
+a,
+.link {
+  text-decoration: underline;
 }
 
-button.button {
-  text-decoration: none;
+a:hover,
+.link:hover {
+  color: #ffd92b;
 }
 
 .my-fa-link {

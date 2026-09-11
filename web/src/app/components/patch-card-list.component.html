@@ -7,10 +7,18 @@
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
         [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)"
         [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
-      @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]" target="_blank" rel="noopener noreferrer">แก้ไข</a> }
+      @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]" target="_blank"
+        rel="noopener noreferrer">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
       <h2>{{ patch.gameTitle }}</h2>
+      @if (patch.haveUpdateFlag) {
+      <span class="game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif"
+          alt="update" /></span>
+      } @else if (isNewGame(patch.updateDate)) {
+      <span class="game-badge new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif"
+          alt="new" /></span>
+      }
       <div class="patch-card__description">
 
         <div>
@@ -42,18 +50,13 @@
         @if (formatUpdateDate(patch.updateDate); as updateDate) {
         <div>{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}: {{ updateDate }}</div>
         }
-        @if (patch.haveUpdateFlag) {
-        <span class="game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif"
-            alt="update" /></span>
-        } @else if (isNewGame(patch.updateDate)) {
-        <span class="game-badge new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif" alt="new" /></span>
-        }
+
 
       </div>
       @if (cardTags(patch).length > 0) {
       <span class="patch-card__tags-label">แท็ก: </span>
-      <ul class="patch-card__tags">@for (tag of cardTags(patch); track $index) { @if (tag.trim()) { <li>
-          <a [routerLink]="browseRoute('tag', tag)">{{ tag }}</a>
+      <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim()) { <li>
+          <a [routerLink]="browseRoute('tag', tag.slug)">{{ tag.name }}</a>
         </li> } }</ul>
       }
       @if (hasDownloadLinks(patch)) {

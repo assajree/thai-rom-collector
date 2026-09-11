@@ -9,6 +9,7 @@ export interface Translator {
 export interface Tag {
   id: string;
   name: string;
+  slug: string;
 }
 
 export interface SystemMaster {

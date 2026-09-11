@@ -72,6 +72,7 @@ export interface Translator {
 export interface Tag {
   id: string;
   name: string;
+  slug: string;
 }
 
 export interface Patch {
@@ -179,7 +180,7 @@ export const adminGuard: CanActivateFn = (): boolean | UrlTree | Observable<bool
 |---|---|---|---|
 | `admins` | Firebase Auth UID | `email` | Explicit allowlist used by client admin-state lookup and security rules. Documents are provisioned outside the public app by the project owner. |
 | `translators` | Auto ID | `name`, `link?` | Translator/team master data. |
-| `tags` | Auto ID | `name` | Category-tag master data. |
+| `tags` | Auto ID | `name`, `slug` | Category-tag master data; slug is used in public tag URLs. |
 | `patches` | Auto ID | `fileName`, `gameTitle`, `system`, `translatorId`, `translatedBy`, `patchTool`, `tags`, `coverUrl`, `patchFileUrl` | Public patch repository. |
 
 ### Cloud Storage layout
