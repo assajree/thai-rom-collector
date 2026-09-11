@@ -12,7 +12,7 @@ export class ArticleRepository {
       .filter(article => includeDrafts || String(article.status).toLowerCase() === 'published')
       .sort((a, b) => (b.publishedAt ?? b.updatedAt).localeCompare(a.publishedAt ?? a.updatedAt));
   }
-  async bySlug(slug: string): Promise<Article | null> { return (await this.all()).find(x => x.slug === slug) ?? null; }
+  async bySlug(slug: string, includeDrafts = false): Promise<Article | null> { return (await this.all(includeDrafts)).find(x => x.slug === slug) ?? null; }
   async byId(id: string): Promise<Article | null> { const value = (await get(ref(this.db, `${this.path}/${id}`))).val(); return value ? { ...(value as Omit<Article, 'id'>), id } : null; }
   async save(draft: ArticleDraft, id?: string): Promise<string> {
     const now = new Date().toISOString(); const existing = id ? await this.byId(id) : null;

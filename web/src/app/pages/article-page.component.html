@@ -1,5 +1,5 @@
 <main class="article-page article-container">
     <p *ngIf="loading">กำลังโหลด...</p>
-    <app-article-preview *ngIf="!loading && article; else missing" [article]="article" [backLink]="true" />
+    <app-article-preview *ngIf="!loading && article; else missing" [article]="article" [backLink]="backLink" />
     <ng-template #missing><p *ngIf="!loading">ไม่พบบทความนี้</p></ng-template>
 </main>
