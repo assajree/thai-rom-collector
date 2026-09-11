@@ -22,6 +22,7 @@ export class PatchRepository {
       map((rows) => rows.map((row) => ({
         id: String(row['id']),
         updateDate: String(row['updateDate'] ?? ''),
+        haveUpdateFlag: row['haveUpdateFlag'] === true,
         patchVersion: String(row['patchVersion'] ?? ''),
         gameTitle: String(row['gameTitle'] ?? ''),
         system: String(row['system'] ?? ''),
@@ -45,7 +46,11 @@ export class PatchRepository {
   getById(id: string): Promise<Patch | undefined> {
     return new Promise((resolve, reject) => {
       from(get(ref(this.database, `${this.patches}/${id}`))).pipe(
-        map((snapshot) => snapshot.exists() ? ({ ...(snapshot.val() as Record<string, unknown>), id } as unknown as Patch) : undefined),
+        map((snapshot) => {
+          if (!snapshot.exists()) return undefined;
+          const row = snapshot.val() as Record<string, unknown>;
+          return { ...row, id, haveUpdateFlag: row['haveUpdateFlag'] === true } as Patch;
+        }),
         catchError(() => throwError(() => new RepositoryError('ไม่สามารถโหลดข้อมูลแพตช์ได้', 'read')))
       ).subscribe({ next: resolve, error: reject, complete: () => resolve(undefined) });
     });
@@ -106,7 +111,7 @@ export class PatchRepository {
     const fields = [draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      updateDate, patchVersion: clean(draft.patchVersion), gameTitle: clean(draft.gameTitle), system: system.shortName,
+      updateDate, haveUpdateFlag: draft.haveUpdateFlag === true, patchVersion: clean(draft.patchVersion), gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(),
       patchedRomUrl: draft.patchedRomUrl.trim(), referenceText: clean(draft.referenceText), referenceUrl: draft.referenceUrl.trim(),

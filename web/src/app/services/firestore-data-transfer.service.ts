@@ -12,6 +12,8 @@ const normalizePatchRow = (row: BackupDocument): BackupDocument => {
   const { fileName: _legacyFileName, ...data } = row;
   if (data['patchVersion'] === undefined) data['patchVersion'] = '';
   if (typeof data['patchVersion'] !== 'string') throw new Error(`${row.id}.patchVersion ต้องเป็นข้อความ`);
+  if (data['haveUpdateFlag'] === undefined) data['haveUpdateFlag'] = false;
+  if (typeof data['haveUpdateFlag'] !== 'boolean') throw new Error(`${row.id}.haveUpdateFlag ต้องเป็น boolean`);
   return data;
 };
 @Injectable({ providedIn: 'root' }) export class FirestoreDataTransferService {

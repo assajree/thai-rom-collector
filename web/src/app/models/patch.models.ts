@@ -20,6 +20,7 @@ export interface SystemMaster {
 export interface Patch {
   id: string;
   updateDate: string;
+  haveUpdateFlag: boolean;
   patchVersion: string;
   gameTitle: string;
   system: string;
@@ -42,6 +43,7 @@ export interface AdminProfile {
 
 export interface PatchDraft {
   updateDate: string;
+  haveUpdateFlag: boolean;
   patchVersion: string;
   gameTitle: string;
   system: string;

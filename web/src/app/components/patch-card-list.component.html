@@ -4,7 +4,9 @@
 
     <div class="patch-cover-wrap">
       <div class="patch-cover-placeholder" aria-hidden="true"></div>
-      @if (isNewGame(patch.updateDate)) {
+      @if (patch.haveUpdateFlag) {
+      <span class="new-game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif" alt="update" /></span>
+      } @else if (isNewGame(patch.updateDate)) {
       <span class="new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif" alt="new" /></span>
       }
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
@@ -39,7 +41,7 @@
         <div>ระบบ: <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a></div>
         @if (patch.patchVersion) { <div>เวอร์ชันแพตช์: {{ patch.patchVersion }}</div> }
 
-        @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }
+        @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}: {{ updateDate }}</div> }
         
       </div>
       @if (cardTags(patch).length > 0) {

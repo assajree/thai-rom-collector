@@ -4,6 +4,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
   {
     id: 'mock-ocarina-3ds',
     updateDate: '2024-03-15T00:00:00.000Z',
+    haveUpdateFlag: false,
     patchVersion: 'v1.0',
     gameTitle: 'The Legend of Zelda: Ocarina of Time 3D',
     system: '3DS',
@@ -18,6 +19,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
   {
     id: 'mock-mother-gba',
     updateDate: '2024-02-15T00:00:00.000Z',
+    haveUpdateFlag: false,
     patchVersion: 'v0.9',
     gameTitle: 'Mother 3',
     system: 'GBA',
@@ -32,6 +34,7 @@ export const MOCK_PATCHES: readonly Patch[] = [
   {
     id: 'mock-patapon-psp',
     updateDate: '2024-01-15T00:00:00.000Z',
+    haveUpdateFlag: false,
     patchVersion: 'v1.2',
     gameTitle: 'Patapon',
     system: 'PSP',

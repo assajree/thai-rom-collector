@@ -43,7 +43,7 @@ export class AdminPatchPageComponent {
   protected systemOptions: SystemMaster[] = [];
   protected systemSearchText = '';
   protected systemAutocompleteOpen = false;
-  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
+  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], haveUpdateFlag: [false], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
   protected pastingGameTitle = false;
@@ -67,9 +67,12 @@ export class AdminPatchPageComponent {
   protected systemDialogOpen = false;
   protected savingTranslator = false;
   protected savingSystem = false;
+  private editLoadRequest = 0;
   constructor() {
     this.initializeFilenameGeneration();
-    void this.loadEditRecord();
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      void this.loadEditRecord(params.get('id'));
+    });
   }
 
   protected translatorOptions: Translator[] = [];
@@ -188,6 +191,7 @@ export class AdminPatchPageComponent {
       const translatorModTool = this.translatorOptions.find((item) => item.id === value.translatorId)?.modTool ?? '';
       this.form.reset({
         updateDate: this.todayInputDate(),
+        haveUpdateFlag: false,
         patchVersion: '',
         gameTitle: '',
         system: value.system,
@@ -257,14 +261,36 @@ export class AdminPatchPageComponent {
     }
   }
 
-  private async loadEditRecord(): Promise<void> {
-    const id = this.route.snapshot.paramMap.get('id');
+  private async loadEditRecord(id: string | null): Promise<void> {
+    const request = ++this.editLoadRequest;
+    this.editId = id;
+    this.existingCoverUrl = '';
+    this.cover = undefined;
+    this.coverInput?.clear();
+    this.selectedTags = [];
+    this.systemSearchText = '';
+    this.translatorSearchText = '';
+    this.form.reset({
+      updateDate: this.todayInputDate(),
+      haveUpdateFlag: false,
+      patchVersion: '',
+      gameTitle: '',
+      system: '',
+      translatorId: '',
+      patchTool: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      referenceText: '',
+      referenceUrl: '',
+      walkthroughUrl: ''
+    });
     if (!id) return;
     const patch = await this.patchRepository.getById(id);
+    if (request !== this.editLoadRequest) return;
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
     this.existingCoverUrl = patch.coverUrl ?? '';
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
+    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
     const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
     if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
     const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
