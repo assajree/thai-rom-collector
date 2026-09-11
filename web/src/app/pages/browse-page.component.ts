@@ -31,6 +31,7 @@ export class BrowsePageComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   protected readonly auth = inject(AuthService);
+  private lastClearAllRequest = this.filterState.clearAllRequested();
   protected readonly patches = signal<Patch[]>([]);
   protected readonly keyword = signal('');
   protected readonly selectedTag = this.filterState.selectedTag;
@@ -48,14 +49,34 @@ export class BrowsePageComponent {
   protected readonly pageSize = 10;
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
+  private readonly queryStateReady = signal(false);
+  private readonly translatorQuery = signal<string | null>(null);
   protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | null>(null);
   private readonly routeSlug = signal<string | null>(null);
   private readonly clearAllEffect = effect(() => {
-    this.filterState.clearAllRequested();
+    const request = this.filterState.clearAllRequested();
+    if (request === this.lastClearAllRequest) return;
+    this.lastClearAllRequest = request;
     this.keyword.set('');
     this.sortBy.set('updateDate');
     this.direction.set('desc');
   }, { allowSignalWrites: true });
+  private readonly queryStateEffect = effect(() => {
+    if (!this.queryStateReady()) return;
+    const filters = this.filters();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        q: filters.keyword.trim() || null,
+        tag: filters.tag || null,
+        translator: this.translators().find((item) => item.id === filters.translatorId)?.shortName || null,
+        system: filters.system || null,
+        sort: filters.sortBy === 'updateDate' ? null : filters.sortBy,
+        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection
+      },
+      replaceUrl: true
+    });
+  });
   private readonly forceRefreshEffect = effect(() => {
     if (this.patchCache.refreshRequested() === 0) return;
     this.loading.set(true);
@@ -128,9 +149,6 @@ export class BrowsePageComponent {
     const kind = this.routeKind();
     const slug = this.routeSlug();
     if (kind === null) {
-      this.filterState.selectedSystem.set(null);
-      this.filterState.selectedTranslatorId.set(null);
-      this.filterState.selectedTag.set(null);
       return;
     }
     if (!slug) return;
@@ -162,6 +180,14 @@ export class BrowsePageComponent {
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(null);
     }
+  }, { allowSignalWrites: true });
+  private readonly queryTranslatorEffect = effect(() => {
+    const queryValue = this.translatorQuery();
+    if (!this.translatorsLoaded()) return;
+    const normalized = queryValue ? normalizeBrowseName(queryValue).toLocaleLowerCase('th') : '';
+    const translator = this.translators().find((item) => normalizeBrowseName(item.shortName).toLocaleLowerCase('th') === normalized);
+    this.filterState.selectedTranslatorId.set(translator?.id ?? null);
+    this.queryStateReady.set(true);
   }, { allowSignalWrites: true });
   protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
   protected isInRecentWindow(updateDate: string, window: 'today' | 'week'): boolean {
@@ -217,7 +243,26 @@ export class BrowsePageComponent {
       this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | undefined) ?? null);
     });
     this.route.paramMap.subscribe((params) => {
-      this.routeSlug.set(params.get('slug'));
+      const slug = params.get('slug');
+      this.routeSlug.set(slug);
+      if (!slug) return;
+      const kind = this.route.snapshot.data['browseKind'] as 'system' | 'translator' | undefined;
+      const queryKey = kind === 'system' ? 'system' : kind === 'translator' ? 'translator' : null;
+      if (!queryKey || this.route.snapshot.queryParamMap.has(queryKey)) return;
+      void this.router.navigate([`/${kind}`], {
+        queryParams: { [queryKey]: decodeURIComponent(slug) },
+        replaceUrl: true
+      });
+    });
+    this.route.queryParamMap.subscribe((params) => {
+      const sort = params.get('sort');
+      const direction = params.get('dir');
+      this.keyword.set(params.get('q') ?? '');
+      this.filterState.selectedTag.set(params.get('tag'));
+      this.translatorQuery.set(params.get('translator'));
+      this.filterState.selectedSystem.set(params.get('system'));
+      this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' ? sort : 'updateDate');
+      this.direction.set(direction === 'asc' ? 'asc' : 'desc');
     });
   }
 }

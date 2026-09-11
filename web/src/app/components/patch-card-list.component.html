@@ -19,7 +19,7 @@
         <div>
           โดย:
           <span class="translator-links">
-            <a [routerLink]="translatorRoute(patch)">{{ translatorName(patch) }}</a>
+            <a routerLink="/translator" [queryParams]="{ translator: translatorShortName(patch) ?? translatorName(patch) }">{{ translatorName(patch) }}</a>
 
             @if (translatorLink(patch); as link) {
             <a [href]="link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="my-fa-link">
@@ -36,7 +36,7 @@
           </span>
         </div>
 
-        <div>ระบบ: <a [routerLink]="systemLink(patch.system)">{{ systemName(patch.system) }}</a></div>
+        <div>ระบบ: <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a></div>
         @if (patch.patchVersion) { <div>เวอร์ชันแพตช์: {{ patch.patchVersion }}</div> }
 
         @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>เพิ่มเมื่อ: {{ updateDate }}</div> }

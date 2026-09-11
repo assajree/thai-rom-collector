@@ -9,5 +9,7 @@ export function browseSlug(value: string): string {
 }
 
 export function browseRoute(kind: BrowseRouteKind, value: string): string {
+  if (kind === 'system') return `/system?system=${encodeURIComponent(normalizeBrowseName(value))}`;
+  if (kind === 'translator') return `/translator?translator=${encodeURIComponent(normalizeBrowseName(value))}`;
   return `/${kind}/${browseSlug(value)}`;
 }

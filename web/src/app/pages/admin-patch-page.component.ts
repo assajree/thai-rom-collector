@@ -1,4 +1,4 @@
-import { Component, DestroyRef, HostListener, ViewChild, inject } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, ViewChild, inject } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -26,6 +26,7 @@ const compareDropdownLabels = (a: { shortName: string; name: string }, b: { shor
 })
 export class AdminPatchPageComponent {
   @ViewChild(CoverInputComponent) private coverInput?: CoverInputComponent;
+  @ViewChild('tagInput') private tagInput?: ElementRef<HTMLInputElement>;
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -307,6 +308,7 @@ export class AdminPatchPageComponent {
     if (!this.selectedTags.includes(tag.name)) this.selectedTags = [...this.selectedTags, tag.name];
     this.newTagName = '';
     this.tagAutocompleteOpen = false;
+    queueMicrotask(() => this.tagInput?.nativeElement.focus());
   }
   protected removeTag(name: string): void { this.selectedTags = this.selectedTags.filter((tag) => tag !== name); }
   protected onTagInput(value: string): void { this.newTagName = value; this.tagAutocompleteOpen = true; }

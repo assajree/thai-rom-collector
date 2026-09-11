@@ -40,13 +40,7 @@ export class PatchCardListComponent {
   protected cardTags(patch: Patch): string[] {
     return patch.tags;
   }
-  protected translatorRoute(patch: Patch): string {
-    return browseRoute('translator', this.translatorShortName(patch) ?? this.translatorName(patch));
-  }
   protected browseRoute = browseRoute;
-  protected systemLink(system: string): string {
-    return browseRoute('system', system);
-  }
   protected systemName(shortName: string): string {
     return this.systems.find((system) => system.shortName === shortName)?.name ?? shortName;
   }
