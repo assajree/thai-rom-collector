@@ -43,8 +43,6 @@
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่วันนี้</a>
       <a class="retro-rail-link" routerLink="/new" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่สัปดาห์นี้</a>
-      <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
-        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
       <div class="">
         <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active">บทความ</a>
       </div>
@@ -157,7 +155,7 @@
       <div>
         @for (tag of tags(); track tag.id) {
         <a class="retro-system-button" [routerLink]="browseRoute('tag', tag.name)"
-          routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.name)">
+          routerLinkActive="retro-system-button--active" (click)="selectRouteTag(tag.id)">
           {{ tag.name }}
         </a>
         }
@@ -175,6 +173,8 @@
         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on
           Facebook</a>
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
+        <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
+          [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
         <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
           Refresh
         </button>
@@ -228,7 +228,7 @@
 
     <router-outlet />
 
-    <footer class="page-footer" aria-label="ข้อมูลหน้าเว็บ">
+    <footer class="page-footer hidden" aria-label="ข้อมูลหน้าเว็บ">
       <div class="browser-info" aria-label="ข้อมูล browser">Browser: {{ browserInfo }}</div>
       <div class="browser-info" aria-label="navigator.userAgent">{{ userAgent }}</div>
       <div class="footer-space"></div>

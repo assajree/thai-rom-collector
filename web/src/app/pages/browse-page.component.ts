@@ -169,12 +169,11 @@ export class BrowsePageComponent {
       this.filterState.selectedTag.set(null);
     } else if (kind === 'tag') {
       if (!this.patchesLoaded() || !this.tagsLoaded()) return;
-      const tag = this.tags().find((item) => item.name === value)?.name
-        ?? [...new Set(this.patches().flatMap((patch) => patch.tags))].find((item) => item === value);
+      const tag = this.tags().find((item) => item.name === value);
       if (!tag) return void this.router.navigateByUrl('/');
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
-      this.filterState.selectedTag.set(tag);
+      this.filterState.selectedTag.set(tag.id);
     } else if (kind === 'rom') {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);

@@ -3,7 +3,6 @@
         <div>
             <p class="eyebrow">CONTENT WORKSPACE</p>
             <h1>จัดการบทความ</h1>
-            <p>เขียน แก้ไข ตรวจ preview และเผยแพร่จากที่เดียว</p>
         </div><button *ngIf="!isEdit" class="primary-button" type="button" (click)="start()">+ เพิ่มบทความ</button>
     </header>
     <section *ngIf="!isEdit" class="list-mode">
@@ -15,24 +14,31 @@
         </div>
         <div class="article-list">
             <article *ngFor="let item of items" class="article-row">
-                <div class="article-row-main"><span class="status" [class.published]="item.status === 'published'">{{
-                        item.status === 'published' ? 'เผยแพร่แล้ว' : 'ฉบับร่าง' }}</span>
+                <div class="article-row-main">
+                    <span class="status" [class.published]="item.status === 'published'">
+                        {{
+                        item.status === 'published' ? 'เผยแพร่แล้ว' : 'ฉบับร่าง' }}
+                    </span>
                     <h3>{{ item.title || 'ไม่มีชื่อบทความ' }}</h3>
-                    <p>{{ item.excerpt || 'ยังไม่มีคำโปรย' }}</p><small>{{ item.category }} - {{ item.slug }}</small>
                 </div>
-                <div class="row-actions"><button type="button" (click)="openPreview(item)">Preview</button><button
-                        type="button" (click)="start(item)">แก้ไข</button><button type="button"
-                        *ngIf="item.status !== 'published'" [disabled]="busy"
-                        (click)="publish(item)">Publish</button><button class="danger" type="button" [disabled]="busy"
-                        (click)="remove(item)">ลบ</button></div>
+                <div class="row-actions">
+                    <button type="button" [disabled]="busy"
+                        (click)="item.status === 'published' ? unpublish(item) : publish(item)">
+                        {{ item.status === 'published' ? 'Unpublish' : 'Publish' }}
+                    </button>
+                    <button type="button" (click)="start(item)">Edit</button>
+                    <button type="button" (click)="openPreview(item)">Preview</button>
+                    <button class="danger" type="button" [disabled]="busy" (click)="remove(item)">ลบ</button>
+                </div>
             </article>
             <p *ngIf="!items.length" class="empty-state">ยังไม่มีบทความ เริ่มจากการเพิ่มบทความแรก</p>
         </div>
     </section>
     <section *ngIf="isEdit && !isPreview" class="workspace-mode">
-        <div class="mode-toolbar"><button type="button" (click)="backToList()">← รายการบทความ</button>
-            <h2>{{ editing ? 'แก้ไขบทความ' : 'เพิ่มบทความ' }}</h2><button type="button"
-                (click)="togglePreview(true)">Preview</button>
+        <div class="mode-toolbar">
+            <button type="button" (click)="backToList()">รายการบทความ</button>
+            <h2>{{ editing ? 'แก้ไขบทความ' : 'เพิ่มบทความ' }}</h2>
+            <button type="button" (click)="togglePreview(true)">Preview</button>
         </div>
         <div class="editor-layout">
             <form class="editor-form" (submit)="$event.preventDefault(); save('draft')">
@@ -40,7 +46,7 @@
                     ชื่อบทความ
                     <input name="title" [(ngModel)]="form.title" (blur)="slugify()" placeholder="ชื่อบทความ">
                 </label>
-                
+
                 <label>
                     เนื้อหา Markdown
                     <textarea name="content" [(ngModel)]="form.content" rows="18"
@@ -67,17 +73,20 @@
                 </label>
 
                 <div class="form-actions">
-                    <button type="button" (click)="backToList()">ยกเลิก</button>
-                    <button type="submit" [disabled]="busy">บันทึกร่าง</button>
-                    <button class="primary-button" type="button" [disabled]="busy"
-                        (click)="save('published')">เผยแพร่</button>
+                    <button class="primary-button" type="submit" [disabled]="busy">บันทึก</button>
                 </div>
             </form>
         </div>
     </section>
     <section *ngIf="isEdit && isPreview" class="preview-mode">
-        <div class="mode-toolbar"><button type="button" (click)="togglePreview(false)">← กลับไปแก้ไข</button>
-            <h2>Preview บทความ</h2><button type="button" (click)="togglePreview(false)">แก้ไขบทความ</button>
-        </div><app-article-preview [article]="form" />
+        <div class="mode-toolbar">
+            <button type="button" (click)="backToList()">รายการบทความ</button>
+            <h2>Preview บทความ</h2>
+            <button type="button" (click)="togglePreview(false)">แก้ไขบทความ</button>
+        </div>
+        <app-article-preview [article]="form" />
+        <div class="form-actions preview-actions">
+            <button class="primary-button" type="button" [disabled]="busy" (click)="save()">บันทึก</button>
+        </div>
     </section>
 </main>

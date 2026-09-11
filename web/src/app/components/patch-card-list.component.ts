@@ -1,6 +1,6 @@
 import { Component, Input, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Patch, Translator } from '../models/patch.models';
+import { Patch, Tag, Translator } from '../models/patch.models';
 import { browseRoute } from '../shared/browse-route.util';
 import { SystemMaster } from '../repositories/system.repository';
 import { StatusMessageService } from '../shared/status-message.service';
@@ -18,6 +18,7 @@ export class PatchCardListComponent {
   @Input() patches: Patch[] = [];
   @Input() translators: Translator[] = [];
   @Input() systems: SystemMaster[] = [];
+  @Input() tags: Tag[] = [];
   @Input() canEdit = false;
   protected readonly loadedImages = signal(new Set<string>());
   protected translatorLink(patch: Patch): string | undefined {
@@ -38,7 +39,7 @@ export class PatchCardListComponent {
     return `${shortName ? `${gameTitle} (Thai by ${shortName})` : gameTitle || 'cover'}.png`;
   }
   protected cardTags(patch: Patch): string[] {
-    return patch.tags;
+    return patch.tags.map((id) => this.tags.find((tag) => tag.id === id)?.name ?? '').filter(Boolean);
   }
   protected browseRoute = browseRoute;
   protected systemName(shortName: string): string {

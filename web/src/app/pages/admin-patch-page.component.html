@@ -58,13 +58,6 @@
       <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value" [system]="form.controls.system.value"
         (selected)="cover = $event" />
     </div>
-    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<input class="admin-input"
-        formControlName="patchVersion" type="text" />
-    </label>
-    <label class="flex items-center gap-2">
-      <input formControlName="haveUpdateFlag" type="checkbox" />
-      <span>แสดงเป็นแพตช์อัปเดต</span>
-    </label>
     <div>
       <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
           formControlName="patchTool" /></label>
@@ -97,6 +90,16 @@
       <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>
       <button class="mt-3 border border-signal px-3 py-2 font-bold text-signal" type="button" (click)="createTag()"
         [disabled]="!newTagName.trim()">เพิ่ม tag ใหม่</button>
+
+      @if (selectedTags.length > 0) {
+      <ul class="selected-tags" aria-label="tag ที่เลือก">
+        @for (tag of selectedTags; track tag) {
+        <li>{{ tagName(tag) }} <button type="button" (click)="removeTag(tag)"
+            [attr.aria-label]="'ลบ tag ' + tagName(tag)">x</button></li>
+        }
+      </ul>
+      }
+      
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
         <input #tagInput class="admin-input" placeholder="พิมพ์เพื่อค้นหา tag" [value]="newTagName"
           (focus)="openTagAutocomplete()" (input)="onTagInput($any($event.target).value)"
@@ -111,16 +114,16 @@
         <p class="tag-autocomplete__empty">ไม่พบ tag ที่ตรงกัน — กด “เพิ่ม tag” เพื่อสร้างใหม่</p>
         }
       </div>
-      @if (selectedTags.length > 0) {
-      <ul class="selected-tags" aria-label="tag ที่เลือก">
-        @for (tag of selectedTags; track tag) {
-        <li>{{ tag }} <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'ลบ tag ' + tag">x</button></li>
-        }
-      </ul>
-      }
-      
-    </fieldset>
 
+
+    </fieldset>
+    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<input class="admin-input"
+        formControlName="patchVersion" type="text" />
+    </label>
+    <label class="flex items-center gap-2">
+      <input formControlName="haveUpdateFlag" type="checkbox" />
+      <span>แสดงเป็นแพตช์อัปเดต</span>
+    </label>
     <div>
       <label><i class="fa-solid fa-calendar-days mr-1" aria-hidden="true"></i>วันที่และเวลาอัปเดต<input
           class="admin-input" formControlName="updateDate" type="datetime-local" /></label>

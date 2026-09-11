@@ -17,6 +17,7 @@ import { ConfirmDialogComponent } from '../components/confirm-dialog.component';
 
 const compareDropdownLabels = (a: { shortName: string; name: string }, b: { shortName: string; name: string }): number =>
   a.shortName.localeCompare(b.shortName, 'th', { sensitivity: 'base' }) || a.name.localeCompare(b.name, 'th', { sensitivity: 'base' });
+const defaultDocumentTitle = 'เกมแปลไทย เกมย้อนยุค ROM Hack และปกเกม | THAI ROM DB';
 
 @Component({
   selector: 'app-admin-patch-page', styleUrl: './admin-patch-page.component.css',
@@ -104,7 +105,10 @@ export class AdminPatchPageComponent {
         this.form.controls.patchTool.setValue('');
       }
     });
-    this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => { this.tagSuggestions = tags; });
+    this.tags.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((tags) => {
+      this.tagSuggestions = tags;
+      this.selectedTags = this.selectedTags.filter((id) => tags.some((tag) => tag.id === id));
+    });
   }
 
   private normalizeGameTitle(value: string): string { return value.replace(/é/g, 'e'); }
@@ -264,6 +268,7 @@ export class AdminPatchPageComponent {
   private async loadEditRecord(id: string | null): Promise<void> {
     const request = ++this.editLoadRequest;
     this.editId = id;
+    document.title = defaultDocumentTitle;
     this.existingCoverUrl = '';
     this.cover = undefined;
     this.coverInput?.clear();
@@ -289,13 +294,14 @@ export class AdminPatchPageComponent {
     if (request !== this.editLoadRequest) return;
     if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
     this.editId = id;
+    document.title = `${patch.gameTitle} | THAI ROM DB`;
     this.existingCoverUrl = patch.coverUrl ?? '';
     this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
     const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
     if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
     const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
     if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
-    this.selectedTags = [...patch.tags];
+    this.selectedTags = patch.tags.filter((id) => this.tagSuggestions.some((tag) => tag.id === id));
   }
   private todayInputDate(): string {
     const now = new Date();
@@ -322,21 +328,22 @@ export class AdminPatchPageComponent {
   protected setRomPatcherTool(): void {
     this.form.controls.patchTool.setValue('https://www.marcrobledo.com/RomPatcher.js');
   }
-  protected toggleTag(name: string): void { this.selectedTags = this.selectedTags.includes(name) ? this.selectedTags.filter((tag) => tag !== name) : [...this.selectedTags, name]; }
+  protected tagName(id: string): string { return this.tagSuggestions.find((tag) => tag.id === id)?.name ?? ''; }
+  protected toggleTag(id: string): void { this.selectedTags = this.selectedTags.includes(id) ? this.selectedTags.filter((tag) => tag !== id) : [...this.selectedTags, id]; }
   protected filteredTagSuggestions(): Tag[] {
     const query = this.newTagName.trim().toLocaleLowerCase();
     return this.tagSuggestions
-      .filter((tag) => !this.selectedTags.includes(tag.name))
+      .filter((tag) => !this.selectedTags.includes(tag.id))
       .filter((tag) => !query || tag.name.toLocaleLowerCase().includes(query))
       .slice(0, 8);
   }
   protected selectTag(tag: Tag): void {
-    if (!this.selectedTags.includes(tag.name)) this.selectedTags = [...this.selectedTags, tag.name];
+    if (!this.selectedTags.includes(tag.id)) this.selectedTags = [...this.selectedTags, tag.id];
     this.newTagName = '';
     this.tagAutocompleteOpen = false;
     queueMicrotask(() => this.tagInput?.nativeElement.focus());
   }
-  protected removeTag(name: string): void { this.selectedTags = this.selectedTags.filter((tag) => tag !== name); }
+  protected removeTag(id: string): void { this.selectedTags = this.selectedTags.filter((tag) => tag !== id); }
   protected onTagInput(value: string): void { this.newTagName = value; this.tagAutocompleteOpen = true; }
   protected openTagAutocomplete(): void { this.tagAutocompleteOpen = true; }
   @HostListener('document:click')

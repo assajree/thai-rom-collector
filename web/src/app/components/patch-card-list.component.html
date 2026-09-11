@@ -7,7 +7,7 @@
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
         [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)"
         [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
-      @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]">แก้ไข</a> }
+      @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]" target="_blank" rel="noopener noreferrer">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
       <h2>{{ patch.gameTitle }}</h2>

@@ -41,6 +41,7 @@
   background: #c7ff3a !important;
   color: #11162a !important;
   padding: .45rem .7rem;
+  text-decoration: none;
 }
 
 .article-list {
@@ -57,6 +58,11 @@
 
 .article-row-main {
   min-width: 0
+}
+
+.row-actions {
+  gap: 2rem;
+  justify-content: space-between;
 }
 
 .article-row h3 {
@@ -150,6 +156,10 @@
 .preview-mode app-article-preview {
   display: block;
   padding: 2rem 0
+}
+
+.preview-actions {
+  padding-bottom: 2rem
 }
 
 .empty-state {

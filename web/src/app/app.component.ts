@@ -104,8 +104,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.filterState.selectedTag.set(null);
     this.closeSidebar();
   }
-  protected selectRouteTag(tag: string): void {
-    this.filterState.selectedTag.set(tag);
+  protected selectRouteTag(tagId: string): void {
+    this.filterState.selectedTag.set(tagId);
     this.filterState.selectedSystem.set(null);
     this.filterState.selectedTranslatorId.set(null);
     this.closeSidebar();

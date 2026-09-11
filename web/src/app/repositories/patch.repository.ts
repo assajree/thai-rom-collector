@@ -145,14 +145,12 @@ export class PatchRepository {
     });
   }
 
-  private getMasterTags(idsOrNames: string[]): Promise<string[]> {
+  private getMasterTags(ids: string[]): Promise<string[]> {
     return new Promise((resolve, reject) => {
       this.cache.get('tags', () => from(get(ref(this.database, 'tags'))).pipe(map((snapshot) => Object.entries((snapshot.val() ?? {}) as Record<string, unknown>).map(([id, data]) => ({ id, ...(data as Record<string, unknown>) } as Record<string, unknown>))))).subscribe({
         next: (rows) => {
-          const selected = new Set(idsOrNames);
-          const names = rows.filter((row) => selected.has(String(row['id'])) || selected.has(String(row['name'])))
-            .map((row) => clean(String(row['name'] ?? ''))).filter(Boolean);
-          resolve([...new Set(names)]);
+          const selected = new Set(ids);
+          resolve([...new Set(rows.filter((row) => selected.has(String(row['id']))).map((row) => String(row['id']))) ]);
         },
         error: () => reject(new RepositoryError('ไม่สามารถตรวจสอบหมวดหมู่ได้', 'create'))
       });

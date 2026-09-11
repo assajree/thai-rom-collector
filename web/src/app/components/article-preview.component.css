@@ -44,37 +44,32 @@
 }
 
 :host ::ng-deep .markdown-body h1,
-:host ::ng-deep .markdown-body h3,
-:host ::ng-deep .markdown-body h5 {
-  color: #c7ff3a;
-}
-
 :host ::ng-deep .markdown-body h2,
+:host ::ng-deep .markdown-body h3,
 :host ::ng-deep .markdown-body h4,
-:host ::ng-deep .markdown-body h6 {
+:host ::ng-deep .markdown-body h5,
+:host ::ng-deep .markdown-body h6,
+:host ::ng-deep .markdown-body strong {
   color: #ff73ba;
 }
 
-:host ::ng-deep .markdown-body h1,
-:host ::ng-deep .markdown-body h2 {
+:host ::ng-deep .markdown-body h1{
   margin: 2.5rem 0 1rem;
   font-size: 2rem;
 }
 
-:host ::ng-deep .markdown-body h3,
-:host ::ng-deep .markdown-body h4 {
+:host ::ng-deep .markdown-body h2 {
   margin: 2.25rem 0 .75rem;
   font-size: 1.8rem;
 }
 
-:host ::ng-deep .markdown-body h5,
-:host ::ng-deep .markdown-body h6 {
+:host ::ng-deep .markdown-body h3 {
   margin: 2.25rem 0 .5rem;
   font-size: 1.2rem;
 }
 
 :host ::ng-deep .markdown-body p {
-  margin: 0 0 1rem;
+  margin: 0 0 0rem;
 }
 
 :host ::ng-deep .markdown-body strong {
