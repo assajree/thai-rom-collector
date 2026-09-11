@@ -4,14 +4,9 @@
 
     <div class="patch-cover-wrap">
       <div class="patch-cover-placeholder" aria-hidden="true"></div>
-      @if (patch.haveUpdateFlag) {
-      <span class="new-game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif" alt="update" /></span>
-      } @else if (isNewGame(patch.updateDate)) {
-      <span class="new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif" alt="new" /></span>
-      }
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
-        [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)" [alt]="'ปกเกม ' + patch.gameTitle"
-        (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
+        [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)"
+        [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
       @if (canEdit) { <a class="edit-button" [routerLink]="['/add-patch', patch.id]">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
@@ -21,7 +16,9 @@
         <div>
           โดย:
           <span class="translator-links">
-            <a routerLink="/translator" [queryParams]="{ translator: translatorShortName(patch) ?? translatorName(patch) }">{{ translatorName(patch) }}</a>
+            <a routerLink="/translator"
+              [queryParams]="{ translator: translatorShortName(patch) ?? translatorName(patch) }">{{
+              translatorName(patch) }}</a>
 
             @if (translatorLink(patch); as link) {
             <a [href]="link" target="_blank" rel="noopener noreferrer" aria-label="เปิดลิงก์ทีมแปล" class="my-fa-link">
@@ -38,17 +35,26 @@
           </span>
         </div>
 
-        <div>ระบบ: <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a></div>
+        <div>ระบบ: <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a>
+        </div>
         @if (patch.patchVersion) { <div>เวอร์ชันแพตช์: {{ patch.patchVersion }}</div> }
 
-        @if (formatUpdateDate(patch.updateDate); as updateDate) { <div>{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}: {{ updateDate }}</div> }
-        
+        @if (formatUpdateDate(patch.updateDate); as updateDate) {
+        <div>{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}: {{ updateDate }}</div>
+        }
+        @if (patch.haveUpdateFlag) {
+        <span class="game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif"
+            alt="update" /></span>
+        } @else if (isNewGame(patch.updateDate)) {
+        <span class="game-badge new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif" alt="new" /></span>
+        }
+
       </div>
       @if (cardTags(patch).length > 0) {
       <span class="patch-card__tags-label">แท็ก: </span>
       <ul class="patch-card__tags">@for (tag of cardTags(patch); track $index) { @if (tag.trim()) { <li>
-        <a [routerLink]="browseRoute('tag', tag)">{{ tag }}</a>
-      </li> } }</ul>
+          <a [routerLink]="browseRoute('tag', tag)">{{ tag }}</a>
+        </li> } }</ul>
       }
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
@@ -64,11 +70,11 @@
           <a [href]="patch.patchFileUrl" target="_blank">Patch</a>
           }
           @if (patch.referenceUrl) {
-          <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'ที่มา' }}</a>
+          <a [href]="patch.referenceUrl" target="_blank" rel="noopener noreferrer">{{ patch.referenceText || 'ที่มา'
+            }}</a>
           }
           @if (patch.patchedRomUrl) {
-          <a [href]="patch.patchedRomUrl" target="_blank"
-            rel="noopener noreferrer">รอมแปลไทย</a>
+          <a [href]="patch.patchedRomUrl" target="_blank" rel="noopener noreferrer">รอมแปลไทย</a>
           }
           @if (patch.walkthroughUrl) {
           <a [href]="patch.walkthroughUrl" target="_blank" rel="noopener noreferrer">บทสรุป</a>

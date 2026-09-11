@@ -200,6 +200,10 @@ export class BrowsePageComponent {
   protected toggleDirection(): void { this.direction.update((value) => value === 'asc' ? 'desc' : 'asc'); }
   protected setKeyword(value: string): void { this.keyword.set(value); }
   protected clearKeyword(): void { this.keyword.set(''); }
+  protected clearAllFilters(): void {
+    this.filterState.clearAll();
+    void this.router.navigateByUrl('/', { replaceUrl: true });
+  }
   protected toggleTag(tag: string): void { this.selectedTag.update((current) => current === tag ? null : tag); }
   protected clearTag(): void { this.selectedTag.set(null); }
   protected setTranslator(value: string): void { this.selectedTranslatorId.set(value || null); }

@@ -4,7 +4,11 @@
     [draft]="filters()" (filtersChanged)="setFilters($event)" />
 
   @if (activeRouteLabel(); as routeLabel) {
-  <p class="browse-route-label">{{ routeLabel }} ({{ sortedPatches().length }})</p>
+  <div class="browse-route-label">
+    <span>{{ routeLabel }} ({{ sortedPatches().length }})</span>
+    <button type="button" class="browse-route-label__clear" aria-label="ล้างตัวกรองทั้งหมด"
+      (click)="clearAllFilters()">x</button>
+  </div>
   @if (!loading() && !unavailable() && sortedPatches().length > 0 && totalPages() > 1) {
     <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
       <button type="button" class="pagination__button" [disabled]="currentPage() === 1"

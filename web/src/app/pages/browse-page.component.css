@@ -28,13 +28,30 @@
 }
 
 .browse-route-label {
+  align-items: center;
   color: #ffd92b;
+  display: flex;
   font-size: 1.5rem;
   font-weight: bold;
+  justify-content: space-between;
   margin: 0.75rem 0 0;
   background: #35006c;
-  padding-left: 1rem;
+  padding: .15rem .35rem .15rem 1rem;
   box-shadow: 2px 2px #080808;
+}
+
+.browse-route-label__clear {
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+  line-height: 1;
+  min-width: 1.8rem;
+  padding: .15rem .3rem;
+}
+
+.browse-route-label__clear:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
 }
 
 .skeleton-grid {
