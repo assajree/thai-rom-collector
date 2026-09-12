@@ -1,7 +1,12 @@
+
 <div class="search-console">
-  <label class="search-console__icon" for="game-search">⌕</label>
-  <input id="game-search" type="search" placeholder="ค้นหาเกม..." [(ngModel)]="draft.keyword" (ngModelChange)="emit()" />
+  <label class="admin-search-field" for="game-search">
+    <span class="admin-search-icon" aria-hidden="true">⌕</span>
+    <span class="sr-only">ค้นหาเกม</span>
+    <input id="game-search" class="admin-search-input" type="search" placeholder="ค้นหาเกม..." [(ngModel)]="draft.keyword" (ngModelChange)="emit()" />
+  </label>
 </div>
+
 <div class="sort-row">
    @if (routeKind !== 'translator') {
     <div class="sort-field">

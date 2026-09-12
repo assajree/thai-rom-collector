@@ -6,8 +6,12 @@
   </div>
   @if (description) { <p class="mt-3 text-slate-200">{{ description }}</p> }
   @if (items.length) {
-    <input id="master-search" class="admin-search-input" type="search" [(ngModel)]="searchText"
-      placeholder="พิมพ์เพื่อค้นหา..." autocomplete="off" />
+    <label class="admin-search-field" for="master-search">
+      <span class="admin-search-icon" aria-hidden="true">⌕</span>
+      <span class="sr-only">ค้นหาข้อมูล</span>
+      <input id="master-search" class="admin-search-input" type="search" [(ngModel)]="searchText"
+        placeholder="พิมพ์เพื่อค้นหา..." autocomplete="off" />
+    </label>
   @if (filteredItems.length) { <section class="master-card-grid mt-6" aria-label="รายการข้อมูล">@for (item of
     filteredItems; track item.id) { <article class="master-card">@if
       (cardTemplate) { <ng-container *ngTemplateOutlet="cardTemplate; context: { $implicit: item }" />}<div

@@ -1,42 +1,7 @@
 .search-console {
-    background: linear-gradient(135deg, var(--color-text), var(--color-bevel-mid));
-    box-shadow: 0 5px 0 var(--color-black), inset 2px 2px var(--color-text), inset -3px -3px var(--color-bevel-dark);
-    display: flex;
-    gap: 0.4rem;
+    display: block;
     margin-inline: auto;
     max-width: 48rem;
-    padding: 0.4rem;
-}
-
-.search-console__icon {
-    align-items: center;
-    background: var(--color-bevel-mid);
-    border: 3px solid var(--color-black);
-    box-shadow: inset 3px 3px var(--color-text), inset -3px -3px var(--color-bevel-dark);
-    cursor: text;
-    display: flex;
-    font-family: serif;
-    font-size: 1.8rem;
-    font-weight: bold;
-    height: 2.5rem;
-    justify-content: center;
-    line-height: 1;
-    width: 2.5rem;
-}
-
-.search-console input {
-    background: var(--color-bevel-mid);
-    box-shadow: inset 3px 3px var(--color-bevel-dark), inset -2px -2px var(--color-bevel-light);
-    color: var(--color-black);
-    flex: 1;
-    font-family: inherit;
-    min-width: 0;
-    padding: 0.3rem 0.6rem;
-}
-
-.search-console input::placeholder {
-    color: var(--color-bevel-dark);
-    opacity: 1;
 }
 
 .filter-chips {
@@ -107,17 +72,6 @@
 }
 
 @media (max-width: 34rem) {
-    .search-console {
-        gap: .3rem;
-        padding: .3rem;
-    }
-
-    .search-console__icon {
-        font-size: 1.6rem;
-        height: 2.25rem;
-        width: 2.25rem;
-    }
-
     .sort-row {
         align-items: stretch;
         flex-direction: column;

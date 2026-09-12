@@ -62,7 +62,7 @@ h1 span {
 }
 
 .server-cost {
-  color: var(--color-danger);
+  color: var(--color-brand);
   font-size: 1.1rem;
 }
 
@@ -78,7 +78,7 @@ h1 span {
 }
 
 .hero-mark {
-  color: var(--color-danger);
+  color: var(--color-brand);
   font-family: Arial, sans-serif;
   font-size: clamp(12rem, 25vw, 25rem);
   line-height: .65;

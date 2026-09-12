@@ -3,17 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --color-ink: #090b16;
   --color-surface: #35006c;
   --color-border: #a8abd9;
   --color-text: #ffffff;
-  --color-text-muted: #c7d2fe;
+  --color-text-muted: #a8abd9;
   --color-accent: #c7ff3a;
   --color-accent-hover: #e0ff92;
   --color-link: #00ffff;
   --color-highlight: #ffd92b;
-  --color-brand: #ff73ba;
-  --color-danger: #ff4d67;
+  --color-brand: #ff4d67;
   --color-black: #080808;
   --color-overlay: rgb(0 0 0 / 55%);
   --color-overlay-soft: rgb(0 0 0 / 22%);
@@ -101,7 +99,55 @@
 }
 
 .danger {
-  color: var(--color-danger);
+  color: var(--color-brand);
+}
+
+.admin-search-input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: 0;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  color: var(--color-text);
+  font: inherit;
+  outline: 0;
+  padding: .35rem 0;
+}
+
+.admin-search-input::placeholder {
+  color: var(--color-text-muted);
+  opacity: 1;
+}
+
+.admin-search-field {
+  align-items: center;
+  background: var(--color-black);
+  border: 2px solid var(--color-border);
+  box-shadow: 4px 4px 0 var(--color-black), inset 0 0 0 2px var(--color-surface);
+  color: var(--color-accent);
+  display: flex;
+  gap: .55rem;
+  margin: 1.25rem auto 0;
+  max-width: 48rem;
+  padding: .45rem .65rem;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+
+.admin-search-field:focus-within {
+  border-color: var(--color-accent);
+  box-shadow: 4px 4px 0 var(--color-black), 0 0 0 2px var(--color-accent);
+}
+
+.admin-search-icon {
+  align-items: center;
+  display: inline-flex;
+  flex: 0 0 1.35rem;
+  font-size: 1.35rem;
+  font-weight: bold;
+  justify-content: center;
+  line-height: 1;
 }
 
 a,

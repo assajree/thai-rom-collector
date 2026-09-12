@@ -28,7 +28,7 @@
 }
 
 .delete-dialog {
-  border-color: var(--color-danger);
+  border-color: var(--color-brand);
 }
 
 label,
@@ -37,7 +37,7 @@ legend{
 }
 
 label.required::before {
-  color: var(--color-danger);
+  color: var(--color-brand);
   content: '* ';
   font-weight: 700;
 }
@@ -97,7 +97,7 @@ label.required::before {
 }
 
 .selected-tags button {
-  color: var(--color-danger);
+  color: var(--color-brand);
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;

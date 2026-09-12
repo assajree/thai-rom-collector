@@ -118,7 +118,7 @@
 }
 
 .retro-rail-heading {
-  color: var(--color-danger);
+  color: var(--color-brand);
   display: inline-block;
   font-weight: 700;
   line-height: 1.1;
@@ -143,7 +143,7 @@
 }
 
 .retro-rail-admin-link {
-  color: var(--color-danger);
+  color: var(--color-brand);
   margin-left: 0.35rem;
 }
 
