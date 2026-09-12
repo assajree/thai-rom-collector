@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Observable, catchError, defer, of, shareReplay, tap } from 'rxjs';
 
 const CACHE_TTL_MS = 12 * 60 * 60 * 1000;
-type CacheKey = 'patches' | 'translators' | 'tags' | 'systems';
+type CacheKey = 'patches' | 'translators' | 'tags' | 'systems' | 'sidebarLinks';
 
 interface CacheEntry<T> { savedAt: number; value: T; }
 type CacheTimestamps = Record<CacheKey, number | null>;
@@ -10,7 +10,7 @@ type CacheTimestamps = Record<CacheKey, number | null>;
 @Injectable({ providedIn: 'root' })
 export class FirestoreCacheService {
   private readonly memory = new Map<CacheKey, Observable<unknown>>();
-  private readonly timestamps = signal<CacheTimestamps>({ patches: null, translators: null, tags: null, systems: null });
+  private readonly timestamps = signal<CacheTimestamps>({ patches: null, translators: null, tags: null, systems: null, sidebarLinks: null });
 
   timestamp(key: CacheKey): number | null {
     const current = this.timestamps()[key];
@@ -52,7 +52,7 @@ export class FirestoreCacheService {
   }
 
   clearAll(): void {
-    (['patches', 'translators', 'tags', 'systems'] as const).forEach((key) => this.clear(key));
+    (['patches', 'translators', 'tags', 'systems', 'sidebarLinks'] as const).forEach((key) => this.clear(key));
   }
 
   private storageKey(key: CacheKey): string { return `rom-collector:realtime-database:${key}`; }

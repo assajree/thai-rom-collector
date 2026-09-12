@@ -10,6 +10,7 @@
     "test": "ng test",
     "backfill:create-date": "node scripts/backfill-create-date.mjs",
     "backfill:tag-slugs": "node scripts/backfill-tag-slugs.mjs",
+    "seed:sidebar-links": "node scripts/seed-sidebar-links.mjs",
     "migrate:firestore-to-rtdb": "node scripts/migrate-firestore-to-rtdb.mjs"
   },
   "private": true,

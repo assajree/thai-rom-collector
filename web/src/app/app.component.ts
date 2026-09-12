@@ -13,6 +13,8 @@ import { ServerCostRepository } from './repositories/server-cost.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
 import { browseRoute } from './shared/browse-route.util';
 import { PatchCacheService } from './services/patch-cache.service';
+import { SidebarLink, SidebarLinkSection } from './models/sidebar-link.models';
+import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
 
 @Component({
   selector: 'app-root',
@@ -30,12 +32,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private readonly systemRepository = inject(SystemRepository);
   private readonly serverCostRepository = inject(ServerCostRepository);
   private readonly patchCache = inject(PatchCacheService);
+  private readonly sidebarLinkRepository = inject(SidebarLinkRepository);
   private readonly router = inject(Router);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
   protected readonly filterState = inject(BrowseFilterStateService);
   protected readonly statusMessage = this.statusMessageService.message;
   protected readonly platforms = signal<SystemMaster[]>([]);
   protected readonly tags = signal<Tag[]>([]);
+  protected readonly sidebarLinks = signal<SidebarLink[]>([]);
   protected readonly translators = signal<Translator[]>([]);
   protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
   private readonly sidebarScrollLock = effect(() => {
@@ -45,6 +49,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly browseRoute = browseRoute;
   protected readonly isOffline = signal(false);
   protected readonly appUpdateReady = signal(false);
+  protected sidebarLinksFor(section: SidebarLinkSection): SidebarLink[] { return this.sidebarLinks().filter((link) => link.section === section); }
+  protected hasCreditLink(): boolean { return this.sidebarLinks().some((link) => link.articleSlug === 'credit'); }
   protected readonly browserInfo = this.getBrowserInfo();
   protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
   protected readonly patchCacheLastUpdated = this.patchCache.lastUpdated;
@@ -138,6 +144,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       if (event instanceof NavigationStart) this.statusMessageService.clear();
     });
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
+    this.sidebarLinkRepository.watchAll().subscribe({ next: (links) => this.sidebarLinks.set(links) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
     this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });
     this.loadServerCost();

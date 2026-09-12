@@ -27,6 +27,14 @@
         ".validate": "newData.hasChildren(['title','slug','excerpt','content','coverUrl','category','status','author','createdAt','updatedAt']) && newData.child('title').isString() && newData.child('title').val().length > 0 && newData.child('slug').isString() && newData.child('slug').val().matches(/^[a-z0-9ก-๙-]+$/) && newData.child('excerpt').isString() && newData.child('content').isString() && newData.child('coverUrl').isString() && newData.child('category').isString() && (newData.child('status').val() == 'draft' || newData.child('status').val() == 'published') && newData.child('author').isString() && newData.child('createdAt').isString() && newData.child('updatedAt').isString()"
       }
     },
+    "sidebarLinks": {
+      ".read": true,
+      "$id": {
+        ".read": true,
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['label','articleSlug','section']) && newData.child('label').isString() && newData.child('label').val().length > 0 && newData.child('articleSlug').isString() && newData.child('articleSlug').val().length > 0 && (newData.child('section').val() == 'systems' || newData.child('section').val() == 'translators' || newData.child('section').val() == 'tags' || newData.child('section').val() == 'other')"
+      }
+    },
     "admins": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }
   }
 }
