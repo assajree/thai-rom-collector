@@ -4,12 +4,12 @@
 }
 
 .back-link {
-  color: #ff73ba;
+  color: var(--color-brand);
 }
 
 .article-preview h1 {
   margin: 1.5rem 0 .75rem;
-  color: #c7ff3a;
+  color: var(--color-accent);
   font-size: clamp(2rem, 5vw, 3.25rem);
   line-height: 1;
 }
@@ -21,11 +21,11 @@
 }
 
 .article-meta {
-  color: #aab4d6;
+  color: var(--color-text-muted);
 }
 
 .excerpt {
-  color: #c7d2fe;
+  color: var(--color-text-muted);
   font-size: 1.1rem;
 }
 
@@ -50,7 +50,7 @@
 :host ::ng-deep .markdown-body h5,
 :host ::ng-deep .markdown-body h6,
 :host ::ng-deep .markdown-body strong {
-  color: #ff73ba;
+  color: var(--color-brand);
 }
 
 :host ::ng-deep .markdown-body h1{
@@ -73,26 +73,26 @@
 }
 
 :host ::ng-deep .markdown-body strong {
-  color: #fff;
+  color: var(--color-text);
   font-weight: 900;
 }
 
 :host ::ng-deep .markdown-body em {
-  color: #c7d2fe;
+  color: var(--color-text-muted);
 }
 
 :host ::ng-deep .markdown-body code {
   padding: .12rem .35rem;
-  background: #11162a;
-  color: #c7ff3a;
+  background: var(--color-surface);
+  color: var(--color-accent);
   font-size: .92em;
 }
 
 :host ::ng-deep .markdown-body pre {
   margin: 1.5rem 0;
   padding: 1rem;
-  border: 1px solid #8890bd;
-  background: #11162a;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   overflow-x: auto;
 }
 
@@ -102,10 +102,10 @@
 
 :host ::ng-deep .markdown-body blockquote {
   margin: 1.5rem 0;
-  border-left: 4px solid #ff73ba;
+  border-left: 4px solid var(--color-brand);
   padding: .5rem 1rem;
-  background: rgb(23 29 53 / 55%);
-  color: #c7d2fe;
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  color: var(--color-text-muted);
 }
 
 :host ::ng-deep .markdown-body ul {
@@ -120,7 +120,7 @@
 :host ::ng-deep .markdown-body hr {
   margin: 1rem 0;
   border: 0;
-  border-top: 2px solid #8890bd;
+  border-top: 2px solid var(--color-border);
 }
 
 :host ::ng-deep .markdown-body img {
@@ -128,7 +128,7 @@
   width: 100%;
   height: auto;
   margin: 1.5rem 0;
-  border: 1px solid #8890bd;
+  border: 1px solid var(--color-border);
 }
 
 @media (max-width: 40rem) {

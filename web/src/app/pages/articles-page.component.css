@@ -1,13 +1,9 @@
 .articles-page {
-    padding: 2rem;
     max-width: 70rem;
-    margin: auto;
-    min-height: calc(100vh - 6rem);
-    box-sizing: border-box;
 }
 
 .description {
-    color: #c7d2fe
+    color: var(--color-text-muted)
 }
 
 .article-grid {
@@ -18,10 +14,10 @@
 
 .article-card {
     display: block;
-    border: 2px solid #8890bd;
-    background: #171d35;
+    border: 2px solid var(--color-border);
+    background: var(--color-surface);
     padding: 1rem;
-    box-shadow: .3rem .3rem #11162a;
+    box-shadow: .3rem .3rem var(--color-surface);
     text-decoration: none
 }
 
@@ -32,21 +28,21 @@
 }
 
 .article-card h2 {
-    color: #ffffff
+    color: var(--color-text)
 }
 
 .article-card span {
-    color: #ff73ba;
+    color: var(--color-brand);
     font-weight: 800
 }
 
 .article-meta {
     font-size: .8rem;
-    color: #aab4d6
+    color: var(--color-text-muted)
 }
 
 h1 {
     margin: .3rem 0;
-    color: #c7ff3a;
+    color: var(--color-accent);
     font-size: clamp(2rem, 5vw, 3.5rem);
 }

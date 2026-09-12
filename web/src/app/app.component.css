@@ -1,10 +1,10 @@
 .app-topbar {
-  background-color: #280a61;
+  background-color: var(--color-surface);
   height: 4rem;
 }
 
 #last-update {
-  color: #ffd92b;
+  color: var(--color-highlight);
   flex: 0 1 auto;
   font-size: 0.75rem;
   font-weight: 700;
@@ -14,7 +14,7 @@
 }
 
 .marquee {
-  background-color: #610101;
+  background-color: var(--color-status-danger);
 }
 
 .app-shell {
@@ -30,7 +30,7 @@
 .retro-rail {
   align-self: stretch;
   box-sizing: border-box;
-  border-right: 1px solid #a8abd9;
+  border-right: 1px solid var(--color-border);
   min-height: calc(100vh - 6rem);
   min-width: 16rem;
   padding: 1rem 1rem 1rem 0.5rem;
@@ -45,12 +45,12 @@
 }
 
 .status-message--success {
-  background: #16a34a;
+  background: var(--color-status-success);
 }
 
 .status-message--offline {
-  background: #ffd92b;
-  color: #111827;
+  background: var(--color-highlight);
+  color: var(--color-black);
 }
 
 .app-content {
@@ -59,16 +59,16 @@
 }
 
 .page-footer {
-  border-top: 1px solid #a8abd9;
-  color: #d7d9e4;
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
   text-align: center;
 }
 
 
 .mobile-menu-button {
   background: transparent;
-  border: 1px solid #00ffff;
-  color: #00ffff;
+  border: 1px solid var(--color-link);
+  color: var(--color-link);
   cursor: pointer;
   display: none;
   font-size: 1.25rem;
@@ -107,7 +107,7 @@
   align-items: center;
   display: inline-flex;
   text-decoration: none;
-  color: #00ff00;
+  color: var(--color-accent);
 }
 
 .site-title img {
@@ -118,7 +118,7 @@
 }
 
 .retro-rail-heading {
-  color: #ff4d5d;
+  color: var(--color-danger);
   display: inline-block;
   font-weight: 700;
   line-height: 1.1;
@@ -127,8 +127,8 @@
 
 .right-ad-sidebar {
   align-self: stretch;
-  background: #35006c;
-  border-left: 1px solid #a8abd9;
+  background: var(--color-surface);
+  border-left: 1px solid var(--color-border);
   box-sizing: border-box;
   display: none;
   min-height: calc(100vh - 6rem);
@@ -139,20 +139,20 @@
 .right-ad-slot {
   min-height: 250px;
   width: 100%;
-  border: solid 1px #888;
+  border: solid 1px var(--color-border);
 }
 
 .retro-rail-admin-link {
-  color: #ff4d5d;
+  color: var(--color-danger);
   margin-left: 0.35rem;
 }
 
 .retro-rail-admin-link:hover {
-  color: #c7ff3a;
+  color: var(--color-accent);
 }
 
 .retro-rail-link {
-  color: #00ffff;
+  color: var(--color-link);
   display: block;
   font-family: inherit;
   font-weight: 700;
@@ -164,7 +164,7 @@
 
 .retro-rail-link:hover,
 .retro-rail-link--active {
-  color: #c7ff3a;
+  color: var(--color-accent);
 }
 
 .retro-system-section,
@@ -177,7 +177,7 @@
 .retro-system-button {
   background: transparent;
   border: 0;
-  color: #00ffff;
+  color: var(--color-link);
   cursor: pointer;
   display: block;
   font-family: inherit;
@@ -220,7 +220,7 @@
 }
 
 .browser-info {
-  color: #a8abd9;
+  color: var(--color-border);
   line-height: 1.2;
   margin-top: .25rem;
   overflow-wrap: anywhere;
@@ -229,7 +229,7 @@
 
 .retro-system-button:hover,
 .retro-system-button--active {
-  color: #c7ff3a;
+  color: var(--color-accent);
 }
 
 
@@ -257,7 +257,7 @@
   }
 
   .mobile-sidebar-backdrop {
-    background: rgba(0, 0, 0, 0.55);
+    background: var(--color-overlay);
     border: 0;
     inset: 0;
     position: fixed;
@@ -265,7 +265,7 @@
   }
 
   .retro-rail {
-    background: #35006c;
+    background: var(--color-surface);
     display: none;
     left: 0;
     max-height: calc(100vh - 6rem);

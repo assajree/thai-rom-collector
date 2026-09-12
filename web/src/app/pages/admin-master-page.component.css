@@ -2,9 +2,9 @@
     display: block;
     margin-top: .35rem;
     width: 100%;
-    background: #11162a;
-    border: 1px solid #8890bd;
-    color: #fff;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     padding: .65rem;
     pointer-events: auto;
     user-select: text
@@ -25,10 +25,10 @@
 .master-card {
     display: flex;
     flex-direction: column;
-    border: 1px solid #8890bd;
-    background: #171d35;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
     padding: 1rem;
-    box-shadow: 0 .35rem 0 #11162a
+    box-shadow: 0 .35rem 0 var(--color-surface)
 }
 
 .master-card-actions {
@@ -44,7 +44,7 @@
     z-index: 20;
     display: grid;
     place-items: center;
-    background: rgb(0 0 0 / 70%);
+    background: var(--color-overlay-heavy);
     padding: 1rem;
     pointer-events: auto
 }
@@ -53,11 +53,11 @@
     position: relative;
     z-index: 21;
     width: min(100%, 32rem);
-    border: 2px solid #c7ff3a;
-    background: #171d35;
+    border: 2px solid var(--color-accent);
+    background: var(--color-surface);
     padding: 1.25rem;
-    color: #fff;
-    box-shadow: 0 1rem 3rem rgb(0 0 0 / 45%);
+    color: var(--color-text);
+    box-shadow: 0 1rem 3rem var(--color-overlay);
     pointer-events: auto;
     user-select: text
 }
@@ -69,20 +69,20 @@
 .admin-search-input {    
     width: stretch;
     margin-top: 1rem;
-    background: #11162a;
-    border: 1px solid #8890bd;
-    color: #fff;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     padding: .65rem;
 }
 
 .admin-search-input::placeholder {
-    color: #fff;
+    color: var(--color-text);
 }
 
 .admin-master-page .admin-search-input {
-    background: #a7a7a7;
-    box-shadow: inset 3px 3px #555, inset -2px -2px #eee;
-    color: #111;
+    background: var(--color-bevel-mid);
+    box-shadow: inset 3px 3px var(--color-bevel-dark), inset -2px -2px var(--color-bevel-light);
+    color: var(--color-black);
     display: block;
     font-family: inherit;
     min-width: 0;
@@ -91,14 +91,14 @@
 }
 
 .admin-master-page .admin-search-input::placeholder {
-    color: #5d5d5d;
+    color: var(--color-bevel-dark);
     opacity: 1;
 }
 
 .admin-master-page label[for="master-search"] {
-    background: linear-gradient(135deg, #f5f5f5, #a6a6a6);
-    box-shadow: 0 5px 0 #080808, inset 2px 2px #fff, inset -3px -3px #777;
-    color: #111;
+    background: linear-gradient(135deg, var(--color-text), var(--color-bevel-mid));
+    box-shadow: 0 5px 0 var(--color-black), inset 2px 2px var(--color-text), inset -3px -3px var(--color-bevel-dark);
+    color: var(--color-black);
     display: flex;
     gap: .4rem;
     margin-inline: auto;
@@ -108,9 +108,9 @@
 
 .admin-master-page label[for="master-search"]::before {
     align-items: center;
-    background: #ddd;
-    border: 3px solid #111;
-    box-shadow: inset 3px 3px #fff, inset -3px -3px #777;
+    background: var(--color-bevel-mid);
+    border: 3px solid var(--color-black);
+    box-shadow: inset 3px 3px var(--color-text), inset -3px -3px var(--color-bevel-dark);
     content: '⌕';
     cursor: text;
     display: flex;

@@ -5,11 +5,11 @@
 .server-cost-page {
     min-height: calc(100vh - 2.5rem);
     padding: 2rem clamp(1.25rem, 5vw, 4rem);
-    color: #fff;
+    color: var(--color-text);
 }
 
 .eyebrow {
-    color: #c7ff3a;
+    color: var(--color-accent);
     font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
@@ -22,13 +22,13 @@ h1 {
 }
 
 .description {
-    color: #d7d8f4;
+    color: var(--color-text-muted);
     margin-bottom: 2rem;
 }
 
 .cost-form {
-    border: 1px solid #8890bd;
-    background: #171d35;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
     max-width: 38rem;
     padding: 1.25rem;
 }
@@ -46,22 +46,22 @@ label {
 }
 
 input {
-    background: #11162a;
-    border: 1px solid #8890bd;
-    color: #fff;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
     min-width: 0;
     padding: .7rem;
     width: 100%;
 }
 
 .cost-input-row span {
-    color: #d7d8f4;
+    color: var(--color-text-muted);
     white-space: nowrap;
 }
 
 button {
-    background: #c7ff3a;
-    color: #11162a;
+    background: var(--color-accent);
+    color: var(--color-surface);
     cursor: pointer;
     font-weight: 700;
     margin-top: 1.25rem;

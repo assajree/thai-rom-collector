@@ -2,6 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-ink: #090b16;
+  --color-surface: #35006c;
+  --color-border: #a8abd9;
+  --color-text: #ffffff;
+  --color-text-muted: #c7d2fe;
+  --color-accent: #c7ff3a;
+  --color-accent-hover: #e0ff92;
+  --color-link: #00ffff;
+  --color-highlight: #ffd92b;
+  --color-brand: #ff73ba;
+  --color-danger: #ff4d67;
+  --color-black: #080808;
+  --color-overlay: rgb(0 0 0 / 55%);
+  --color-overlay-soft: rgb(0 0 0 / 22%);
+  --color-overlay-heavy: rgb(0 0 0 / 70%);
+  --color-status-success: #16a34a;
+  --color-status-danger: #610101;
+  --color-disabled: #777b91;
+  --color-bevel-light: #fff;
+  --color-bevel-mid: #a7a7a7;
+  --color-bevel-dark: #777;
+  --color-bevel-highlight: rgb(255 255 255 / 65%);
+  --color-bevel-shadow: rgb(0 0 0 / 35%);
+  --color-badge-start: red;
+  --color-badge-end: yellow;
+
+  --space-page: 1rem;
+  --radius-none: 0;
+  --shadow-retro: 2px 2px 0 var(--color-black);
+  --shadow-bevel: inset 2px 2px var(--color-bevel-light), inset -2px -2px var(--color-bevel-dark);
+}
+
 @font-face {
   font-family: 'RD Chulajaruek';
   src: url('/assets/fonts/RD%20CHULAJARUEK.ttf') format('truetype');
@@ -68,13 +101,13 @@
 }
 
 .danger {
-  color: #ff5454
+  color: var(--color-danger);
 }
 
 a,
 .link {
   text-decoration: underline;
-  color: #00ffff;
+  color: var(--color-link);
 }
 
 a,
@@ -84,19 +117,22 @@ a,
 
 a:hover,
 .link:hover {
-  color: #ffd92b;
+  color: var(--color-highlight);
 }
 
 .my-fa-link {
   text-decoration: none;
-  color: #0500ac;
+  color: var(--color-link);
 }
 
 .page-footer,
 .article-container {
-  background-color: #35006c;
+  background-color: var(--color-surface);
 }
 
 .article-container {
-  height: 100%;
+  box-sizing: border-box;
+  min-height: calc(100vh - 6rem);
+  margin: auto;
+  padding: 2rem;
 }

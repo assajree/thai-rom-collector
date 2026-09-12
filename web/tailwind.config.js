@@ -4,11 +4,11 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: '#090b16',
-        panel: '#11162a',
-        line: '#293153',
-        signal: '#fa4f8b',
-        arcade: '#fa4f8b'
+        ink: 'var(--color-ink)',
+        panel: 'var(--color-surface)',
+        line: 'var(--color-border)',
+        signal: 'var(--color-brand)',
+        arcade: 'var(--color-brand)'
       },
       fontFamily: {
         rd: ['RD Chulajaruek', 'serif']

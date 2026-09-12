@@ -2,9 +2,9 @@
   display: block;
   margin-top: .35rem;
   width: 100%;
-  background: #11162a;
-  border: 1px solid #8890bd;
-  color: #fff;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
   padding: .65rem;
 }
 
@@ -14,30 +14,30 @@
   z-index: 20;
   display: grid;
   place-items: center;
-  background: rgb(0 0 0 / 70%);
+  background: var(--color-overlay-heavy);
   padding: 1rem;
 }
 
 .system-dialog {
   width: min(100%, 32rem);
-  border: 2px solid #c7ff3a;
-  background: #171d35;
+  border: 2px solid var(--color-accent);
+  background: var(--color-surface);
   padding: 1.25rem;
-  color: #fff;
-  box-shadow: 0 1rem 3rem rgb(0 0 0 / 45%);
+  color: var(--color-text);
+  box-shadow: 0 1rem 3rem var(--color-overlay);
 }
 
 .delete-dialog {
-  border-color: #ff4d67;
+  border-color: var(--color-danger);
 }
 
 label,
 legend{
-  color: #00ffff;
+  color: var(--color-link);
 }
 
 label.required::before {
-  color: #ff4d5d;
+  color: var(--color-danger);
   content: '* ';
   font-weight: 700;
 }
@@ -51,22 +51,22 @@ label.required::before {
   z-index: 10;
   width: 100%;
   margin-top: .25rem;
-  border: 1px solid #8890bd;
-  background: #171d35;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 }
 
 .tag-autocomplete__list button {
   display: block;
   width: 100%;
   padding: .55rem .65rem;
-  color: #fff;
+  color: var(--color-text);
   text-align: left;
 }
 
 .tag-autocomplete__list button:hover,
 .tag-autocomplete__list button:focus {
-  background: #c7ff3a;
-  color: #11162a;
+  background: var(--color-accent);
+  color: var(--color-surface);
 }
 
 .tag-autocomplete__empty {
@@ -74,10 +74,10 @@ label.required::before {
   z-index: 10;
   width: 100%;
   margin-top: .25rem;
-  border: 1px solid #8890bd;
-  background: #171d35;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   padding: .55rem .65rem;
-  color: #cbd5e1;
+  color: var(--color-text-muted);
 }
 
 .selected-tags {
@@ -91,13 +91,13 @@ label.required::before {
   display: inline-flex;
   align-items: center;
   gap: .35rem;
-  border: 1px solid #c7ff3a;
+  border: 1px solid var(--color-accent);
   padding: .25rem .5rem;
-  color: #c7ff3a;
+  color: var(--color-accent);
 }
 
 .selected-tags button {
-  color: #ff4d67;
+  color: var(--color-danger);
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
@@ -105,5 +105,5 @@ label.required::before {
 
 .selected-tags button:hover,
 .selected-tags button:focus {
-  color: #ff8a9a;
+  color: var(--color-brand);
 }

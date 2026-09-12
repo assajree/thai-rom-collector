@@ -1,7 +1,7 @@
 .patch-card {
-  background: #000133;
-  border: 5px solid #111;
-  box-shadow: 5px 5px 0 #111, inset 3px 3px #fff, inset -4px -4px #777;
+  background: var(--color-surface);
+  border: 5px solid var(--color-black);
+  box-shadow: 5px 5px 0 var(--color-black), inset 3px 3px var(--color-text), inset -4px -4px var(--color-bevel-dark);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
@@ -30,12 +30,12 @@
 }
 
 .patch-card__tags li {
-  border: 1px solid #555;
+  border: 1px solid var(--color-bevel-dark);
   padding: .15rem .5rem;
 }
 
 .edit-button {
-  background: #001414;
+  background: var(--color-surface);
   padding: .15rem .35rem;
   position: absolute;
   left: .2rem;
@@ -74,14 +74,14 @@
 
 /* Compact retro web card */
 .patch-card {
-  border: 1px solid #001414;
+  border: 1px solid var(--color-surface);
   box-shadow: none;
   gap: .45rem;
   grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
   margin: 0 auto .7rem;
   max-width: 42rem;
   padding: .3rem;
-  color: #f5f5f5;
+  color: var(--color-text);
 }
 
 .patch-cover-image {
@@ -101,7 +101,7 @@
 }
 
 .new-game-badge img{
-  background-image: linear-gradient(to right, red, yellow);
+  background-image: linear-gradient(to right, var(--color-badge-start), var(--color-badge-end));
   padding: 1px 12px;
 }
 
@@ -138,13 +138,13 @@
 }
 
 .patch-card h2 {
-  color: #ffd92b;
+  color: var(--color-highlight);
   line-height: 1.1;
   margin: 0;
 }
 
 .patch-card__description {
-  color: #fff;
+  color: var(--color-text);
   line-height: 1.15;
   margin: .15rem 0;
 }
@@ -181,7 +181,7 @@
 
 .patch-card__tags li {
   border: 0;
-  color: #45e6c2;
+  color: var(--color-highlight);
   padding: 0;
   text-decoration: underline;
 }

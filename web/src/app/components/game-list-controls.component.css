@@ -1,6 +1,6 @@
 .search-console {
-    background: linear-gradient(135deg, #f5f5f5, #a6a6a6);
-    box-shadow: 0 5px 0 #080808, inset 2px 2px #fff, inset -3px -3px #777;
+    background: linear-gradient(135deg, var(--color-text), var(--color-bevel-mid));
+    box-shadow: 0 5px 0 var(--color-black), inset 2px 2px var(--color-text), inset -3px -3px var(--color-bevel-dark);
     display: flex;
     gap: 0.4rem;
     margin-inline: auto;
@@ -10,9 +10,9 @@
 
 .search-console__icon {
     align-items: center;
-    background: #ddd;
-    border: 3px solid #111;
-    box-shadow: inset 3px 3px #fff, inset -3px -3px #777;
+    background: var(--color-bevel-mid);
+    border: 3px solid var(--color-black);
+    box-shadow: inset 3px 3px var(--color-text), inset -3px -3px var(--color-bevel-dark);
     cursor: text;
     display: flex;
     font-family: serif;
@@ -25,9 +25,9 @@
 }
 
 .search-console input {
-    background: #a7a7a7;
-    box-shadow: inset 3px 3px #555, inset -2px -2px #eee;
-    color: #111;
+    background: var(--color-bevel-mid);
+    box-shadow: inset 3px 3px var(--color-bevel-dark), inset -2px -2px var(--color-bevel-light);
+    color: var(--color-black);
     flex: 1;
     font-family: inherit;
     min-width: 0;
@@ -35,7 +35,7 @@
 }
 
 .search-console input::placeholder {
-    color: #5d5d5d;
+    color: var(--color-bevel-dark);
     opacity: 1;
 }
 
@@ -49,9 +49,9 @@
 }
 
 .filter-chip {
-    border: 3px solid #080808;
-    box-shadow: 3px 3px 0 #080808, inset 2px 2px rgba(255, 255, 255, .65), inset -2px -2px rgba(0, 0, 0, .35);
-    color: #080808;
+    border: 3px solid var(--color-black);
+    box-shadow: 3px 3px 0 var(--color-black), inset 2px 2px var(--color-bevel-highlight), inset -2px -2px var(--color-bevel-shadow);
+    color: var(--color-black);
     font-family: inherit;
     font-weight: 800;
     padding: 0.45rem 1.1rem;
@@ -61,22 +61,22 @@
 }
 
 .filter-chip--green {
-    background: #8bdd70;
+    background: var(--color-status-success);
 }
 
 .filter-chip--selected {
-    outline: 3px solid #fff;
+    outline: 3px solid var(--color-text);
     outline-offset: 2px;
 }
 
 .filter-chip--clear {
-    background: #ddd;
-    color: #222;
+    background: var(--color-bevel-mid);
+    color: var(--color-black);
 }
 
 .sort-row {
     align-items: center;
-    color: #fff;
+    color: var(--color-text);
     display: flex;
     flex-wrap: wrap;
     gap: .55rem;
@@ -93,17 +93,17 @@
 
 .sort-row select,
 .sort-row button {
-    background: #d8d8d8;
-    border: 2px solid #080808;
-    box-shadow: 2px 2px #080808;
-    color: #080808;
+    background: var(--color-bevel-mid);
+    border: 2px solid var(--color-black);
+    box-shadow: 2px 2px var(--color-black);
+    color: var(--color-black);
     cursor: pointer;
     font: inherit;
     padding: .35rem .6rem;
 }
 
 .sort-row button:hover {
-    background: #c7ff3a;
+    background: var(--color-accent);
 }
 
 @media (max-width: 34rem) {
