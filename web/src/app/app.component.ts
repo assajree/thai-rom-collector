@@ -50,7 +50,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly isOffline = signal(false);
   protected readonly appUpdateReady = signal(false);
   protected sidebarLinksFor(section: SidebarLinkSection): SidebarLink[] { return this.sidebarLinks().filter((link) => link.section === section); }
-  protected hasCreditLink(): boolean { return this.sidebarLinks().some((link) => link.articleSlug === 'credit'); }
   protected readonly browserInfo = this.getBrowserInfo();
   protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
   protected readonly patchCacheLastUpdated = this.patchCache.lastUpdated;
