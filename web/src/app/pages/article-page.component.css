@@ -1,6 +1,8 @@
 .article-page {
     padding: 2rem;
     margin: auto;
+    min-height: calc(100vh - 6rem);
+    box-sizing: border-box;
 }
 
 .article-page>a {

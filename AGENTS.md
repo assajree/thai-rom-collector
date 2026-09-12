@@ -30,3 +30,7 @@ When adding or changing a Firestore document field, update the corresponding val
 ## Font Compatibility
 
 Do not use the middle dot character `·` in UI text or source content because the project font does not support it. Use a supported separator such as `-` instead.
+
+## Full-Space Pages
+
+New pages must fill the available center content area in both width and height. Use the existing app-shell/content layout and set an appropriate minimum height for the viewport content area so short pages do not leave unused gaps.

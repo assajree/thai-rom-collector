@@ -44,7 +44,8 @@
       <a class="retro-rail-link" routerLink="/new" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่สัปดาห์นี้</a>
       <div class="">
-        <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active">บทความ</a>
+        <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">บทความ</a>
       </div>
     </nav>
 
