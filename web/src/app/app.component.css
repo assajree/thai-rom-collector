@@ -25,7 +25,9 @@
   padding: .35rem .65rem;
 }
 
-.theme-toggle:active { transform: translateY(1px); }
+.theme-toggle:active {
+  transform: translateY(1px);
+}
 
 .theme-picker .theme-toggle {
   flex: 1;
@@ -47,10 +49,6 @@
   color: var(--color-text-invert);
 }
 
-.marquee a{
-  color: var(--color-brand);
-}
-
 .app-shell {
   min-height: calc(100vh - 6rem);
 }
@@ -69,7 +67,7 @@
   min-height: calc(100vh - 6rem);
   min-width: 16rem;
   padding: 1rem 1rem 1rem 0.5rem;
-  background-color: var(--color-surface);  
+  background-color: var(--color-surface);
 }
 
 .status-message {
@@ -82,6 +80,17 @@
 
 .status-message--success {
   background: var(--color-status-success);
+  color: var(--color-text);
+}
+
+.status-message--info {
+  background: var(--color-status-info);
+  color: #fff;
+}
+
+.status-message--error {
+  background: var(--color-status-error);
+  color: #fff;
 }
 
 .status-message--offline {
@@ -91,7 +100,7 @@
 
 .app-content {
   position: relative;
-  background-color: var(--color-surface);  
+  background-color: var(--color-surface);
 }
 
 .page-footer {

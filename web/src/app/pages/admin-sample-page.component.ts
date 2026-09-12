@@ -24,7 +24,7 @@ export class AdminSamplePageComponent {
     ['border', '--color-border'], ['text', '--color-text'], ['text-muted', '--color-text-muted'],
     ['accent', '--color-accent'], ['link', '--color-link'], ['highlight', '--color-highlight'],
     ['brand', '--color-brand'], ['success', '--color-status-success'],
-    ['danger', '--color-status-danger'], ['disabled', '--color-disabled']
+    ['danger', '--color-status-error'], ['disabled', '--color-disabled']
   ];
 
   protected selectTab(tab: SampleTab): void { this.activeTab.set(tab); }

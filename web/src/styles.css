@@ -17,7 +17,8 @@
   --color-shadow: #080808;
   --color-overlay: rgb(0 0 0 / 55%);
   --color-status-success: #16a34a;
-  --color-status-danger: #610101;
+  --color-status-info: #2563eb;
+  --color-status-error: #dc2626;
   --color-disabled: #777b91;
   --color-surface: #35006c;
   --color-badge-start: red;
@@ -37,9 +38,7 @@ body[data-theme='pocket-pet'] {
   --color-highlight: #90760e;
   --color-brand: #90760e;
   --color-shadow: #808080;
-  --color-overlay: rgb(53 67 59 / 35%);
-  --color-status-success: #607d68;
-  --color-status-danger: #8a625c;
+  --color-overlay: rgb(53 67 59 / 35%);  
   --color-disabled: #808080;
   --color-surface: #b8c8b4;
 }

@@ -200,7 +200,7 @@ h4 {
 }
 
 .contrast-cell--danger {
-    background: var(--color-status-danger);
+    background: var(--color-status-error);
     color: var(--color-text-invert);
 }
 
@@ -330,7 +330,7 @@ button:disabled {
 }
 
 .button--danger {
-    background: var(--color-status-danger);
+    background: var(--color-status-error);
     color: var(--color-text-invert);
 }
 
