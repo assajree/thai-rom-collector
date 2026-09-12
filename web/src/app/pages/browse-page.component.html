@@ -6,12 +6,12 @@
   @if (activeRouteLabel(); as routeLabel) {
   <div class="browse-route-label">
     <span>{{ routeLabel }} ({{ sortedPatches().length }})</span>
-    <button type="button" class="browse-route-label__clear" aria-label="ล้างตัวกรองทั้งหมด"
+    <button type="button" class=" no-button" aria-label="ล้างตัวกรองทั้งหมด"
       (click)="clearAllFilters()">x</button>
   </div>
   @if (!loading() && !unavailable() && sortedPatches().length > 0 && totalPages() > 1) {
     <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
-      <button type="button" class="pagination__button" [disabled]="currentPage() === 1"
+      <button type="button" class="pagination__button no-button" [disabled]="currentPage() === 1"
         aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
       <span class="pagination__current" aria-live="polite">หน้า {{ currentPage() }} / {{ totalPages() }}</span>
       <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"

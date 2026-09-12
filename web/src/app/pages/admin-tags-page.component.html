@@ -1,4 +1,4 @@
 <app-admin-master-page [items]="(items | async) ?? []" title="จัดการ master tag" addLabel="เพิ่ม tag" emptyText="ยังไม่มีข้อมูล tag" [dialogOpen]="open" [dialogTitle]="id ? 'แก้ไข tag' : 'เพิ่ม tag'" (create)="add()" (edit)="edit($event)" (remove)="remove($event)" (save)="save()" (close)="close()" (signOut)="signOut()">
-  <ng-template #card let-item><h2 class="font-black text-lg">{{ item.name }} ({{ item.slug }})</h2></ng-template>
+  <ng-template #card let-item><h2 class=" text-lg">{{ item.name }} ({{ item.slug }})</h2></ng-template>
   <ng-template #editor><label class="mt-4 block">ชื่อ tag<input class="admin-input" type="text" autocomplete="off" spellcheck="false" [(ngModel)]="name" (ngModelChange)="syncDefaultSlug($event)" /></label><label class="mt-4 block">Slug<input class="admin-input" type="text" autocomplete="off" spellcheck="false" [(ngModel)]="slug" /></label></ng-template>
 </app-admin-master-page>

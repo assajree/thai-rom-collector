@@ -4,33 +4,44 @@
 
 :root {
   --color-surface: #35006c;
+  --color-surface-light: #371a7e;
   --color-border: #a8abd9;
   --color-text: #ffffff;
+  --color-text-invert: #000000;
   --color-text-muted: #a8abd9;
   --color-accent: #c7ff3a;
   --color-accent-hover: #e0ff92;
   --color-link: #00ffff;
   --color-highlight: #ffd92b;
   --color-brand: #ff4d67;
-  --color-black: #080808;
+  --color-shadow: #080808;
   --color-overlay: rgb(0 0 0 / 55%);
-  --color-overlay-soft: rgb(0 0 0 / 22%);
-  --color-overlay-heavy: rgb(0 0 0 / 70%);
   --color-status-success: #16a34a;
   --color-status-danger: #610101;
   --color-disabled: #777b91;
-  --color-bevel-light: #fff;
-  --color-bevel-mid: #a7a7a7;
-  --color-bevel-dark: #777;
-  --color-bevel-highlight: rgb(255 255 255 / 65%);
-  --color-bevel-shadow: rgb(0 0 0 / 35%);
+  --color-surface: #35006c;
   --color-badge-start: red;
   --color-badge-end: yellow;
+}
 
-  --space-page: 1rem;
-  --radius-none: 0;
-  --shadow-retro: 2px 2px 0 var(--color-black);
-  --shadow-bevel: inset 2px 2px var(--color-bevel-light), inset -2px -2px var(--color-bevel-dark);
+body[data-theme='pocket-pet'] {
+  --color-surface: #b8c8b4;
+  --color-surface-light: #dce4d8;
+  --color-border: #718174;
+  --color-text: #35433b;
+  --color-text-invert: #ffffff;
+  --color-text-muted: #5f7064;
+  --color-accent: #90760e;
+  --color-accent-hover: #879e92;
+  --color-link: #47594f;
+  --color-highlight: #90760e;
+  --color-brand: #90760e;
+  --color-shadow: #808080;
+  --color-overlay: rgb(53 67 59 / 35%);
+  --color-status-success: #607d68;
+  --color-status-danger: #8a625c;
+  --color-disabled: #808080;
+  --color-surface: #b8c8b4;
 }
 
 @font-face {
@@ -54,10 +65,29 @@
   }
 
   body {
-    @apply min-h-screen bg-ink text-slate-100;
+    @apply min-h-screen bg-ink;
+    color: var(--color-text);
     font-size: 1rem;
     background-size: 100% 4px;
+    transition: background-color .2s ease, color .2s ease;
   }
+
+  button {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-shadow);
+    box-shadow: 2px 2px 0 var(--color-shadow);
+  }
+
+  button:hover{
+    background-color: var(--color-surface-light);
+  }
+
+  .no-button{
+    border: none;
+    box-shadow: none;
+  }
+
+
 
   @media (max-width: 1023px) {
     body.sidebar-open {
@@ -70,6 +100,25 @@
   select,
   textarea {
     font: inherit;
+  }
+
+  input[type='checkbox'] {
+    accent-color: var(--color-accent);
+    block-size: 1.15rem;
+    cursor: pointer;
+    inline-size: 1.15rem;
+    margin: 0;
+    vertical-align: middle;
+  }
+
+  input[type='checkbox']:focus-visible {
+    outline-color: var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  input[type='checkbox']:disabled {
+    cursor: not-allowed;
+    opacity: .55;
   }
 
   h1,
@@ -98,6 +147,16 @@
   }
 }
 
+body {
+  background-color: var(--color-surface);
+}
+
+.retro-rail-heading,
+.heading {
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+}
+
 .danger {
   color: var(--color-brand);
 }
@@ -123,21 +182,20 @@
 
 .admin-search-field {
   align-items: center;
-  background: var(--color-black);
+  background: var(--color-surface);
   border: 2px solid var(--color-border);
-  box-shadow: 4px 4px 0 var(--color-black), inset 0 0 0 2px var(--color-surface);
   color: var(--color-accent);
   display: flex;
   gap: .55rem;
-  margin: 1.25rem auto 0;
   max-width: 48rem;
   padding: .45rem .65rem;
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 
+
+
 .admin-search-field:focus-within {
   border-color: var(--color-accent);
-  box-shadow: 4px 4px 0 var(--color-black), 0 0 0 2px var(--color-accent);
 }
 
 .admin-search-icon {
@@ -184,6 +242,46 @@ a:hover,
   height: 100%;
 }
 
-.browse-catalogue{
-  background-image: url("https://theoldnet.com/images/chatbg2.gif");  
+.browse-catalogue {
+  background-color: var(--color-surface-light);
 }
+
+.patch-cover-image {
+  border: solid 1px var(--color-shadow);
+}
+
+/****** Begin Pocket Pet Theme Style ******/
+
+body[data-theme='pocket-pet'] .site-title img {
+  filter: sepia(1);
+}
+
+body[data-theme='pocket-pet'] .browse-catalogue {
+  background-image: none;
+}
+
+body[data-theme='pocket-pet'] .admin-search-field {
+  background: #dce4d8;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+}
+
+body[data-theme='pocket-pet'] .theme-toggle {
+  background: #dce4d8;
+  border-color: var(--color-border);
+  color: var(--color-accent);
+}
+
+body[data-theme='pocket-pet'] * {
+  border-radius: 10px;
+}
+
+body[data-theme='pocket-pet'] .app-topbar,
+body[data-theme='pocket-pet'] .marquee,
+body[data-theme='pocket-pet'] .retro-rail,
+body[data-theme='pocket-pet'] .right-ad-sidebar,
+body[data-theme='pocket-pet'] main {
+  border-radius: 0px !important;
+}
+
+/****** End Pocket Pet Theme Style ******/

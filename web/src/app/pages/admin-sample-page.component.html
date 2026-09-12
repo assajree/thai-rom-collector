@@ -1,0 +1,76 @@
+<main class="sample-page">
+  <header class="sample-header">
+    <div>
+      <p class="sample-eyebrow">ADMIN / STYLE LAB</p>
+      <h1>UI Sample</h1>
+      <p class="sample-lede">พื้นที่ทดลองสี ตัวอักษร component และสถานะต่าง ๆ ของ THAI ROM DB</p>
+    </div>
+    <div class="sample-header-meta">
+      <span class="status-badge status-badge--success">LOCAL ONLY</span>
+      <small>ไม่มีการบันทึกข้อมูล</small>
+    </div>
+  </header>
+
+  <nav class="sample-tabs" aria-label="กลุ่มตัวอย่าง">
+    <button type="button" [class.sample-tab--active]="activeTab() === 'overview'" (click)="selectTab('overview')">ภาพรวม</button>
+    <button type="button" [class.sample-tab--active]="activeTab() === 'controls'" (click)="selectTab('controls')">Controls</button>
+    <button type="button" [class.sample-tab--active]="activeTab() === 'states'" (click)="selectTab('states')">States</button>
+  </nav>
+
+  @if (activeTab() === 'overview') {
+  <section class="sample-section" aria-labelledby="type-title">
+    <div class="section-heading"><div><p class="sample-eyebrow">TYPE SCALE</p><h2 id="type-title">Typography</h2></div><span class="section-note">RD Chulajaruek</span></div>
+    <div class="type-samples">
+      <h1>Heading one <span>accent</span></h1><h2>Heading two</h2><h3>Heading three</h3><h4>Heading four</h4>
+      <p>ข้อความหลักสำหรับอ่านเนื้อหาในหน้าเว็บ พร้อม <a href="/admin/sample" (click)="$event.preventDefault()">ลิงก์ตัวอย่าง</a> และ <strong>ข้อความเน้น</strong></p>
+      <p class="muted">ข้อความรองสำหรับคำอธิบาย สถานะ หรือข้อมูลที่ไม่ใช่ action หลัก</p>
+      <code>const theme = 'retro';</code>
+      <pre>Spacing  4 / 8 / 16 / 24 / 32
+Surface  border  text  accent</pre>
+    </div>
+  </section>
+
+  <section class="sample-section" aria-labelledby="color-title">
+    <div class="section-heading"><div><p class="sample-eyebrow">TOKENS</p><h2 id="color-title">Color tokens</h2></div><span class="section-note">เปลี่ยนธีมจาก sidebar เพื่อเทียบสี</span></div>
+    <div class="swatch-grid">
+      @for (token of colorTokens; track token[1]) {
+      <div class="swatch" [style.background]="'var(' + token[1] + ')'">
+        <strong>{{ token[0] }}</strong><code>{{ token[1] }}</code>
+      </div>
+      }
+    </div>
+    <div class="contrast-grid">
+      <div class="contrast-cell contrast-cell--surface">Text on surface</div><div class="contrast-cell contrast-cell--accent">Text on accent</div>
+      <div class="contrast-cell contrast-cell--link">Text on link</div><div class="contrast-cell contrast-cell--danger">Text on danger</div>
+      <div class="contrast-cell contrast-cell--black">Text on black</div><div class="contrast-cell contrast-cell--light">Text on light</div>
+    </div>
+  </section>
+
+  <section class="sample-section" aria-labelledby="content-title">
+    <div class="section-heading"><div><p class="sample-eyebrow">CONTENT PATTERNS</p><h2 id="content-title">Panels and data</h2></div></div>
+    <div class="panel-grid"><article class="sample-panel"><h3>Plain panel</h3><p>ใช้จัดกลุ่มข้อมูลที่เกี่ยวข้องโดยไม่ต้องเพิ่ม card decoration มากเกินไป</p><hr><span class="status-badge status-badge--warning">รอตรวจสอบ</span> <span class="status-badge status-badge--danger">ผิดพลาด</span></article>
+      <article class="sample-panel"><h3>Empty state</h3><p class="muted">ยังไม่มีข้อมูลในช่วงเวลานี้</p><button class="button button--secondary" type="button">ลองใหม่</button></article></div>
+    <div class="table-wrap"><table><caption>ตัวอย่างตารางข้อมูล</caption><thead><tr><th>รายการ</th><th>สถานะ</th><th class="numeric">จำนวน</th></tr></thead><tbody><tr><td>เกมตัวอย่าง A</td><td><span class="status-badge status-badge--success">พร้อมใช้</span></td><td class="numeric">128</td></tr><tr><td>เกมตัวอย่าง B</td><td><span class="status-badge status-badge--warning">รอข้อมูล</span></td><td class="numeric">24</td></tr></tbody></table></div>
+  </section>
+  }
+
+  @if (activeTab() === 'controls') {
+  <section class="sample-section" aria-labelledby="controls-title"><div class="section-heading"><div><p class="sample-eyebrow">INTERACTION</p><h2 id="controls-title">Controls</h2></div></div>
+    <div class="control-grid"><div class="control-group"><h3>Buttons</h3><div class="button-row"><button class="button button--primary" type="button">Primary</button><button class="button button--secondary" type="button">Secondary</button><button class="button button--danger" type="button">Danger</button><button class="button" type="button" disabled>Disabled</button></div></div>
+      <div class="control-group"><h3>Inputs</h3><label>ชื่อเกม<input type="text" placeholder="พิมพ์ข้อความ" /></label><label>ค้นหา<input type="search" placeholder="ค้นหา..." /></label><label>ประเภท<select><option>ทั้งหมด</option><option>เกมใหม่</option><option>บทความ</option></select></label><label>รายละเอียด<textarea rows="3" placeholder="ข้อความหลายบรรทัด"></textarea></label></div>
+      <div class="control-group"><h3>Choices</h3><label class="choice"><input type="checkbox" [checked]="enabled()" (change)="enabled.set(!enabled())" /> เปิดใช้งาน</label><label class="choice"><input type="radio" name="style-choice" value="retro" [checked]="selectedOption() === 'retro'" (change)="selectedOption.set('retro')" /> Retro</label><label class="choice"><input type="radio" name="style-choice" value="pocket" [checked]="selectedOption() === 'pocket'" (change)="selectedOption.set('pocket')" /> Pocket Pet</label><label>วันที่<input type="date" /></label></div></div>
+  </section>
+  }
+
+  @if (activeTab() === 'states') {
+  <section class="sample-section" aria-labelledby="states-title"><div class="section-heading"><div><p class="sample-eyebrow">FEEDBACK</p><h2 id="states-title">States and feedback</h2></div></div>
+    <div class="state-grid"><article class="sample-panel"><h3>Toast</h3><div class="button-row"><button class="button button--primary" type="button" (click)="showToast('success')">Success</button><button class="button button--secondary" type="button" (click)="showToast('info')">Info</button><button class="button button--danger" type="button" (click)="showToast('error')">Error</button></div></article>
+      <article class="sample-panel"><h3>Loading</h3><button class="button button--primary" type="button" [disabled]="loading()" (click)="simulateLoading()">{{ loading() ? 'กำลังโหลด...' : 'จำลองการโหลด' }}</button></article>
+      <article class="sample-panel"><h3>Modal</h3><button class="button button--secondary" type="button" (click)="modalOpen.set(true)">เปิด dialog</button></article></div>
+  </section>
+  }
+
+  <section class="sample-section sample-section--spacing" aria-labelledby="spacing-title"><div class="section-heading"><div><p class="sample-eyebrow">LAYOUT TEST</p><h2 id="spacing-title">Spacing and wrapping</h2></div></div><div class="spacing-demo"><span>4</span><span>8</span><span>16</span><span>24</span><span>32</span></div><p class="long-copy">ข้อความยาวสำหรับทดสอบการตัดบรรทัดและการขยายพื้นที่บนหน้าจอแคบ รวมถึงการจัดวาง element ที่อยู่ติดกันให้ยังอ่านได้ง่ายเมื่อเปลี่ยนขนาดหน้าต่าง</p></section>
+</main>
+
+@if (modalOpen()) { <div class="modal-backdrop" role="presentation" (click)="modalOpen.set(false)"><section class="sample-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" (click)="$event.stopPropagation()"><h2 id="modal-title">ตัวอย่าง dialog</h2><p>นี่คือ modal สำหรับตรวจ overlay, border, spacing และ keyboard focus</p><button class="button button--primary" type="button" (click)="modalOpen.set(false)">ปิด</button></section></div> }

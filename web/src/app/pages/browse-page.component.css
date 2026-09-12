@@ -1,9 +1,8 @@
 .browse-catalogue {
-  color: var(--color-black);
+  color: var(--color-shadow);
 }
 
 .state-message {
-  background: var(--color-overlay-soft);
   border: 2px solid var(--color-border);
   color: var(--color-text);
   margin: 1.5rem auto 0;
@@ -18,9 +17,9 @@
 
 .retry-button {
   background: var(--color-accent);
-  border: 2px solid var(--color-black);
-  box-shadow: 2px 2px var(--color-black);
-  color: var(--color-black);
+  border: 2px solid var(--color-shadow);
+  box-shadow: 2px 2px var(--color-shadow);
+  color: var(--color-shadow);
   cursor: pointer;
   font: inherit;
   margin-left: .5rem;
@@ -37,7 +36,8 @@
   margin: 0.75rem 0 0;
   background: var(--color-surface);
   padding: .15rem .35rem .15rem 1rem;
-  box-shadow: 2px 2px var(--color-black);
+  box-shadow: 2px 2px var(--color-shadow);
+  border: 1px solid var(--color-shadow);
 }
 
 .browse-route-label__clear {
@@ -85,11 +85,11 @@
 
 .back-to-top {
   align-items: center;
-  background: var(--color-accent);
-  border: 3px solid var(--color-black);
+  background: var(--color-surface);
+  border: 1px solid var(--color-shadow);
+  box-shadow: 2px 2px 0 var(--color-shadow);
   top: 1rem;
-  box-shadow: 3px 3px 0 var(--color-black), inset 2px 2px var(--color-bevel-highlight), inset -2px -2px var(--color-bevel-shadow);
-  color: var(--color-black);
+  color: var(--color-text);
   cursor: pointer;
   display: flex;
   font: inherit;
@@ -102,7 +102,7 @@
 }
 
 .back-to-top:hover {
-  background: var(--color-accent-hover);
+  background: var(--color-surface-light);
 }
 
 .back-to-top:focus-visible {
@@ -146,19 +146,19 @@
 }
 
 .pagination__button {
-  background: var(--color-accent);
-  border: 2px solid var(--color-black);
-  box-shadow: 2px 2px 0 var(--color-black);
-  color: var(--color-black);
+  background: var(--color-surface);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  color: var(--color-text);
   cursor: pointer;
   font: inherit;
   font-weight: 800;
   min-width: 2.5rem;
   padding: .45rem .7rem;
+  border: 1px solid var(--color-shadow);
 }
 
 .pagination__button:hover:not(:disabled) {
-  background: var(--color-accent-hover);
+  background: var(--color-surface-light);
 }
 
 .pagination__button:focus-visible {
@@ -168,7 +168,7 @@
 
 .pagination__button:disabled {
   background: var(--color-disabled);
-  box-shadow: 1px 1px 0 var(--color-black);
+  box-shadow: 1px 1px 0 var(--color-shadow);
   color: var(--color-text-muted);
   cursor: not-allowed;
 }
@@ -178,8 +178,8 @@
 }
 
 .pagination__page--active {
-  background: var(--color-brand);
-  color: var(--color-text);
+  background: var(--color-surface-light);
+  color: var(--color-text);  
 }
 
 @keyframes skeleton-pulse {

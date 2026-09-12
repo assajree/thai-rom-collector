@@ -1,11 +1,11 @@
 <input #coverFile id="cover-file" class="hidden" type="file" accept="image/*" (change)="select($event)" />
-<button class="mr-2 mt-2 border-2 border-white px-3 py-2 font-bold text-white transition hover:bg-white hover:text-black" type="button" (click)="searchCoverImage()">
+<button class="mr-2 mt-2   px-3 py-2 font-bold transition" type="button" (click)="searchCoverImage()">
   ค้นหารูปภาพ
 </button>
-<button class="mr-2 mt-2 border-2 border-white px-3 py-2 font-bold text-white transition hover:bg-white hover:text-black" type="button" (click)="readFromClipboard()">
+<button class="mr-2 mt-2   px-3 py-2 font-bold transition" type="button" (click)="readFromClipboard()">
   ดึงรูปจาก Clipboard
 </button>
-<button class="mr-2 mt-2 border-2 border-white px-3 py-2 font-bold text-white transition hover:bg-white hover:text-black" type="button" (click)="coverFile.click()">
+<button class="mr-2 mt-2   px-3 py-2 font-bold transition" type="button" (click)="coverFile.click()">
   เลือกไฟล์
 </button>
 @if (preview()) { <img class="cover-preview mt-3" [src]="preview()" alt="Cover preview" /> }

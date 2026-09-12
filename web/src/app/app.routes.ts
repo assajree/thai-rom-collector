@@ -15,6 +15,7 @@ import { ArticlesPageComponent } from './pages/articles-page.component';
 import { ArticlePageComponent } from './pages/article-page.component';
 import { AdminArticlesPageComponent } from './pages/admin-articles-page.component';
 import { AdminSidebarLinksPageComponent } from './pages/admin-sidebar-links-page.component';
+import { AdminSamplePageComponent } from './pages/admin-sample-page.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,7 @@ export const routes: Routes = [
   { path: 'other/:slug', component: ArticlePageComponent, data: { includeDrafts: true, backLink: false } },
   { path: 'admin/articles', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/sidebar-links', component: AdminSidebarLinksPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/sample', component: AdminSamplePageComponent, canActivate: [adminGuard] },
   { path: 'admin/articles/edit/new', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/articles/edit/:id', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },

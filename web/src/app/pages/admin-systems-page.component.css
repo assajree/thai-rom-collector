@@ -1,12 +1,4 @@
-.admin-input {
-    display: block;
-    margin-top: .35rem;
-    width: 100%;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
-    padding: .65rem;
-}
+
 
 .system-dialog-backdrop {
     position: fixed;
@@ -14,8 +6,8 @@
     z-index: 20;
     display: grid;
     place-items: center;
-    background: var(--color-overlay-heavy);
     padding: 1rem;
+    background: var(--color-overlay);
 }
 
 .system-dialog {
@@ -24,5 +16,4 @@
     background: var(--color-surface);
     padding: 1.25rem;
     color: var(--color-text);
-    box-shadow: 0 1rem 3rem var(--color-overlay);
 }

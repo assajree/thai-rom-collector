@@ -4,7 +4,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        ink: 'var(--color-black)',
+        ink: 'var(--color-text)',
         panel: 'var(--color-surface)',
         line: 'var(--color-border)',
         signal: 'var(--color-brand)',

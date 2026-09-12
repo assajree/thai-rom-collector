@@ -14,9 +14,8 @@
 }
 
 .filter-chip {
-    border: 3px solid var(--color-black);
-    box-shadow: 3px 3px 0 var(--color-black), inset 2px 2px var(--color-bevel-highlight), inset -2px -2px var(--color-bevel-shadow);
-    color: var(--color-black);
+    border: 3px solid var(--color-shadow);
+    color: var(--color-shadow);
     font-family: inherit;
     font-weight: 800;
     padding: 0.45rem 1.1rem;
@@ -35,8 +34,8 @@
 }
 
 .filter-chip--clear {
-    background: var(--color-bevel-mid);
-    color: var(--color-black);
+    background: var(--color-surface);
+    color: var(--color-shadow);
 }
 
 .sort-row {
@@ -58,13 +57,15 @@
 
 .sort-row select,
 .sort-row button {
-    background: var(--color-bevel-mid);
-    border: 2px solid var(--color-black);
-    box-shadow: 2px 2px var(--color-black);
-    color: var(--color-black);
-    cursor: pointer;
-    font: inherit;
-    padding: .35rem .6rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-shadow);
+  box-sizing: border-box;
+  box-shadow: 2px 2px var(--color-shadow);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  height: 2.5rem;
+  padding: .35rem .6rem;
 }
 
 .sort-row button:hover {

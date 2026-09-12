@@ -24,6 +24,8 @@ import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
   styleUrl: './app.component.css'
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+  private static readonly themeStorageKey = 'rom-collector-theme';
+  protected readonly theme = signal<'default' | 'pocket-pet'>('default');
   private readonly document = inject(DOCUMENT);
   protected readonly statusMessageService = inject(StatusMessageService);
   protected readonly authService = inject(AuthService);
@@ -135,6 +137,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   constructor() {
+    this.restoreTheme();
     this.isOffline.set(typeof navigator !== 'undefined' && !navigator.onLine);
     window.addEventListener('online', this.onlineHandler);
     window.addEventListener('offline', this.offlineHandler);
@@ -164,6 +167,27 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กดอัปเดตเมื่อสะดวก');
       }
     });
+  }
+
+  protected toggleTheme(): void {
+    const nextTheme = this.theme() === 'default' ? 'pocket-pet' : 'default';
+    this.theme.set(nextTheme);
+    this.document.body.dataset['theme'] = nextTheme === 'default' ? '' : nextTheme;
+    try { window.localStorage.setItem(AppComponent.themeStorageKey, nextTheme); } catch { /* storage can be unavailable */ }
+  }
+
+  protected selectTheme(event: Event): void {
+    const value = (event.target as HTMLSelectElement).value;
+    if (value === this.theme()) return;
+    this.toggleTheme();
+  }
+
+  private restoreTheme(): void {
+    let savedTheme: string | null = null;
+    try { savedTheme = window.localStorage.getItem(AppComponent.themeStorageKey); } catch { /* storage can be unavailable */ }
+    const theme = savedTheme === 'pocket-pet' ? 'pocket-pet' : 'default';
+    this.theme.set(theme);
+    if (theme === 'pocket-pet') this.document.body.dataset['theme'] = theme;
   }
 
   protected async updateApp(): Promise<void> {

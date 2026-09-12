@@ -1,4 +1,4 @@
 <app-admin-master-page [items]="(systems | async) ?? []" title="จัดการ master เครื่องเกม" description="รายการเครื่องเกมทั้งหมดในระบบ" addLabel="เพิ่มเครื่องเกม" emptyText="ยังไม่มีข้อมูลเครื่องเกม" [dialogOpen]="dialogOpen" [dialogTitle]="editingId ? 'แก้ไขเครื่องเกม' : 'เพิ่มเครื่องเกม'" [saving]="saving" (create)="openCreate()" (edit)="openEdit($event)" (remove)="remove($event)" (save)="save()" (close)="closeDialog()" (signOut)="signOut()">
-  <ng-template #card let-system><h2 class="font-black text-lg">{{ system.shortName }} - {{ system.name }}</h2></ng-template>
+  <ng-template #card let-system><h2 class=" text-lg">{{ system.shortName }} - {{ system.name }}</h2></ng-template>
   <ng-template #editor><label class="mt-4 block">ชื่อย่อเครื่องเกม<input class="admin-input" [(ngModel)]="shortName" /></label><label class="mt-3 block">ชื่อเต็มเครื่องเกม<input class="admin-input" [(ngModel)]="name" /></label></ng-template>
 </app-admin-master-page>

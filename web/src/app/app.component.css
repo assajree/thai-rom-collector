@@ -3,6 +3,35 @@
   height: 4rem;
 }
 
+.theme-picker {
+  align-items: center;
+  color: var(--color-text-muted);
+  display: flex;
+  gap: .5rem;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  width: min(100%, 14rem);
+}
+
+.theme-toggle {
+  align-items: center;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  gap: .4rem;
+  min-height: 2.25rem;
+  padding: .35rem .65rem;
+}
+
+.theme-toggle:active { transform: translateY(1px); }
+
+.theme-picker .theme-toggle {
+  flex: 1;
+  min-width: 0;
+}
+
 #last-update {
   color: var(--color-highlight);
   flex: 0 1 auto;
@@ -14,7 +43,12 @@
 }
 
 .marquee {
-  background-color: var(--color-status-danger);
+  background-color: var(--color-accent);
+  color: var(--color-text-invert);
+}
+
+.marquee a{
+  color: var(--color-brand);
 }
 
 .app-shell {
@@ -25,6 +59,7 @@
   #last-update {
     max-width: 9rem;
   }
+
 }
 
 .retro-rail {
@@ -51,7 +86,7 @@
 
 .status-message--offline {
   background: var(--color-highlight);
-  color: var(--color-black);
+  color: var(--color-shadow);
 }
 
 .app-content {
@@ -121,7 +156,7 @@
 .retro-rail-heading {
   color: var(--color-brand);
   display: inline-block;
-  font-weight: 700;
+  font-weight: bold;
   line-height: 1.1;
   margin: 0 0 0.2rem;
 }
@@ -258,11 +293,11 @@
   }
 
   .mobile-sidebar-backdrop {
-    background: var(--color-overlay);
     border: 0;
     inset: 0;
     position: fixed;
     z-index: 15;
+    background: var(--color-overlay);
   }
 
   .retro-rail {

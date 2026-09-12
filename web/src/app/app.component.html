@@ -1,4 +1,4 @@
-<header class="app-topbar flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
+<header class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
   <div class="flex items-center gap-3">
     <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
       aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
@@ -10,6 +10,7 @@
     <br />
     {{ patchCacheLastUpdatedLabel() }}
   </div>
+
 
 
 </header>
@@ -67,6 +68,8 @@
           (click)="closeSidebar()">จัดการบทความ</a>
         <a class="retro-rail-link" routerLink="/admin/sidebar-links" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการลิงก์ sidebar</a>
+        <a class="retro-rail-link" routerLink="/admin/sample" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">ทดสอบ Style</a>
         <a class="retro-rail-link" routerLink="/admin/server-cost" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">ค่าเซิร์ฟเวอร์เดือนนี้</a>
         <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active"
@@ -210,15 +213,21 @@
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
         <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
           [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
-        <button class="retro-system-button" type="button" (click)="forceRefreshPatches()">
-          Refresh
-        </button>
+
+        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">Refresh</a>
 
       </div>
     </div>
 
 
     <div class="retro-tag-section">
+      <label class="theme-picker">
+        <select class="theme-toggle" [value]="theme()" (change)="selectTheme($event)"
+          aria-label="เลือกธีม">
+          <option value="default">Retro Neon Theme</option>
+          <option value="pocket-pet">Pocket Pet Theme</option>
+        </select>
+      </label>
       <div class="hit-counter" align=center>
         <div class="retro-rail-heading">จำนวนผู้เข้าชม</div>
         <a href='https://www.counter12.com'><img src='https://www.counter12.com/img-00y4C51BcA675b33-1.gif' border='0'
@@ -247,7 +256,7 @@
     <div
       class="status-message flex items-center gap-2 border-b border-black bg-signal px-4 py-2 font-bold text-ink sm:px-6"
       [class.bg-arcade]="message.tone === 'error'" [class.status-message--success]="message.tone === 'success'"
-      [class.text-white]="message.tone !== 'info'" role="status" aria-live="polite">
+      role="status" aria-live="polite">
       <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
         message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}

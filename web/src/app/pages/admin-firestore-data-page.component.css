@@ -71,7 +71,7 @@
 .admin-input {
     display: block;
     width: 100%;
-    background: var(--color-surface);
+    background: var(--color-surface-light);
     border: 1px solid var(--color-border);
     color: var(--color-text);
     padding: .65rem
