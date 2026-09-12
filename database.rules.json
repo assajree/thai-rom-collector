@@ -1,6 +1,6 @@
 {
   "rules": {
-    ".read": false,
+    ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
     ".write": false,
       "patches": {
         ".read": true,
@@ -32,7 +32,7 @@
       "$id": {
         ".read": true,
         ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
-        ".validate": "newData.hasChildren(['label','articleSlug','section']) && newData.child('label').isString() && newData.child('label').val().length > 0 && newData.child('articleSlug').isString() && newData.child('articleSlug').val().length > 0 && (newData.child('section').val() == 'systems' || newData.child('section').val() == 'translators' || newData.child('section').val() == 'tags' || newData.child('section').val() == 'other')"
+        ".validate": "newData.hasChildren(['label','section']) && newData.child('label').isString() && newData.child('label').val().length > 0 && (newData.child('section').val() == 'systems' || newData.child('section').val() == 'translators' || newData.child('section').val() == 'tags' || newData.child('section').val() == 'other') && ((!newData.hasChild('type') || newData.child('type').val() == 'article') ? newData.child('articleSlug').isString() && newData.child('articleSlug').val().length > 0 : newData.child('type').val() == 'external' && newData.child('url').isString() && newData.child('url').val().matches(/^https?:\\/\\/[^\\s]+$/))"
       }
     },
     "admins": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }

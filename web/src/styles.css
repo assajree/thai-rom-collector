@@ -181,4 +181,9 @@ a:hover,
   min-height: calc(100vh - 6rem);
   margin: auto;
   padding: 2rem;
+  height: 100%;
+}
+
+.browse-catalogue{
+  background-image: url("https://theoldnet.com/images/chatbg2.gif");  
 }

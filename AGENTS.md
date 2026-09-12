@@ -27,6 +27,10 @@ For short-lived operations that complete immediately and do not perform long-run
 
 When adding or changing a Firestore document field, update the corresponding validation and allowed-field list in `firestore.rules` in the same change. Verify that the client document shape and deployed Firestore Rules remain in sync, and mention the required rules deployment command when handing off the change.
 
+## Realtime Database Changes
+
+When adding or changing Realtime Database data, update the JSON import/export functionality in the same change so it supports the updated data shape and remains compatible with the database.
+
 ## Font Compatibility
 
 Do not use the middle dot character `·` in UI text or source content because the project font does not support it. Use a supported separator such as `-` instead.

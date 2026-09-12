@@ -32,7 +32,7 @@
 </div>
 
 <div class="app-shell min-h-[calc(100vh-6rem)]">
-  <aside id="system-sidebar" class="retro-rail bg-[#35006c]" [class.mobile-sidebar-open]="sidebarOpen()"
+  <aside id="system-sidebar" class="retro-rail" [class.mobile-sidebar-open]="sidebarOpen()"
     (click)="$event.stopPropagation()" aria-label="Main navigation">
 
     <p class="retro-rail-heading">THAI ROM DB</p>
@@ -55,10 +55,6 @@
       <nav aria-label="Main navigation">
         <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">เพิ่มเกม</a>
-        <a class="retro-rail-link" routerLink="/admin/articles" routerLinkActive="retro-rail-link--active"
-          (click)="closeSidebar()">จัดการบทความ</a>
-        <a class="retro-rail-link" routerLink="/admin/sidebar-links" routerLinkActive="retro-rail-link--active"
-          (click)="closeSidebar()">จัดการลิงก์ sidebar</a>
         <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการเครื่องเกม</a>
         <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active"
@@ -67,6 +63,10 @@
           (click)="closeSidebar()">จัดการแท็ก</a>
         <a class="retro-rail-link" routerLink="/admin/firestore-data" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการข้อมูล</a>
+        <a class="retro-rail-link" routerLink="/admin/articles" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการบทความ</a>
+        <a class="retro-rail-link" routerLink="/admin/sidebar-links" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการลิงก์ sidebar</a>
         <a class="retro-rail-link" routerLink="/admin/server-cost" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">ค่าเซิร์ฟเวอร์เดือนนี้</a>
         <a class="retro-rail-link" routerLink="/admin/tags" routerLinkActive="retro-rail-link--active"
@@ -92,7 +92,10 @@
         </a>
         }
         @for (link of sidebarLinksFor('systems'); track link.id) {
-        <a class="retro-system-button" [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active" (click)="closeSidebar()">{{ link.label }}</a>
+        @if (link.type === 'external') { <a class="retro-system-button" [href]="link.url" target="_blank"
+          rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
+          [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
+          (click)="closeSidebar()">{{ link.label }}</a> }
         }
       </div>
     </div>
@@ -146,7 +149,10 @@
         </div>
         }
         @for (link of sidebarLinksFor('translators'); track link.id) {
-        <a class="retro-system-button" [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active" (click)="closeSidebar()">{{ link.label }}</a>
+        @if (link.type === 'external') { <a class="retro-system-button" [href]="link.url" target="_blank"
+          rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
+          [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
+          (click)="closeSidebar()">{{ link.label }}</a> }
         }
       </div>
     </div>
@@ -177,7 +183,10 @@
         </div>
         }
         @for (link of sidebarLinksFor('tags'); track link.id) {
-        <a class="retro-system-button" [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active" (click)="closeSidebar()">{{ link.label }}</a>
+        @if (link.type === 'external') { <a class="retro-system-button" [href]="link.url" target="_blank"
+          rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
+          [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
+          (click)="closeSidebar()">{{ link.label }}</a> }
         }
       </div>
     </div>
@@ -187,7 +196,10 @@
       <p class="retro-rail-heading">อื่นๆ</p>
       <div>
         @for (link of sidebarLinksFor('other'); track link.id) {
-        <a class="retro-system-button" [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active" (click)="closeSidebar()">{{ link.label }}</a>
+        @if (link.type === 'external') { <a class="retro-system-button" [href]="link.url" target="_blank"
+          rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
+          [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
+          (click)="closeSidebar()">{{ link.label }}</a> }
         }
         <a class="retro-system-button" target="_blank" href="https://thairomdb.atabook.org/">สมุดเยี่ยม</a>
         <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
@@ -224,7 +236,7 @@
     aria-label="Close navigation menu"></button>
   }
 
-  <section class="app-content min-w-0 bg-[#343568]">
+  <section class="app-content min-w-0">
     @if (isOffline()) {
     <div class="status-message status-message--offline border-b border-black px-4 py-2 font-bold sm:px-6" role="status"
       aria-live="polite">

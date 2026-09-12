@@ -34,6 +34,7 @@
   min-height: calc(100vh - 6rem);
   min-width: 16rem;
   padding: 1rem 1rem 1rem 0.5rem;
+  background-color: var(--color-surface);  
 }
 
 .status-message {
@@ -55,7 +56,7 @@
 
 .app-content {
   position: relative;
-  background-image: url("https://theoldnet.com/images/chatbg2.gif");  
+  background-color: var(--color-surface);  
 }
 
 .page-footer {
