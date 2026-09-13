@@ -9,20 +9,20 @@
   --color-text: #ffffff;
   --color-text-invert: #000000;
   --color-text-muted: #a8abd9;
-  --color-accent: #c7ff3a;
-  --color-accent-hover: #e0ff92;
-  --color-link: #00ffff;
-  --color-highlight: #ffd92b;
   --color-brand: #ff4d67;
+  --color-highlight: #ffd92b;
+  --color-link: #00ffff;
+  --color-accent: #8eb629;
+  --color-accent-hover: #e0ff92;
   --color-shadow: #080808;
-  --color-overlay: rgb(0 0 0 / 55%);
+  --color-disabled: #777b91;
+  --color-badge-start: red;
+  --color-badge-end: yellow;
+
   --color-status-success: #16a34a;
   --color-status-info: #2563eb;
   --color-status-error: #dc2626;
-  --color-disabled: #777b91;
-  --color-surface: #35006c;
-  --color-badge-start: red;
-  --color-badge-end: yellow;
+  --color-overlay: rgb(0 0 0 / 55%);
 }
 
 body[data-theme='pocket-pet'] {
@@ -32,15 +32,14 @@ body[data-theme='pocket-pet'] {
   --color-text: #35433b;
   --color-text-invert: #ffffff;
   --color-text-muted: #5f7064;
+  --color-brand: #90760e;
+  --color-highlight: #90760e;
+  --color-link: #47594f;
   --color-accent: #90760e;
   --color-accent-hover: #879e92;
-  --color-link: #47594f;
-  --color-highlight: #90760e;
-  --color-brand: #90760e;
   --color-shadow: #808080;
-  --color-overlay: rgb(53 67 59 / 35%);  
   --color-disabled: #808080;
-  --color-surface: #b8c8b4;
+  --color-overlay: rgb(53 67 59 / 35%);
 }
 
 @font-face {
@@ -60,32 +59,50 @@ body[data-theme='pocket-pet'] {
   }
 
   html {
-    @apply bg-ink;
+    @apply bg-panel;
+    height: 100%;
   }
 
   body {
-    @apply min-h-screen bg-ink;
+    @apply min-h-screen bg-panel;
+    height: 100%;
     color: var(--color-text);
     font-size: 1rem;
     background-size: 100% 4px;
     transition: background-color .2s ease, color .2s ease;
+    margin: 0;
   }
 
-  button {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-highlight);
+  }
+
+  .button {
     background-color: var(--color-surface);
     border: 1px solid var(--color-shadow);
     box-shadow: 2px 2px 0 var(--color-shadow);
+    padding: .7rem 1rem;
   }
 
-  button:hover{
+  .button:disabled,
+  .button:disabled:hover {
+    background-color: var(--color-shadow);
+    opacity: 0.5;
+  }
+
+  .button:hover {
     background-color: var(--color-surface-light);
   }
 
-  .no-button{
-    border: none;
-    box-shadow: none;
+  .no-button {
+    background: transparent;
+    border: 0;
   }
-
 
 
   @media (max-width: 1023px) {
@@ -118,16 +135,6 @@ body[data-theme='pocket-pet'] {
   input[type='checkbox']:disabled {
     cursor: not-allowed;
     opacity: .55;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6,
-  small {
-    font-size: inherit;
   }
 
   :focus-visible {
@@ -191,8 +198,6 @@ body {
   transition: border-color .15s ease, box-shadow .15s ease;
 }
 
-
-
 .admin-search-field:focus-within {
   border-color: var(--color-accent);
 }
@@ -233,6 +238,41 @@ a:hover,
   background-color: var(--color-surface);
 }
 
+.admin-page-shell {
+  box-sizing: border-box;
+  min-height: calc(100vh - 6rem);
+  padding: 2rem;
+}
+
+.admin-input {
+  box-sizing: border-box;
+  display: block;
+  margin-top: .35rem;
+  width: 100%;
+  background: var(--color-surface-light);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: .65rem;
+}
+
+.admin-dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: var(--color-overlay);
+}
+
+.admin-dialog {
+  width: min(100%, 32rem);
+  border: 2px solid var(--color-accent);
+  background: var(--color-surface);
+  padding: 1.25rem;
+  color: var(--color-text);
+}
+
 .article-container {
   box-sizing: border-box;
   min-height: calc(100vh - 6rem);
@@ -247,6 +287,24 @@ a:hover,
 
 .patch-cover-image {
   border: solid 1px var(--color-shadow);
+}
+
+.app-select {
+  align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-sizing: border-box;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  gap: .4rem;
+  min-height: 2.25rem;
+  padding: .35rem .65rem;
+}
+
+.app-select:active {
+  transform: translateY(1px);
 }
 
 /****** Begin Pocket Pet Theme Style ******/
@@ -265,10 +323,9 @@ body[data-theme='pocket-pet'] .admin-search-field {
   border-radius: 1rem;
 }
 
-body[data-theme='pocket-pet'] .theme-toggle {
+body[data-theme='pocket-pet'] .app-select {
   background: #dce4d8;
   border-color: var(--color-border);
-  color: var(--color-accent);
 }
 
 body[data-theme='pocket-pet'] * {
@@ -278,7 +335,7 @@ body[data-theme='pocket-pet'] * {
 body[data-theme='pocket-pet'] .app-topbar,
 body[data-theme='pocket-pet'] .marquee,
 body[data-theme='pocket-pet'] .retro-rail,
-body[data-theme='pocket-pet'] .right-ad-sidebar,
+body[data-theme='pocket-pet'] .right-ad-sidebar *,
 body[data-theme='pocket-pet'] main {
   border-radius: 0px !important;
 }

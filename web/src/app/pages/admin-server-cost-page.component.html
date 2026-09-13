@@ -1,14 +1,13 @@
 <main class="server-cost-page">
-  <p class="eyebrow">Admin area / Master</p>
   <h1>ค่าเซิร์ฟเวอร์เดือนนี้</h1>
   <p class="description">กำหนดจำนวนเงินที่จะแสดงบนหน้า Donate เพื่อแจ้งค่าใช้จ่ายประจำเดือน</p>
 
   <form class="cost-form" (ngSubmit)="save()">
     <label for="monthly-cost">ค่าเซิร์ฟเวอร์ (บาท)</label>
     <div class="cost-input-row">
-      <input id="monthly-cost" name="monthlyCost" type="number" min="0" step="0.01" [(ngModel)]="monthlyCost" [disabled]="loading || saving" required />
+      <input class="admin-input" id="monthly-cost" name="monthlyCost" type="number" min="0" step="0.01" [(ngModel)]="monthlyCost" [disabled]="loading || saving" required />
       <span>บาท / เดือน</span>
     </div>
-    <button type="submit" [disabled]="loading || saving">{{ saving ? 'กำลังบันทึก…' : 'บันทึกค่าเซิร์ฟเวอร์' }}</button>
+    <button class="button mt-4" type="submit" [disabled]="loading || saving">{{ saving ? 'กำลังบันทึก…' : 'บันทึกค่าเซิร์ฟเวอร์' }}</button>
   </form>
 </main>

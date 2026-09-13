@@ -13,23 +13,7 @@
   width: min(100%, 14rem);
 }
 
-.theme-toggle {
-  align-items: center;
-  background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  color: var(--color-text);
-  cursor: pointer;
-  display: inline-flex;
-  gap: .4rem;
-  min-height: 2.25rem;
-  padding: .35rem .65rem;
-}
-
-.theme-toggle:active {
-  transform: translateY(1px);
-}
-
-.theme-picker .theme-toggle {
+.theme-picker .app-select {
   flex: 1;
   min-width: 0;
 }
@@ -101,6 +85,10 @@
 .app-content {
   position: relative;
   background-color: var(--color-surface);
+}
+
+:host ::ng-deep .app-content > router-outlet + * {
+  display: block;
 }
 
 .page-footer {
@@ -219,6 +207,22 @@
   background: url("https://theoldnet.com/images/anibar.gif") top center no-repeat;
 }
 
+.hit-counter {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  justify-content: center;
+}
+
+.hit-counter .retro-rail-heading {
+  flex: 0 0 auto;
+}
+
+.hit-counter a {
+  display: inline-flex;
+}
+
 .retro-system-button {
   background: transparent;
   border: 0;
@@ -286,7 +290,9 @@
 
 @media (min-width: 769px) {
   .app-shell {
+    align-items: stretch;
     display: grid;
+    grid-auto-rows: minmax(calc(100vh - 6rem), auto);
     grid-template-columns: max-content minmax(0, 1fr);
   }
 

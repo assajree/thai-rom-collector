@@ -4,9 +4,7 @@
 }
 
 .sample-page {
-    min-height: calc(100vh - 6rem);
     color: var(--color-text);
-    padding: clamp(1rem, 3vw, 3rem);
 }
 
 .sample-header,
@@ -285,9 +283,9 @@ label {
     gap: .35rem;
 }
 
-input:not([type=checkbox]):not([type=radio]),
-select,
-textarea {
+input:not([type=checkbox]):not([type=radio]):not(.admin-input),
+select:not(.app-select),
+textarea:not(.admin-input) {
     background: var(--color-shadow);
     border: 1px solid var(--color-border);
     color: var(--color-text);
@@ -415,10 +413,7 @@ button:disabled {
 }
 
 .sample-modal {
-    background: var(--color-surface);
-    border: 2px solid var(--color-border);
     max-width: 30rem;
-    padding: 1.25rem;
     width: 100%;
 }
 

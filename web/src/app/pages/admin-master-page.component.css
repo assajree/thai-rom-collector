@@ -7,7 +7,7 @@
     color: var(--color-text);
     padding: .65rem;
     pointer-events: auto;
-    user-select: text
+    user-select: text;
 }
 
 .master-card-grid {
@@ -45,8 +45,7 @@
     display: grid;
     place-items: center;
     padding: 1rem;
-    pointer-events: auto;
-    background: var(--color-overlay);
+    background: var(--color-overlay)
 }
 
 .master-dialog {
@@ -57,7 +56,6 @@
     background: var(--color-surface);
     padding: 1.25rem;
     color: var(--color-text);
-    pointer-events: auto;
     user-select: text
 }
 

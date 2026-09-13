@@ -1,12 +1,12 @@
-<main class="min-h-full p-4 sm:p-6 lg:p-8 article-container">
+<main class="admin-page-shell article-container">
   <h1 class="mt-1 ">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
   <form class="mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
 
     <div>
       <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
           class="admin-input" formControlName="gameTitle" /></label>
-      <button class="mt-2 border  px-3 py-2 font-bold   "
-        type="button" (click)="pasteGameTitle()" [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' :
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteGameTitle()"
+        [disabled]="pastingGameTitle">{{ pastingGameTitle ? 'กำลังวาง…' :
         'Clipboard' }}</button>
     </div>
 
@@ -21,15 +21,15 @@
         @if (systemAutocompleteOpen && filteredSystemOptions().length > 0) {
         <ul id="system-options" class="tag-autocomplete__list" role="listbox">
           @for (system of filteredSystemOptions(); track system.id) {
-          <li><button type="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system) }}</button></li>
+          <li><button type="button" class="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system) }}</button></li>
           }
         </ul>
         } @else if (systemAutocompleteOpen) {
         <p class="tag-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</p>
         }
       </div>
-      <button class="mt-2 border  px-3 py-2 font-bold   "
-        type="button" (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
+      <button class="mt-2 border  px-3 py-2 font-bold button" type="button"
+        (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
     <div>
       <label class="required"><i class="fa-solid fa-users mr-1" aria-hidden="true"></i>ทีมแปล</label>
@@ -42,7 +42,7 @@
         @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
         <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
           @for (translator of filteredTranslatorOptions(); track translator.id) {
-          <li><button type="button" role="option" (click)="selectTranslator(translator)">{{ translatorLabel(translator)
+          <li><button class="button" type="button" role="option" (click)="selectTranslator(translator)">{{ translatorLabel(translator)
               }}</button></li>
           }
         </ul>
@@ -50,8 +50,8 @@
         <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
         }
       </div>
-      <button class="mt-2 border  px-3 py-2 font-bold   "
-        type="button" (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button"
+        (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
     </div>
     <div>
       <label><i class="fa-solid fa-image mr-1" aria-hidden="true"></i>ภาพปก</label>
@@ -62,12 +62,11 @@
       <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
           formControlName="patchTool" /></label>
       <div class="mt-2 flex flex-wrap gap-2">
-        <button class="border  px-3 py-2 font-bold   "
-          type="button" (click)="setDefaultPatchTool()">Default</button>
-        <button class="border  px-3 py-2 font-bold   "
-          type="button" (click)="setRomPatcherTool()">RomPatcher.js</button>
-        <button class="border  px-3 py-2 font-bold   "
-          type="button" (click)="pastePatchTool()" [disabled]="pastingPatchTool">{{ pastingPatchTool ? 'กำลังวาง…' :
+        <button class="border px-3 py-2 font-bold button" type="button" (click)="setDefaultPatchTool()">Default</button>
+        <button class="border px-3 py-2 font-bold button" type="button"
+          (click)="setRomPatcherTool()">RomPatcher.js</button>
+        <button class="border px-3 py-2 font-bold button" type="button" (click)="pastePatchTool()"
+          [disabled]="pastingPatchTool">{{ pastingPatchTool ? 'กำลังวาง…' :
           'Clipboard' }}</button>
       </div>
     </div>
@@ -88,18 +87,18 @@
         formControlName="walkthroughUrl" type="url" /></label>
     <fieldset class="border border-slate-600 p-3">
       <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>
-      <button class="mt-3 border  px-3 py-2 font-bold " type="button" (click)="createTag()"
+      <button class="mb-3 border px-3 py-2 font-bold button" type="button" (click)="createTag()"
         [disabled]="!newTagName.trim()">เพิ่ม tag ใหม่</button>
 
       @if (selectedTags.length > 0) {
       <ul class="selected-tags" aria-label="tag ที่เลือก">
         @for (tag of selectedTags; track tag) {
-        <li>{{ tagName(tag) }} <button type="button" (click)="removeTag(tag)"
+        <li>{{ tagName(tag) }} <button class="button" type="button" (click)="removeTag(tag)"
             [attr.aria-label]="'ลบ tag ' + tagName(tag)">x</button></li>
         }
       </ul>
       }
-      
+
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
         <input #tagInput class="admin-input" placeholder="พิมพ์เพื่อค้นหา tag" [value]="newTagName"
           (focus)="openTagAutocomplete()" (input)="onTagInput($any($event.target).value)"
@@ -107,7 +106,7 @@
         @if (tagAutocompleteOpen && filteredTagSuggestions().length > 0) {
         <ul class="tag-autocomplete__list" role="listbox">
           @for (tag of filteredTagSuggestions(); track tag.id) {
-          <li><button type="button" role="option" (click)="selectTag(tag)">{{ tag.name }}</button></li>
+          <li><button class="button" type="button" role="option" (click)="selectTag(tag)">{{ tag.name }}</button></li>
           }
         </ul>
         } @else if (tagAutocompleteOpen && newTagName.trim()) {
@@ -127,22 +126,21 @@
     <div>
       <label><i class="fa-solid fa-calendar-days mr-1" aria-hidden="true"></i>วันที่และเวลาอัปเดต<input
           class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
-      <button class="mt-2 border  px-3 py-2 font-bold   "
-        type="button" (click)="setUpdateDateNow()">ตอนนี้</button>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()">ตอนนี้</button>
     </div>
     <div class="mt-8 flex w-full items-center justify-between">
-      <button class="w-fit   bg-signal px-5 py-3 font-bold text-ink disabled:opacity-50"
-        type="submit" [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' :
+      <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button" type="submit"
+        [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' :
         'บันทึกแพตช์' }}</button>
       @if (editId) {
-      <button class="w-fit  border-arcade px-5 py-3 font-bold disabled:opacity-50" type="button"
-        [disabled]="saving" (click)="deletePatch()">ลบแพตช์</button>
+      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button" type="button" [disabled]="saving"
+        (click)="deletePatch()">ลบแพตช์</button>
       }
     </div>
   </form>
   @if (systemDialogOpen) {
-  <div class="system-dialog-backdrop" role="presentation">
-    <section class="system-dialog" role="dialog" aria-modal="true" aria-labelledby="system-dialog-title"
+  <div class="admin-dialog-backdrop system-dialog-backdrop" role="presentation">
+    <section class="admin-dialog system-dialog" role="dialog" aria-modal="true" aria-labelledby="system-dialog-title"
       (click)="$event.stopPropagation()">
       <h2 id="system-dialog-title" class="">เพิ่มเครื่องเกม</h2>
       <label class="mt-4 block"><i class="fa-solid fa-code mr-1" aria-hidden="true"></i>ชื่อย่อเครื่องเกม<input
@@ -151,18 +149,18 @@
       <label class="mt-3 block"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>ชื่อเต็มเครื่องเกม<input
           class="admin-input" [value]="newSystemName" (input)="newSystemName = $any($event.target).value" /></label>
       <div class="mt-5 flex gap-2">
-        <button class="border  bg-signal px-3 py-2 font-bold text-ink disabled:opacity-50" type="button"
+        <button class="border   px-3 py-2 font-bold text-ink disabled:opacity-50 button" type="button"
           (click)="createSystem()" [disabled]="savingSystem">{{ savingSystem ? 'กำลังบันทึก…' : 'บันทึก' }}</button>
-        <button class="border border-slate-300 px-3 py-2 font-bold text-[var(--color-text)]" type="button"
+        <button class="border border-slate-300 px-3 py-2 font-bold text-[var(--color-text)] button" type="button"
           (click)="closeSystemDialog()">ยกเลิก</button>
       </div>
     </section>
   </div>
   }
   @if (translatorDialogOpen) {
-  <div class="system-dialog-backdrop" role="presentation">
-    <section class="system-dialog" role="dialog" aria-modal="true" aria-labelledby="translator-dialog-title"
-      (click)="$event.stopPropagation()">
+  <div class="admin-dialog-backdrop system-dialog-backdrop" role="presentation">
+    <section class="admin-dialog system-dialog" role="dialog" aria-modal="true"
+      aria-labelledby="translator-dialog-title" (click)="$event.stopPropagation()">
       <h2 id="translator-dialog-title" class="">เพิ่มทีมแปล</h2>
       <label class="mt-4 block"><i class="fa-solid fa-code mr-1" aria-hidden="true"></i>ชื่อย่อทีมแปล<input
           class="admin-input" [value]="newTranslatorShortName"
@@ -176,10 +174,10 @@
       <label class="mt-3 block"><i class="fa-solid fa-link mr-1" aria-hidden="true"></i>ลิงก์ทีมแปล (ถ้ามี)<input
           class="admin-input" [value]="newTranslatorLink"
           (input)="newTranslatorLink = $any($event.target).value" /></label>
-      <div class="mt-5 flex gap-2"><button
-          class="border  bg-signal px-3 py-2 font-bold text-ink disabled:opacity-50" type="button"
-          (click)="createTranslator()" [disabled]="savingTranslator">{{ savingTranslator ? 'กำลังบันทึก…' : 'บันทึก'
-          }}</button><button class="border border-slate-300 px-3 py-2 font-bold text-[var(--color-text)]" type="button"
+      <div class="mt-5 flex gap-2"><button class="border  px-3 py-2 font-bold disabled:opacity-50 button"
+          type="button" (click)="createTranslator()" [disabled]="savingTranslator">{{ savingTranslator ? 'กำลังบันทึก…'
+          : 'บันทึก'
+          }}</button><button class="border border-slate-300 px-3 py-2 font-bold button" type="button"
           (click)="closeTranslatorDialog()">ยกเลิก</button></div>
     </section>
   </div>
