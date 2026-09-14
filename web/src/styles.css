@@ -82,11 +82,12 @@ body[data-theme='pocket-pet'] {
     color: var(--color-highlight);
   }
 
-  .button {
+  .button,
+  .sort-field select {
     background-color: var(--color-surface);
-    border: 1px solid var(--color-shadow);
+    border: 1px solid var(--color-border);
     box-shadow: 2px 2px 0 var(--color-shadow);
-    padding: .7rem 1rem;
+    color: var(--color-text);
   }
 
   .button:disabled,
@@ -279,10 +280,6 @@ a:hover,
   margin: auto;
   padding: 2rem;
   height: 100%;
-}
-
-.browse-catalogue {
-  background-color: var(--color-surface-light);
 }
 
 .patch-cover-image {

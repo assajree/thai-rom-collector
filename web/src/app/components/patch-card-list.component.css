@@ -1,6 +1,5 @@
 .patch-card {
   background: var(--color-surface);
-  border: 5px solid var(--color-shadow);
   display: grid;
   gap: 1.5rem;
   grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
@@ -16,7 +15,8 @@
   min-width: 0;
 }
 
-.patch-card h2 {
+.patch-card .heading {
+  color: var(--color-highlight);
   line-height: 1.05;
   margin: 1.25rem 0 0;
 }
@@ -74,7 +74,6 @@
 
 /* Compact retro web card */
 .patch-card {
-  border: 1px solid var(--color-surface);
   gap: .45rem;
   grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
   margin: 0 auto .7rem;

@@ -1,5 +1,7 @@
 .browse-catalogue {
   color: var(--color-shadow);
+  padding-bottom: 5rem;
+  background-color: var(--color-surface-light);
 }
 
 .state-message {
@@ -88,7 +90,7 @@
   background: var(--color-surface);
   border: 1px solid var(--color-shadow);
   box-shadow: 2px 2px 0 var(--color-shadow);
-  top: 1rem;
+  bottom: 1rem;
   color: var(--color-text);
   cursor: pointer;
   display: flex;
@@ -199,11 +201,6 @@
 
   .patch-skeleton>span {
     height: 180px;
-  }
-
-  .back-to-top {
-    top: .75rem;
-    right: .75rem;
   }
 }
 

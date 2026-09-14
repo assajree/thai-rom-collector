@@ -58,7 +58,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly patchCacheLastUpdatedLabel = () => {
     const timestamp = this.patchCacheLastUpdated();
     return timestamp === null ? 'ยังไม่มีข้อมูล cache' : new Intl.DateTimeFormat('th-TH', {
-      dateStyle: 'medium', timeStyle: 'short'
+      timeStyle: 'short'
     }).format(timestamp);
   };
 

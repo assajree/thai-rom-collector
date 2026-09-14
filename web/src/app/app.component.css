@@ -1,6 +1,5 @@
 .app-topbar {
   background-color: var(--color-surface);
-  height: 4rem;
 }
 
 .theme-picker {
@@ -181,7 +180,7 @@
 }
 
 .retro-rail-admin-link:hover {
-  color: var(--color-accent);
+  color: var(--color-highlight);
 }
 
 .retro-rail-link {
@@ -197,7 +196,7 @@
 
 .retro-rail-link:hover,
 .retro-rail-link--active {
-  color: var(--color-accent);
+  color: var(--color-highlight);
 }
 
 .retro-system-section,
@@ -278,7 +277,7 @@
 
 .retro-system-button:hover,
 .retro-system-button--active {
-  color: var(--color-accent);
+  color: var(--color-highlight);
 }
 
 
