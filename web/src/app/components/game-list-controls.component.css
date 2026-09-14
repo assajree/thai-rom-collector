@@ -38,6 +38,10 @@
     color: var(--color-shadow);
 }
 
+.sort-toggle {
+    display: none;
+}
+
 .sort-row {
     align-items: center;
     color: var(--color-text);
@@ -76,10 +80,34 @@
 }
 
 @media (max-width: 34rem) {
+    .sort-toggle {
+        background: var(--color-surface);
+        border: 1px solid var(--color-shadow);
+        box-shadow: 2px 2px var(--color-shadow);
+        color: var(--color-text);
+        cursor: pointer;
+        display: block;
+        font: inherit;
+        font-weight: 800;
+        margin: .75rem auto 0;
+        max-width: 48rem;
+        padding: .45rem .7rem;
+        width: 100%;
+    }
+
+    .sort-toggle:hover {
+        background: var(--color-accent);
+    }
+
     .sort-row {
         align-items: stretch;
+        display: none;
         flex-direction: column;
         gap: .75rem;
+    }
+
+    .sort-row--open {
+        display: flex;
     }
 
     .sort-field {

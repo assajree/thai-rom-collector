@@ -16,5 +16,6 @@ export class GameListControlsComponent {
   @Input() routeKind: BrowseRouteKind | null = null;
   @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'updateDate', sortDirection: 'desc' };
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
+  protected sortOpen = false;
   protected emit(): void { this.filtersChanged.emit({ ...this.draft }); }
 }

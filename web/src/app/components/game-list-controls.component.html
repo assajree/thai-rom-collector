@@ -7,7 +7,9 @@
   </label>
 </div>
 
-<div class="sort-row">
+<button type="button" class="sort-toggle" [attr.aria-expanded]="sortOpen" aria-controls="game-sort-row" (click)="sortOpen = !sortOpen">ตัวกรอง</button>
+
+<div id="game-sort-row" class="sort-row" [class.sort-row--open]="sortOpen">
    @if (routeKind !== 'translator') {
     <div class="sort-field">
       <label for="filter-translator">ทีมแปล</label>
