@@ -11,7 +11,6 @@
         rel="noopener noreferrer">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
-      <div class="heading">{{ patch.gameTitle }}</div>
       @if (patch.haveUpdateFlag) {
       <span class="game-badge update-game-badge" aria-label="แพตช์อัปเดต"><img src="assets/images/update.gif"
           alt="update" /></span>
@@ -19,6 +18,8 @@
       <span class="game-badge new-game-badge" aria-label="เกมมาใหม่"><img src="assets/images/new.gif"
           alt="new" /></span>
       }
+      <div class="heading">{{ patch.gameTitle }}</div>
+
       <div class="patch-card__description">
 
         <div>

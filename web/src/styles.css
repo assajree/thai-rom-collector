@@ -19,9 +19,13 @@
   --color-badge-start: red;
   --color-badge-end: yellow;
 
+  --color-text-light: var(--color-text);
+  --color-text-dark: var(--color-text-invert);
+
   --color-status-success: #16a34a;
   --color-status-info: #2563eb;
   --color-status-error: #dc2626;
+  --color-status-error-hover: #d64543;
   --color-overlay: rgb(0 0 0 / 55%);
 }
 
@@ -40,6 +44,8 @@ body[data-theme='pocket-pet'] {
   --color-shadow: #808080;
   --color-disabled: #808080;
   --color-overlay: rgb(53 67 59 / 35%);
+  --color-text-light: var(--color-text-invert);
+  --color-text-dark: var(--color-text);
 }
 
 @font-face {
@@ -100,9 +106,29 @@ body[data-theme='pocket-pet'] {
     background-color: var(--color-surface-light);
   }
 
+  .btn-danger {
+    background-color: var(--color-status-error);
+    color: var(--color-text-light);
+  }
+
+  .btn-danger:hover {
+    background-color: var(--color-status-hover);
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: var(--color-text-light);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-accent-hover);
+  }
+
   .no-button {
     background: transparent;
     border: 0;
+    cursor: pointer;
+    padding: 0 0.5rem;
   }
 
 
@@ -338,3 +364,4 @@ body[data-theme='pocket-pet'] main {
 }
 
 /****** End Pocket Pet Theme Style ******/
+

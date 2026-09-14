@@ -93,7 +93,7 @@
       @if (selectedTags.length > 0) {
       <ul class="selected-tags" aria-label="tag ที่เลือก">
         @for (tag of selectedTags; track tag) {
-        <li>{{ tagName(tag) }} <button class="button" type="button" (click)="removeTag(tag)"
+        <li>{{ tagName(tag) }} <button class="no-button" type="button" (click)="removeTag(tag)"
             [attr.aria-label]="'ลบ tag ' + tagName(tag)">x</button></li>
         }
       </ul>
@@ -129,11 +129,11 @@
       <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()">ตอนนี้</button>
     </div>
     <div class="mt-8 flex w-full items-center justify-between">
-      <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button" type="submit"
+      <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button btn-primary" type="submit"
         [disabled]="form.invalid || saving" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' :
         'บันทึกแพตช์' }}</button>
       @if (editId) {
-      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button" type="button" [disabled]="saving"
+      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button btn-danger" type="button" [disabled]="saving"
         (click)="deletePatch()">ลบแพตช์</button>
       }
     </div>

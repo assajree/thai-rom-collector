@@ -18,7 +18,6 @@
 .patch-card .heading {
   color: var(--color-highlight);
   line-height: 1.05;
-  margin: 1.25rem 0 0;
 }
 
 .patch-card__tags {
