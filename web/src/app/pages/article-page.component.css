@@ -9,11 +9,6 @@
     line-height: 1;
 }
 
-.article-cover {
-    width: 100%;
-    object-fit: cover
-}
-
 .article-meta {
     color: var(--color-text-muted)
 }

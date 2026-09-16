@@ -339,6 +339,7 @@ a:hover,
 }
 
 app-article-page {
+  margin: auto;
   background-color: var(--color-surface);
   height: stretch;
 }
@@ -372,8 +373,9 @@ app-article-page {
 /***** Article ****/
 
 .article-cover {
-  width: 100%;
-  object-fit: cover;
+  margin: auto;
+  display: block;
+  max-width: 100%;
 }
 
 .article-meta {
