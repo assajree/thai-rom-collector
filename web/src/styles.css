@@ -14,6 +14,7 @@
   --color-link: #00ffff;
   --color-accent: #8eb629;
   --color-accent-hover: #e0ff92;
+  --color-accent-text: #080808;
   --color-shadow: #080808;
   --color-disabled: #777b91;
   --color-badge-start: red;
@@ -29,6 +30,8 @@
   --color-overlay: rgb(0 0 0 / 55%);
 }
 
+/****** Begin Pocket Pet Theme Style ******/
+
 body[data-theme='pocket-pet'] {
   --color-surface: #b8c8b4;
   --color-surface-light: #dce4d8;
@@ -41,12 +44,46 @@ body[data-theme='pocket-pet'] {
   --color-link: #47594f;
   --color-accent: #90760e;
   --color-accent-hover: #879e92;
+  --color-accent-text: #ffffff;
   --color-shadow: #808080;
   --color-disabled: #808080;
   --color-overlay: rgb(53 67 59 / 35%);
   --color-text-light: var(--color-text-invert);
   --color-text-dark: var(--color-text);
 }
+
+body[data-theme='pocket-pet'] .site-title img {
+  filter: sepia(1);
+}
+
+body[data-theme='pocket-pet'] .browse-catalogue {
+  background-image: none;
+}
+
+body[data-theme='pocket-pet'] .admin-search-field {
+  background: #dce4d8;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+}
+
+body[data-theme='pocket-pet'] .app-select {
+  background: #dce4d8;
+  border-color: var(--color-border);
+}
+
+body[data-theme='pocket-pet'] * {
+  border-radius: 10px;
+}
+
+body[data-theme='pocket-pet'] .app-topbar,
+body[data-theme='pocket-pet'] .marquee,
+body[data-theme='pocket-pet'] .retro-rail,
+body[data-theme='pocket-pet'] .right-ad-sidebar *,
+body[data-theme='pocket-pet'] main {
+  border-radius: 0px !important;
+}
+
+/****** End Pocket Pet Theme Style ******/
 
 @font-face {
   font-family: 'RD Chulajaruek';
@@ -84,7 +121,8 @@ body[data-theme='pocket-pet'] {
   h3,
   h4,
   h5,
-  h6 {
+  h6,
+  strong {
     color: var(--color-highlight);
   }
 
@@ -117,7 +155,7 @@ body[data-theme='pocket-pet'] {
 
   .btn-primary {
     background-color: var(--color-accent);
-    color: var(--color-text-light);
+    color: var(--color-accent-text);
   }
 
   .btn-primary:hover {
@@ -260,11 +298,6 @@ a:hover,
   color: var(--color-link);
 }
 
-.page-footer,
-.article-container {
-  background-color: var(--color-surface);
-}
-
 .admin-page-shell {
   box-sizing: border-box;
   min-height: calc(100vh - 6rem);
@@ -300,12 +333,14 @@ a:hover,
   color: var(--color-text);
 }
 
+
 .article-container {
-  box-sizing: border-box;
-  min-height: calc(100vh - 6rem);
-  margin: auto;
   padding: 2rem;
-  height: 100%;
+}
+
+app-article-page {
+  background-color: var(--color-surface);
+  height: stretch;
 }
 
 .patch-cover-image {
@@ -330,38 +365,133 @@ a:hover,
   transform: translateY(1px);
 }
 
-/****** Begin Pocket Pet Theme Style ******/
-
-body[data-theme='pocket-pet'] .site-title img {
-  filter: sepia(1);
+.surface {
+  background-color: var(--color-surface);
 }
 
-body[data-theme='pocket-pet'] .browse-catalogue {
-  background-image: none;
+/***** Article ****/
+
+.article-cover {
+  width: 100%;
+  object-fit: cover;
 }
 
-body[data-theme='pocket-pet'] .admin-search-field {
-  background: #dce4d8;
+.article-meta {
+  color: var(--color-text-muted);
+}
+
+.excerpt {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+}
+
+.markdown-body {
+  margin-top: 2.5rem;
+  line-height: 1.8;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6 {
+  line-height: 1.15;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4,
+.markdown-body h5,
+.markdown-body h6,
+.markdown-body strong {
+  color: var(--color-brand);
+}
+
+.markdown-body h1 {
+  margin: 2.5rem 0 1rem;
+  font-size: 2rem;
+}
+
+.markdown-body h2 {
+  margin: 2.25rem 0 .75rem;
+  font-size: 1.8rem;
+}
+
+.markdown-body h3 {
+  margin: 2.25rem 0 .5rem;
+  font-size: 1.2rem;
+}
+
+.markdown-body p {
+  margin: 0 0 0rem;
+}
+
+.markdown-body strong {
+  font-weight: 900;
+}
+
+.markdown-body em {
+  color: var(--color-text-muted);
+}
+
+.markdown-body code {
+  padding: .12rem .35rem;
+  background: var(--color-surface-light);
+  color: var(--color-text);
+  font-size: .92em;
+}
+
+.markdown-body pre {
+  margin: 1.5rem 0;
+  padding: 1rem;
   border: 1px solid var(--color-border);
-  border-radius: 1rem;
+  background: var(--color-surface);
+  overflow-x: auto;
 }
 
-body[data-theme='pocket-pet'] .app-select {
-  background: #dce4d8;
-  border-color: var(--color-border);
+.markdown-body pre code {
+  padding: 0;
 }
 
-body[data-theme='pocket-pet'] * {
-  border-radius: 10px;
+.markdown-body blockquote {
+  margin: 1.5rem 0;
+  border-left: 4px solid var(--color-brand);
+  padding: .5rem 1rem;
+  background: color-mix(in srgb, var(--color-surface) 55%, transparent);
+  color: var(--color-text-muted);
 }
 
-body[data-theme='pocket-pet'] .app-topbar,
-body[data-theme='pocket-pet'] .marquee,
-body[data-theme='pocket-pet'] .retro-rail,
-body[data-theme='pocket-pet'] .right-ad-sidebar *,
-body[data-theme='pocket-pet'] main {
-  border-radius: 0px !important;
+.markdown-body ul {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
 }
 
-/****** End Pocket Pet Theme Style ******/
+.markdown-body li {
+  margin: .35rem 0;
+}
 
+.markdown-body hr {
+  margin: 1rem 0;
+  border: 0;
+  border-top: 2px solid var(--color-border);
+}
+
+.markdown-body img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 40rem) {
+  .article-preview {
+    max-width: 100%;
+  }
+
+  .markdown-body {
+    margin-top: 1.75rem;
+  }
+}

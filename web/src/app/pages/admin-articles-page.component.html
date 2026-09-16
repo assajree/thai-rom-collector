@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="article-list">
-            <article *ngFor="let item of items" class="article-row">
+            <article *ngFor="let item of items" class="article-row surface">
                 <div class="article-row-main">
                     <span class="status" [class.published]="item.status === 'published'">
                         {{
@@ -22,13 +22,18 @@
                     <h3>{{ item.title || 'ไม่มีชื่อบทความ' }}</h3>
                 </div>
                 <div class="row-actions">
-                    <button type="button" [disabled]="busy"
-                        (click)="item.status === 'published' ? unpublish(item) : publish(item)">
-                        {{ item.status === 'published' ? 'Unpublish' : 'Publish' }}
-                    </button>
-                    <button type="button" (click)="start(item)">Edit</button>
-                    <button type="button" (click)="openPreview(item)">Preview</button>
-                    <button class="danger" type="button" [disabled]="busy" (click)="remove(item)">ลบ</button>
+                    @if (item.status === 'published') {
+                    <button type="button" class="button publish-button" [disabled]="busy"
+                        (click)="unpublish(item)">Unpublish</button>
+                    }
+                    @else{
+                    <button type="button" class="button btn-primary publish-button" [disabled]="busy"
+                        (click)="publish(item)">Publish</button>
+                    }
+
+                    <button type="button" class="button" (click)="start(item)">Edit</button>
+                    <button type="button" class="button" (click)="openPreview(item)">Preview</button>
+                    <button class="button btn-danger" type="button" [disabled]="busy" (click)="remove(item)">ลบ</button>
                 </div>
             </article>
             <p *ngIf="!items.length" class="empty-state">ยังไม่มีบทความ เริ่มจากการเพิ่มบทความแรก</p>

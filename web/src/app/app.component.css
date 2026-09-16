@@ -83,7 +83,7 @@
 
 .app-content {
   position: relative;
-  background-color: var(--color-surface);
+  background-color: var(--color-surface-light);
 }
 
 :host ::ng-deep .app-content > router-outlet + * {
