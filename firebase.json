@@ -1,9 +1,10 @@
 {
   "hosting": {
+    "public": "web",
     "redirects": [
       {
-        "source": "**",
-        "destination": "https://thairomdb.pages.dev/:path",
+        "regex": "^/(.*)$",
+        "destination": "https://thairomdb.pages.dev/\\1",
         "type": 301
       }
     ]
