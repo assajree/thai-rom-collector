@@ -1,6 +1,11 @@
+import { jwtVerify, createRemoteJWKSet } from 'jose';
+
+const FIREBASE_PROJECT_ID = 'thairomdb';
+const JWKS_URI = 'https://www.googleapis.com/service_accounts/v1/jwk/securetoken@system.gserviceaccount.com';
+const JWKS = createRemoteJWKSet(new URL(JWKS_URI));
+
 export interface Env {
   COVERS_BUCKET: R2Bucket;
-  AUTH_SECRET: string;
   PUBLIC_URL_BASE: string;
 }
 
@@ -21,8 +26,26 @@ export default {
     // ตรวจสอบสิทธิ์ สำหรับ POST และ DELETE
     if (['POST', 'DELETE'].includes(request.method)) {
       const authHeader = request.headers.get('Authorization');
-      if (!authHeader || authHeader !== `Bearer ${env.AUTH_SECRET}`) {
-        return new Response(JSON.stringify({ error: 'Unauthorized' }), { 
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return new Response(JSON.stringify({ error: 'Unauthorized: No token provided' }), { 
+          status: 401, 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        });
+      }
+
+      const token = authHeader.split('Bearer ')[1];
+      try {
+        const { payload } = await jwtVerify(token, JWKS, {
+          issuer: `https://securetoken.google.com/${FIREBASE_PROJECT_ID}`,
+          audience: FIREBASE_PROJECT_ID,
+        });
+
+        if (!payload.sub) {
+          throw new Error('Invalid token payload');
+        }
+      } catch (e) {
+        console.error('JWT Verification failed:', e);
+        return new Response(JSON.stringify({ error: 'Unauthorized: Invalid token' }), { 
           status: 401, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
         });

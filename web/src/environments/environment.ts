@@ -11,7 +11,6 @@ export interface FirebaseEnvironment {
   };
   r2?: {
     workerUrl: string;
-    secret: string;
     publicUrl: string;
   };
 }
@@ -33,7 +32,6 @@ export const environment: FirebaseEnvironment = {
   },
   r2: {
     workerUrl: 'https://r2-upload-worker.thairomdb.workers.dev',
-    secret: 'J@rouad37',
     publicUrl: 'https://pub-6ba6c842bf76437db39aeb21dc0f37e2.r2.dev'
   }
 };
