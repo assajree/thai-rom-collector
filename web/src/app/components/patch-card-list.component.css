@@ -38,6 +38,7 @@
   position: absolute;
   left: .2rem;
   top: .2rem;
+  text-decoration: none;
 }
 
 .patch-cover-image {
