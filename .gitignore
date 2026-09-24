@@ -31,6 +31,6 @@ _ReSharper*/
 #Nuget packages folder
 packages/
 
-/web/src/environments
+
 /.firebase
 /r2-worker/node_modules/
