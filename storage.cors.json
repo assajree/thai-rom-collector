@@ -5,7 +5,8 @@
       "https://thairomdb.web.app",
       "https://thairomdb.firebaseapp.com",
       "https://thai-rom-db.web.app",
-      "https://thai-rom-db.firebaseapp.com"
+      "https://thai-rom-db.firebaseapp.com",
+      "https://thairomdb.pages.dev"
     ],
     "method": ["GET", "POST", "PUT", "HEAD", "OPTIONS"],
     "responseHeader": ["Content-Type", "Authorization", "x-goog-resumable", "x-goog-upload-protocol", "x-goog-upload-command", "x-goog-upload-offset"],
