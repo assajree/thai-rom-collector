@@ -31,7 +31,8 @@
               "src/manifest.webmanifest",
               "src/ads.txt",
               "src/robots.txt",
-              "src/sitemap.xml"
+              "src/sitemap.xml",
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.css"
@@ -94,7 +95,8 @@
             "tsConfig": "tsconfig.spec.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/_redirects"
             ],
             "styles": [
               "src/styles.css"
