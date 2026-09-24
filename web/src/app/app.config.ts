@@ -6,6 +6,7 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { provideAuth, getAuth } from '@angular/fire/auth';
 import { provideStorage, getStorage } from '@angular/fire/storage';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideHttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
 
 import { routes } from './app.routes';
@@ -14,6 +15,7 @@ export const appConfig: ApplicationConfig = {
   // GitHub Pages cannot rewrite deep SPA URLs to index.html. Hash routing keeps
   // the requested document at the deployed application root on refresh.
   providers: [
+    provideHttpClient(),
     provideRouter(routes, withHashLocation(), withInMemoryScrolling({
       scrollPositionRestoration: 'top'
     })),

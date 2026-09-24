@@ -1,0 +1,12 @@
+name = "r2-upload-worker"
+main = "src/index.ts"
+compatibility_date = "2023-10-16"
+
+[vars]
+PUBLIC_URL_BASE = "https://pub-6ba6c842bf76437db39aeb21dc0f37e2.r2.dev"
+# AUTH_SECRET = "your-secret-token" # แนะนำให้ใช้ wrangler secret put AUTH_SECRET แทนการใส่ในนี้
+
+[[r2_buckets]]
+binding = "COVERS_BUCKET"
+bucket_name = "thairomdb-covers"
+preview_bucket_name = "thairomdb-covers-dev"
