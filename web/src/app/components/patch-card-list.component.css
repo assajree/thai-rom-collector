@@ -34,7 +34,6 @@
 }
 
 .edit-button {
-  background: var(--color-surface);
   padding: .15rem .35rem;
   position: absolute;
   left: .2rem;
@@ -97,7 +96,7 @@
   width: min(100%, 250px);
 }
 
-.new-game-badge img{
+.new-game-badge img {
   background-image: linear-gradient(to right, var(--color-badge-start), var(--color-badge-end));
   padding: 1px 12px;
 }

@@ -33,3 +33,4 @@ packages/
 
 /web/src/environments
 /.firebase
+/r2-worker/node_modules/

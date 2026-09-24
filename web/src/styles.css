@@ -333,7 +333,6 @@ a:hover,
   color: var(--color-text);
 }
 
-
 .article-container {
   padding: 2rem;
 }
@@ -368,6 +367,10 @@ app-article-page {
 
 .surface {
   background-color: var(--color-surface);
+}
+
+.bg-accent {
+  background-color: var(--color-accent);
 }
 
 /***** Article ****/
