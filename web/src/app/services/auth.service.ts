@@ -12,6 +12,7 @@ export class AuthService {
   private readonly currentUser = signal<User | null>(null);
   private readonly adminState = signal(false);
   private readonly adminCheckComplete = signal(false);
+  private readonly vipCheckComplete = signal(false);
   private readonly authSubscription: Subscription;
   private adminSubscription?: Subscription;
   private vipSubscription?: Subscription;
@@ -28,6 +29,7 @@ export class AuthService {
       this.adminState.set(false);
       this.isVip.set(false);
       this.adminCheckComplete.set(!currentUser);
+      this.vipCheckComplete.set(!currentUser);
       if (!currentUser) return;
       this.adminSubscription = from(get(ref(this.database, `admins/${currentUser.uid}`))).subscribe({
         next: (profile) => {
@@ -44,9 +46,11 @@ export class AuthService {
       this.vipSubscription = from(get(vipQuery)).subscribe({
         next: (snapshot) => {
           this.isVip.set(snapshot.exists());
+          this.vipCheckComplete.set(true);
         },
         error: () => {
           this.isVip.set(false);
+          this.vipCheckComplete.set(true);
         }
       });
     });
@@ -59,6 +63,21 @@ export class AuthService {
       const poll = (): void => {
         if (this.adminCheckComplete() || Date.now() - started >= timeoutMs) {
           resolve(this.adminState());
+          return;
+        }
+        window.setTimeout(poll, 50);
+      };
+      poll();
+    });
+  }
+
+  async waitForVipCheck(timeoutMs = 5000): Promise<boolean> {
+    if (this.vipCheckComplete()) return this.isVip();
+    return new Promise((resolve) => {
+      const started = Date.now();
+      const poll = (): void => {
+        if (this.vipCheckComplete() || Date.now() - started >= timeoutMs) {
+          resolve(this.isVip());
           return;
         }
         window.setTimeout(poll, 50);

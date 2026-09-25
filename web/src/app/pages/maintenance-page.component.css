@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.maintenance-page {
+  min-height: calc(100vh - 6rem);
+  display: grid;
+  place-items: center;
+  padding: 2rem;
+  background: var(--color-surface);
+  color: var(--color-text);
+  text-align: center;
+}
+
+.maintenance-container {
+  max-width: 600px;
+  background: var(--color-surface-light);
+  border: 2px solid var(--color-border);
+  box-shadow: 4px 4px 0 var(--color-shadow);
+  padding: 3rem 2rem;
+}
+
+.maintenance-icon {
+  color: var(--color-highlight);
+  margin-bottom: 1.5rem;
+}
+
+.maintenance-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--color-highlight);
+  margin-bottom: 1rem;
+}
+
+.maintenance-message {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text-muted);
+  margin-bottom: 2rem;
+}
+
+.action-box {
+  background: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  border: 1px solid var(--color-border);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.support-box {
+  border-top: 2px dashed var(--color-border);
+  padding-top: 1.5rem;
+}
+
+.btn-google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  box-shadow: 3px 3px 0 var(--color-shadow);
+  cursor: pointer;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 0.75rem 1.5rem;
+  width: 100%;
+  max-width: 20rem;
+  min-height: 44px;
+}
+
+.btn-google:hover:not(:disabled) {
+  background-color: var(--color-surface-light);
+  color: var(--color-highlight);
+}
+
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.65rem 1rem;
+  font-size: 0.95rem;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.btn-secondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.btn-donate {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  transition: all 0.2s ease;
+}
+
+.btn-donate:hover {
+  background: var(--color-accent);
+  color: var(--color-accent-text);
+}
+
+.btn-redeem {
+  color: var(--color-highlight);
+  font-weight: bold;
+  text-decoration: underline;
+}

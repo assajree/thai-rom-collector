@@ -38,3 +38,8 @@ Do not use the middle dot character `·` in UI text or source content because th
 ## Full-Space Pages
 
 New pages must fill the available center content area in both width and height. Use the existing app-shell/content layout and set an appropriate minimum height for the viewport content area so short pages do not leave unused gaps.
+
+## Git Commits
+
+Do not commit git changes automatically. Always wait for the user to explicitly request or instruct a commit before executing `git commit`.
+

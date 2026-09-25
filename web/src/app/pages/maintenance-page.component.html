@@ -1,0 +1,44 @@
+<main class="maintenance-page">
+  <div class="maintenance-container">
+    <div class="maintenance-icon">
+      <i class="fa-solid fa-person-digging text-5xl" aria-hidden="true"></i>
+    </div>
+    
+    <h1 class="maintenance-title">เว็บไซต์ปิดให้บริการชั่วคราว</h1>
+    <p class="maintenance-message">
+      ขออภัยในความไม่สะดวก ขณะนี้เว็บไซต์อยู่ระหว่างการปิดปรับปรุง (หรือค่าใช้จ่ายเซิร์ฟเวอร์เกินกำหนด) 
+      <br><br>
+      ช่วงเวลานี้ <strong>เฉพาะสมาชิก VIP และ Admin</strong> เท่านั้นที่สามารถเข้าใช้งานเว็บไซต์ได้
+    </p>
+
+    <div class="action-box">
+      @if (authService.user()) {
+        <p class="mb-4">เข้าสู่ระบบแล้วในชื่อ: <strong>{{ authService.user()?.email }}</strong></p>
+        <div class="flex gap-4 justify-center">
+          <a routerLink="/" class="btn-primary">
+            <i class="fa-solid fa-rotate-right mr-2"></i> ลองเข้าสู่หน้าหลักอีกครั้ง
+          </a>
+          <button class="btn-secondary" (click)="authService.signOut()">ออกจากระบบ</button>
+        </div>
+      } @else {
+        <button class="btn-google" (click)="signIn()" [disabled]="loading">
+          <i class="fa-brands fa-google mr-2" aria-hidden="true"></i> 
+          {{ loading ? 'กำลังเชื่อมต่อ...' : 'เข้าสู่ระบบด้วย Google' }}
+        </button>
+        <p class="mt-4 text-sm text-[var(--color-text-muted)]">
+          หากคุณเป็นสมาชิก VIP กรุณาเข้าสู่ระบบเพื่อใช้งานต่อ
+        </p>
+      }
+    </div>
+
+    <div class="support-box">
+      <p class="mb-2">หากต้องการสนับสนุนให้เว็บกลับมาเปิดให้บริการไวขึ้น หรือต้องการรับสิทธิ์ VIP</p>
+      <a routerLink="/donate" class="btn-donate">
+        <i class="fa-solid fa-heart mr-2"></i> ไปที่หน้าช่วยเหลือค่าเซิร์ฟเวอร์
+      </a>
+      <a routerLink="/redeem" class="btn-redeem ml-4 mt-2 inline-block">
+        หรือ นำโค้ดมา Redeem ที่นี่
+      </a>
+    </div>
+  </div>
+</main>

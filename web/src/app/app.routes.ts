@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AdminPatchPageComponent } from './pages/admin-patch-page.component';
 import { BrowsePageComponent } from './pages/browse-page.component';
 import { adminGuard } from './guards/admin.guard';
+import { maintenanceGuard } from './guards/maintenance.guard';
 import { AdminRedirectComponent } from './pages/admin-redirect.component';
 import { LogoutPageComponent } from './pages/logout-page.component';
 import { AdminSystemsPageComponent } from './pages/admin-systems-page.component';
@@ -21,16 +22,18 @@ export const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    component: BrowsePageComponent
+    component: BrowsePageComponent,
+    canActivate: [maintenanceGuard]
   },
-  { path: 'today', component: BrowsePageComponent, data: { browseKind: 'today' } },
-  { path: 'new', component: BrowsePageComponent, data: { browseKind: 'week' } },
-  { path: 'system', component: BrowsePageComponent, data: { browseKind: 'system' } },
-  { path: 'translator', component: BrowsePageComponent, data: { browseKind: 'translator' } },
-  { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system', legacyBrowseRoute: true } },
-  { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator', legacyBrowseRoute: true } },
-  { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' } },
-  { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' } },
+  { path: 'today', component: BrowsePageComponent, data: { browseKind: 'today' }, canActivate: [maintenanceGuard] },
+  { path: 'new', component: BrowsePageComponent, data: { browseKind: 'week' }, canActivate: [maintenanceGuard] },
+  { path: 'system', component: BrowsePageComponent, data: { browseKind: 'system' }, canActivate: [maintenanceGuard] },
+  { path: 'translator', component: BrowsePageComponent, data: { browseKind: 'translator' }, canActivate: [maintenanceGuard] },
+  { path: 'system/:slug', component: BrowsePageComponent, data: { browseKind: 'system', legacyBrowseRoute: true }, canActivate: [maintenanceGuard] },
+  { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator', legacyBrowseRoute: true }, canActivate: [maintenanceGuard] },
+  { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' }, canActivate: [maintenanceGuard] },
+  { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' }, canActivate: [maintenanceGuard] },
+  { path: 'maintenance', loadComponent: () => import('./pages/maintenance-page.component').then(m => m.MaintenancePageComponent) },
   { path: 'donate', component: DonatePageComponent },
   { path: 'articles', component: ArticlesPageComponent },
   { path: 'article/:slug', component: ArticlePageComponent, data: { includeDrafts: false, backLink: true } },
@@ -50,6 +53,7 @@ export const routes: Routes = [
   { path: 'admin/articles/edit/new', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/articles/edit/:id', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },
+  { path: 'admin/maintenance', loadComponent: () => import('./pages/admin-maintenance-page.component').then(m => m.AdminMaintenancePageComponent), canActivate: [adminGuard] },
   {
     path: 'add-patch',
     component: AdminPatchPageComponent,

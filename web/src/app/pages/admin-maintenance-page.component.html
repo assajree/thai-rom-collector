@@ -1,0 +1,21 @@
+<main class="maintenance-settings-page admin-page-shell">
+  <h1>ตั้งค่าระบบ (Maintenance Mode)</h1>
+  <p class="description">เปิดใช้งานโหมดปิดปรับปรุงชั่วคราว เพื่อจำกัดการเข้าถึงเว็บไซต์ให้เฉพาะ Admin และ VIP เท่านั้น</p>
+
+  <form class="settings-form" (ngSubmit)="save()">
+    <label class="toggle-row">
+      <input 
+        type="checkbox" 
+        [disabled]="loading || saving"
+        [ngModel]="maintenanceMode()" 
+        (ngModelChange)="maintenanceMode.set($event)"
+        name="maintenanceMode" 
+        class="admin-checkbox" />
+      <span>เปิดใช้งาน Maintenance Mode (ปิดชั่วคราว)</span>
+    </label>
+    
+    <button class="button mt-4" type="submit" [disabled]="loading || saving">
+      {{ saving ? 'กำลังบันทึก…' : 'บันทึกการตั้งค่า' }}
+    </button>
+  </form>
+</main>
