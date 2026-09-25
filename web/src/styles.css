@@ -137,6 +137,7 @@ body[data-theme='pocket-pet'] main {
 
   .button:disabled,
   .button:disabled:hover {
+    color: var(--color-text-muted);
     background-color: var(--color-shadow);
     opacity: 0.5;
   }
