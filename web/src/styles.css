@@ -75,6 +75,7 @@ body[data-theme='pocket-pet'] * {
   border-radius: 10px;
 }
 
+body[data-theme='pocket-pet'] .app-header,
 body[data-theme='pocket-pet'] .app-topbar,
 body[data-theme='pocket-pet'] .marquee,
 body[data-theme='pocket-pet'] .retro-rail,

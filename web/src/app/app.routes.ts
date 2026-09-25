@@ -33,6 +33,8 @@ export const routes: Routes = [
   { path: 'translator/:slug', component: BrowsePageComponent, data: { browseKind: 'translator', legacyBrowseRoute: true }, canActivate: [maintenanceGuard] },
   { path: 'tag/:slug', component: BrowsePageComponent, data: { browseKind: 'tag' }, canActivate: [maintenanceGuard] },
   { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' }, canActivate: [maintenanceGuard] },
+  { path: 'walkthrough', component: BrowsePageComponent, data: { browseKind: 'walkthrough' }, canActivate: [maintenanceGuard] },
+  { path: 'guide', redirectTo: 'walkthrough', pathMatch: 'full' },
   { path: 'maintenance', loadComponent: () => import('./pages/maintenance-page.component').then(m => m.MaintenancePageComponent) },
   { path: 'donate', component: DonatePageComponent },
   { path: 'donations', loadComponent: () => import('./pages/donations-page.component').then(m => m.DonationsPageComponent) },

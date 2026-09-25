@@ -155,7 +155,7 @@
 .translator-links {
   align-items: center;
   display: inline-flex;
-  gap: .3rem;
+  gap: .8rem;
   line-height: 1;
   vertical-align: middle;
 }
@@ -199,6 +199,14 @@
 
   .patch-card__body {
     grid-column: 1;
+  }
+
+  .patch-card__description {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    line-height: 1.5;
+    margin: 0.4rem 0;
   }
 
   .patch-card__links {

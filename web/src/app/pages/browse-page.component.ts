@@ -7,7 +7,7 @@ import { GameListControlsComponent } from '../components/game-list-controls.comp
 import { PatchCardListComponent } from '../components/patch-card-list.component';
 import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
-import { normalizeBrowseName } from '../shared/browse-route.util';
+import { BrowseRouteKind, normalizeBrowseName } from '../shared/browse-route.util';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
 import { PatchCacheService } from '../services/patch-cache.service';
 import { TagRepository } from '../repositories/tag.repository';
@@ -51,7 +51,7 @@ export class BrowsePageComponent {
   protected readonly direction = signal<'asc' | 'desc'>('desc');
   private readonly queryStateReady = signal(false);
   private readonly translatorQuery = signal<string | null>(null);
-  protected readonly routeKind = signal<'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | null>(null);
+  protected readonly routeKind = signal<BrowseRouteKind | null>(null);
   private readonly routeSlug = signal<string | null>(null);
   private readonly clearAllEffect = effect(() => {
     const request = this.filterState.clearAllRequested();
@@ -90,6 +90,7 @@ export class BrowsePageComponent {
     const kind = this.routeKind();
     const selectedLabels = this.selectedRouteLabels();
     if (kind === 'rom') return this.joinRouteLabels('รอมแปลไทย', ...selectedLabels);
+    if (kind === 'walkthrough') return this.joinRouteLabels('บทสรุป', ...selectedLabels);
     if (kind === 'today') return this.joinRouteLabels('เกมใหม่วันนี้', ...selectedLabels);
     if (kind === 'week') return this.joinRouteLabels('เกมใหม่สัปดาห์นี้', ...selectedLabels);
     if (kind === 'tag') {
@@ -109,6 +110,7 @@ export class BrowsePageComponent {
   protected readonly filters = computed(() => ({ keyword: this.keyword(), tag: this.selectedTag(), translatorId: this.selectedTranslatorId(), system: this.selectedSystem(), sortBy: this.sortBy(), sortDirection: this.direction() }));
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
     if (this.routeKind() === 'rom' && !patch.patchedRomUrl?.trim()) return false;
+    if (this.routeKind() === 'walkthrough' && !patch.walkthroughUrl?.trim()) return false;
     const kind = this.routeKind();
     if ((kind === 'today' || kind === 'week') && !this.isInRecentWindow(patch.updateDate, kind)) return false;
     const tag = this.selectedTag();
@@ -174,7 +176,7 @@ export class BrowsePageComponent {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(tag.id);
-    } else if (kind === 'rom') {
+    } else if (kind === 'rom' || kind === 'walkthrough') {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(null);
@@ -243,7 +245,7 @@ export class BrowsePageComponent {
     this.translatorRepository.watchAll().subscribe({ next: (translators) => { this.translators.set(translators); this.translatorsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.tagRepository.watchAll().subscribe({ next: (tags) => { this.tags.set(tags); this.tagsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
-      this.routeKind.set((data['browseKind'] as 'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | undefined) ?? null);
+      this.routeKind.set((data['browseKind'] as BrowseRouteKind | undefined) ?? null);
     });
     this.route.paramMap.subscribe((params) => {
       const slug = params.get('slug');

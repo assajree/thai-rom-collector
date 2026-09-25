@@ -54,11 +54,13 @@
 
 
       </div>
-      @if (cardTags(patch).length > 0) {
+      @if (cardTags(patch).length > 0 || patch.walkthroughUrl.trim()) {
       <span class="patch-card__tags-label">แท็ก: </span>
-      <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim()) { <li>
+      <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim() && (!patch.walkthroughUrl.trim() || tag.name.trim() !== 'บทสรุป')) { <li>
           <a [routerLink]="browseRoute('tag', tag.slug)">{{ tag.name }}</a>
-        </li> } }</ul>
+        </li> } }@if (patch.walkthroughUrl.trim()) { <li>
+          <a [routerLink]="browseRoute('walkthrough')">บทสรุป</a>
+        </li> }</ul>
       }
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">

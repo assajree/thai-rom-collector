@@ -43,6 +43,10 @@ New pages must fill the available center content area in both width and height. 
 
 When designing, building, or modifying UI components, layouts, or pages, read `docs/design-pattern-knowledge.md` first. Follow the established design patterns, including the 3-column app shell constraints (overflow prevention), multi-theme CSS variable tokens, retro/arcade component structures, font compatibility, and Angular style budget guidelines.
 
+## Mobile Layout & Navigation Patterns
+
+When designing, modifying, or fixing mobile layouts, header bars, marquees, sidebars, or responsive navigation drawers, read `docs/mobile-layout-knowledge.md` first. Follow the multi-tier header container pattern, drawer overflow constraints (`overflow-x: hidden`), and flexbox baseline alignment standards.
+
 ## Git Commits
 
 Do not commit git changes automatically. Always wait for the user to explicitly request or instruct a commit before executing `git commit`.

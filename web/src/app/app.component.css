@@ -1,3 +1,7 @@
+.app-header {
+  display: block;
+}
+
 .app-topbar {
   background-color: var(--color-surface);
 }
@@ -33,7 +37,7 @@
 }
 
 .app-shell {
-  min-height: calc(100vh - 6rem);
+  min-height: calc(100vh - 5rem);
 }
 
 @media (max-width: 480px) {
@@ -47,7 +51,7 @@
   align-self: stretch;
   box-sizing: border-box;
   border-right: 1px solid var(--color-border);
-  min-height: calc(100vh - 6rem);
+  min-height: calc(100vh - 5rem);
   min-width: 16rem;
   padding: 1rem 1rem 1rem 0.5rem;
   background-color: var(--color-surface);
@@ -88,7 +92,7 @@
   overflow-x: clip;
 }
 
-:host ::ng-deep .app-content > router-outlet + * {
+:host ::ng-deep .app-content>router-outlet+* {
   display: block;
 }
 
@@ -110,12 +114,12 @@
   padding: 0.2rem 0.4rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .status-message {
     left: 0;
   }
 
-  :host-context(body.sidebar-open) .app-topbar {
+  :host-context(body.sidebar-open) .app-header {
     left: 0;
     position: fixed;
     right: 0;
@@ -123,16 +127,8 @@
     z-index: 30;
   }
 
-  :host-context(body.sidebar-open) .marquee {
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 4rem;
-    z-index: 30;
-  }
-
   :host-context(body.sidebar-open) .app-shell {
-    padding-top: 6rem;
+    padding-top: 5rem;
   }
 }
 
@@ -165,7 +161,7 @@
   border-left: 1px solid var(--color-border);
   box-sizing: border-box;
   display: none;
-  min-height: calc(100vh - 6rem);
+  min-height: calc(100vh - 5rem);
   width: 288px;
   padding: 1rem;
 }
@@ -185,7 +181,8 @@
   color: var(--color-highlight);
 }
 
-.retro-rail-link {
+.retro-rail-link,
+.retro-system-button {
   color: var(--color-link);
   display: block;
   font-family: inherit;
@@ -194,6 +191,7 @@
   padding: 0.05rem 0;
   text-decoration-line: underline;
   text-underline-offset: 1px;
+  min-height: 1.5rem;
 }
 
 .retro-rail-link:hover,
@@ -224,26 +222,23 @@
   display: inline-flex;
 }
 
-.retro-system-button {
-  background: transparent;
-  border: 0;
-  color: var(--color-link);
-  cursor: pointer;
-  display: block;
-  font-family: inherit;
-  font-weight: 700;
-  line-height: 0.98;
-  padding: 0.05rem 0;
-  text-align: left;
-  text-decoration: underline;
-  text-underline-offset: 1px;
-  width: 100%;
-}
-
 .sidebar-translator-row {
-  align-items: center;
+  align-items: baseline;
   display: flex;
   gap: .35rem;
+}
+
+.sidebar-translator-edit-link {
+  align-items: baseline;
+  color: var(--color-link);
+  display: inline-flex;
+  flex: 0 0 auto;
+  line-height: inherit;
+  text-decoration: none;
+}
+
+.sidebar-translator-edit-link:hover {
+  color: var(--color-highlight);
 }
 
 .sidebar-translator-row>.retro-system-button {
@@ -255,18 +250,22 @@
 }
 
 .sidebar-translator-links {
-  align-items: center;
-  display: flex;
+  align-items: baseline;
+  display: inline-flex;
   flex: 0 0 auto;
   gap: .3rem;
-  line-height: 1;
+  line-height: inherit;
   margin-left: auto;
 }
 
 .sidebar-translator-links a {
-  align-items: center;
+  align-items: baseline;
   display: inline-flex;
-  line-height: 1;
+  line-height: inherit;
+}
+
+.sidebar-translator-row i {
+  vertical-align: baseline;
 }
 
 .browser-info {
@@ -293,7 +292,7 @@
   .app-shell {
     align-items: stretch;
     display: grid;
-    grid-auto-rows: minmax(calc(100vh - 6rem), auto);
+    grid-auto-rows: minmax(calc(100vh - 5rem), auto);
     grid-template-columns: max-content minmax(0, 1fr);
   }
 
@@ -320,10 +319,12 @@
     background: var(--color-surface);
     display: none;
     left: 0;
-    max-height: calc(100vh - 6rem);
+    max-height: calc(100vh - 5rem);
+    min-width: 0;
+    overflow-x: hidden;
     overflow-y: auto;
     position: fixed;
-    top: 6rem;
+    top: 5rem;
     width: min(18rem, 85vw);
     z-index: 20;
   }
@@ -339,6 +340,8 @@
     padding: 0.65rem 0.75rem;
     line-height: 1.2;
     touch-action: manipulation;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
 
   .retro-rail nav,
@@ -352,8 +355,25 @@
     margin-top: 0.15rem;
   }
 
+  .sidebar-translator-row {
+    align-items: baseline;
+  }
+
+  .sidebar-translator-row>.retro-system-button {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
+  .sidebar-translator-edit-link,
+  .sidebar-translator-links a {
+    min-height: 44px;
+    padding: 0.65rem 0.25rem;
+    line-height: 1.2;
+    touch-action: manipulation;
+  }
+
   .sidebar-translator-links {
-    gap: 1rem;
+    gap: 0.75rem;
   }
 
   .page-footer {

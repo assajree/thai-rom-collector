@@ -1,39 +1,37 @@
-﻿<header
-  class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
-  <div class="flex items-center gap-3">
-    <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
-      aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
-    <a class="site-title" routerLink="/"><img src="assets/images/logo.png" alt="THAI ROM DB"></a>
+<header class="app-header">
+  <div class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
+    <div class="flex items-center gap-3">
+      <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
+        aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
+      <a class="site-title" routerLink="/"><img src="assets/images/logo.png" alt="THAI ROM DB"></a>
+    </div>
+
+    <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด:' + patchCacheLastUpdatedLabel()">
+      อัปเดตล่าสุด
+      <br />
+      {{ patchCacheLastUpdatedLabel() }}
+    </div>
   </div>
 
-  <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด:' + patchCacheLastUpdatedLabel()">
-    อัปเดตล่าสุด
-    <br />
-    {{ patchCacheLastUpdatedLabel() }}
+  <div class="marquee border-b-2 border-slate-300 py-1 flex items-center">
+    <marquee scrollamount="5">
+      <span class="inline-flex items-center align-middle">
+        <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+        <span>เว็บไซต์นี้ใช้ระบบแคชเพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย</span>
+        @if (serverCost(); as cost) {
+        <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+        <span>ค่าเซิร์ฟเวอร์เดือนนี้: {{ cost.toLocaleString('th-TH') }} บาท</span>
+        <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+        <img src="https://theoldnet.com/images/pointer.gif" />
+        <a routerLink="/donate">ช่วยเหลือค่าเซิร์ฟเวอร์</a>
+        }
+        <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
+      </span>
+    </marquee>
   </div>
-
-
-
 </header>
 
-<div class="marquee border-b-2 border-slate-300 py-1 flex items-center">
-  <marquee scrollamount="5">
-    <span class="inline-flex items-center align-middle">
-      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
-      <span>เว็บไซต์นี้ใช้ระบบแคชเพื่อช่วยลดค่าใช้จ่ายเซิร์ฟเวอร์ ข้อมูลอาจจะแสดงผลล่าช้าเล็กน้อย</span>
-      @if (serverCost(); as cost) {
-      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
-      <span>ค่าเซิร์ฟเวอร์เดือนนี้: {{ cost.toLocaleString('th-TH') }} บาท</span>
-      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
-      <img src="https://theoldnet.com/images/pointer.gif" />
-      <a routerLink="/donate">ช่วยเหลือค่าเซิร์ฟเวอร์</a>
-      }
-      <img src="https://theoldnet.com/images/bullet3.gif" alt="" class="mx-2 shrink-0" />
-    </span>
-  </marquee>
-</div>
-
-<div class="app-shell min-h-[calc(100vh-6rem)]">
+<div class="app-shell min-h-[calc(100vh-5rem)]">
   <aside id="system-sidebar" class="retro-rail" [class.mobile-sidebar-open]="sidebarOpen()"
     (click)="$event.stopPropagation()" aria-label="Main navigation">
 
@@ -45,16 +43,21 @@
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่วันนี้</a>
       <a class="retro-rail-link" routerLink="/new" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">เกมใหม่สัปดาห์นี้</a>
-      <div class="">
-        <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
-          (click)="closeSidebar()">บทความ</a>
 
-        @if (authService.user()) {
-        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
-        } @else {
-        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signIn(); closeSidebar()">เข้าสู่ระบบ</a>
-        }
-      </div>
+
+      <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
+      <a class="retro-rail-link" routerLink="/walkthrough" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">บทสรุป</a>
+      <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
+        (click)="closeSidebar()">บทความ</a>
+
+      @if (authService.user()) {
+      <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
+      } @else {
+      <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signIn(); closeSidebar()">เข้าสู่ระบบ</a>
+      }
+
     </nav>
 
     <div class="retro-tag-section">
@@ -239,8 +242,6 @@
         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on
           Facebook</a>
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
-        <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
-          [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
 
       </div>
     </div>
