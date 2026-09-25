@@ -84,6 +84,8 @@
 .app-content {
   position: relative;
   background-color: var(--color-surface-light);
+  min-width: 0;
+  overflow-x: clip;
 }
 
 :host ::ng-deep .app-content > router-outlet + * {

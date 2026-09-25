@@ -86,6 +86,32 @@ export class AuthService {
     });
   }
 
+  async refreshVipStatus(): Promise<boolean> {
+    const currentUser = this.currentUser();
+    if (!currentUser) {
+      this.isVip.set(false);
+      this.vipCheckComplete.set(true);
+      return false;
+    }
+    try {
+      const vipQuery = query(
+        ref(this.database, 'redeemCodes'),
+        orderByChild('redeemedBy'),
+        equalTo(currentUser.uid),
+        limitToFirst(1)
+      );
+      const snapshot = await get(vipQuery);
+      const exists = snapshot.exists();
+      this.isVip.set(exists);
+      this.vipCheckComplete.set(true);
+      return exists;
+    } catch {
+      this.isVip.set(false);
+      this.vipCheckComplete.set(true);
+      return false;
+    }
+  }
+
   async signInWithGoogle(): Promise<void> {
     await signInWithPopup(this.auth, new GoogleAuthProvider());
   }

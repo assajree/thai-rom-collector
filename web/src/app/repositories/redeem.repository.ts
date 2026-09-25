@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Database, get, ref, set, update, query, orderByChild, limitToLast } from '@angular/fire/database';
+import { Database, get, ref, set, update, remove, query, orderByChild, limitToLast } from '@angular/fire/database';
 import { RedeemCode } from '../models/redeem.models';
 import { RepositoryError } from './repository-error';
 
@@ -51,6 +51,35 @@ export class RedeemRepository {
     }
   }
 
+  async syncDonations(): Promise<{ synced: number }> {
+    try {
+      const snapshot = await get(ref(this.database, 'redeemCodes'));
+      if (!snapshot.exists()) return { synced: 0 };
+      
+      const updates: any = {};
+      let syncCount = 0;
+      
+      snapshot.forEach((child) => {
+        const codeStr = child.key;
+        const data = child.val();
+        
+        if (data.amount > 0 && !data.donationId) {
+          const donationId = 'don_' + Date.now().toString(36) + Math.random().toString(36).substring(2) + syncCount;
+          
+          updates["donations/" + donationId] = { amount: data.amount, donatedAt: data.donatedAt || data.createdAt }; updates["redeemCodes/" + codeStr + "/donationId"] = donationId;
+          syncCount++;
+        }
+      });
+      
+      if (syncCount > 0) {
+        await update(ref(this.database), updates);
+      }
+      return { synced: syncCount };
+    } catch (error) {
+      throw new RepositoryError('ไม่สามารถซิงค์ข้อมูลการบริจาคได้', 'update');
+    }
+  }
+
   async addCode(code: string, amount: number, adminUid: string, donatedAt?: string): Promise<void> {
     const codeStr = code.trim();
     if (!codeStr) throw new RepositoryError('กรุณากรอกโค้ด', 'create');
@@ -94,6 +123,26 @@ export class RedeemRepository {
       await update(ref(this.database, `redeemCodes/${codeStr}`), updates);
     } catch {
       throw new RepositoryError('ไม่สามารถยกเลิกการใช้งานโค้ดได้', 'update');
+    }
+  }
+
+  async deleteCode(code: string): Promise<void> {
+    const codeStr = code.trim();
+    if (!codeStr) return;
+
+    try {
+      const snapshot = await get(ref(this.database, `redeemCodes/${codeStr}`));
+      if (!snapshot.exists()) return;
+      const data = snapshot.val();
+
+      if (data?.donationId) {
+        await remove(ref(this.database, `donations/${data.donationId}`));
+      }
+
+      await remove(ref(this.database, `redeemCodes/${codeStr}`));
+    } catch (error) {
+      if (error instanceof RepositoryError) throw error;
+      throw new RepositoryError('ไม่สามารถลบโค้ดได้', 'delete');
     }
   }
 

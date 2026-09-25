@@ -35,6 +35,7 @@ export const routes: Routes = [
   { path: 'rom', component: BrowsePageComponent, data: { browseKind: 'rom' }, canActivate: [maintenanceGuard] },
   { path: 'maintenance', loadComponent: () => import('./pages/maintenance-page.component').then(m => m.MaintenancePageComponent) },
   { path: 'donate', component: DonatePageComponent },
+  { path: 'donations', loadComponent: () => import('./pages/donations-page.component').then(m => m.DonationsPageComponent) },
   { path: 'articles', component: ArticlesPageComponent },
   { path: 'article/:slug', component: ArticlePageComponent, data: { includeDrafts: false, backLink: true } },
   { path: 'other/:slug', component: ArticlePageComponent, data: { includeDrafts: true, backLink: false } },
@@ -87,3 +88,4 @@ export const routes: Routes = [
     redirectTo: ''
   }
 ];
+

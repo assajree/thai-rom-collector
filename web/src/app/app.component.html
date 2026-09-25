@@ -1,4 +1,4 @@
-<header
+﻿<header
   class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
   <div class="flex items-center gap-3">
     <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
@@ -48,8 +48,7 @@
       <div class="">
         <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">บทความ</a>
-        <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
-          (click)="closeSidebar()">Redeem โค้ด VIP</a>
+
         @if (authService.user()) {
         <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
         } @else {
@@ -57,6 +56,16 @@
         }
       </div>
     </nav>
+
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">การสนับสนุน</p>
+      <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
+        (click)="closeSidebar()">บริจาค</a>
+      <a class="retro-system-button" routerLink="/donations" routerLinkActive="retro-system-button--active"
+        (click)="closeSidebar()">ข้อมูลการบริจาค</a>
+      <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
+        (click)="closeSidebar()">แลก VIP</a>
+    </div>
 
     @if (authService.isAdmin() || authService.isVip()) {
     <div class="retro-tag-section">
@@ -226,8 +235,6 @@
           (click)="closeSidebar()">{{ link.label }}</a> }
         }
         <a class="retro-system-button" target="_blank" href="https://thairomdb.atabook.org/">สมุดเยี่ยม</a>
-        <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
-          (click)="closeSidebar()">ช่วยค่าเซิร์ฟเวอร์</a>
 
         <a class="retro-system-button" target="_blank" href="https://www.facebook.com/ThaiRomDB/">ThaiRomDB on
           Facebook</a>

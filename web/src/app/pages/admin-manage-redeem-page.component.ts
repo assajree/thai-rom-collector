@@ -43,7 +43,10 @@ import { AuthService } from '../services/auth.service';
       <div class="retro-window">
         <div class="retro-window-titlebar">
           <h2 class="retro-window-title">รายการโค้ดล่าสุด ({{ codes().length }} รายการ)</h2>
-          <button type="button" class="no-button text-black ml-auto" (click)="loadCodes()" aria-label="รีเฟรช">
+          <button type="button" class="no-button text-black ml-auto mr-4" (click)="syncDonations()" aria-label="Sync Donations" title="ซิงค์ข้อมูลการบริจาคย้อนหลัง">
+              <i class="fa-solid fa-cloud-arrow-up"></i> Sync
+            </button>
+            <button type="button" class="no-button text-black" (click)="loadCodes()" aria-label="รีเฟรช">
             <i class="fa-solid fa-rotate-right"></i>
           </button>
         </div>
@@ -56,7 +59,7 @@ import { AuthService } from '../services/auth.service';
                 <th class="p-2 border-r border-slate-300 w-28 text-center">สถานะ</th>
                 <th class="p-2 border-r border-slate-300">ถูกใช้โดย</th>
                 <th class="p-2 border-r border-slate-300 min-w-[120px]">วันที่เพิ่ม</th>
-                <th class="p-2 w-16">จัดการ</th>
+                <th class="p-2 text-center w-28">จัดการ</th>
               </tr>
             </thead>
             <tbody>
@@ -88,10 +91,14 @@ import { AuthService } from '../services/auth.service';
                       }
                     </div>
                   </td>
-                  <td class="p-2 text-center">
-                    @if (code.isRedeemed) {
-                      <button type="button" class="text-xs text-red-600 font-bold hover:underline" (click)="revokeCode(code.id)" [disabled]="loading()">Revoke</button>
-                    }
+                  <td class="p-2 text-center whitespace-nowrap">
+                    <div class="inline-flex items-center gap-2">
+                      @if (code.isRedeemed) {
+                        <button type="button" class="text-xs text-amber-700 font-bold hover:underline disabled:text-slate-400" (click)="revokeCode(code.id)" [disabled]="loading()">Revoke</button>
+                        <span class="text-slate-300">|</span>
+                      }
+                      <button type="button" class="text-xs text-red-600 font-bold hover:underline disabled:text-slate-400" (click)="deleteCode(code)" [disabled]="loading()">ลบ</button>
+                    </div>
                   </td>
                 </tr>
               }
@@ -151,6 +158,20 @@ export class AdminManageRedeemPageComponent implements OnInit {
     }
   }
 
+  protected async syncDonations(): Promise<void> {
+    if (!confirm('ต้องการซิงค์ข้อมูลการบริจาคเก่าไปยังระบบใหม่หรือไม่? (โค้ดเก่าที่มีจำนวนเงิน > 0 จะถูกเพิ่มในหน้ารายการบริจาค)')) return;
+    this.loading.set(true);
+    this.statusMessage.show('กำลังซิงค์ข้อมูล...', 'info');
+    try {
+      const result = await this.redeemRepo.syncDonations();
+      this.statusMessage.show(`ซิงค์ข้อมูลเรียบร้อย จำนวน ${result.synced} รายการ`, 'success');
+    } catch (error: any) {
+      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาดในการซิงค์ข้อมูล', 'error');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
   protected async addCode(): Promise<void> {
     const code = this.newCode().trim();
     const amount = this.newAmount();
@@ -192,10 +213,32 @@ export class AdminManageRedeemPageComponent implements OnInit {
 
     try {
       await this.redeemRepo.revokeCode(code);
+      await this.authService.refreshVipStatus();
       this.statusMessage.show(`ยกเลิกการใช้งานโค้ด ${code} สำเร็จ`, 'success');
       await this.loadCodes();
     } catch (error: any) {
       this.statusMessage.show(error.message || 'เกิดข้อผิดพลาดในการยกเลิกโค้ด', 'error');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  protected async deleteCode(code: RedeemCode): Promise<void> {
+    const confirmMsg = code.isRedeemed
+      ? `แน่ใจหรือไม่ว่าต้องการลบโค้ด ${code.id}?\nโค้ดนี้ถูกใช้งานแล้ว การลบจะยกเลิกสิทธิ์ VIP ของผู้ใช้นี้ด้วย`
+      : `แน่ใจหรือไม่ว่าต้องการลบโค้ด ${code.id}?`;
+    if (!confirm(confirmMsg)) return;
+
+    this.loading.set(true);
+    this.statusMessage.show(`กำลังลบโค้ด ${code.id}...`, 'info');
+
+    try {
+      await this.redeemRepo.deleteCode(code.id);
+      await this.authService.refreshVipStatus();
+      this.statusMessage.show(`ลบโค้ด ${code.id} สำเร็จ`, 'success');
+      await this.loadCodes();
+    } catch (error: any) {
+      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาดในการลบโค้ด', 'error');
     } finally {
       this.loading.set(false);
     }

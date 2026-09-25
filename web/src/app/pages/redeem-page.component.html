@@ -15,37 +15,39 @@
       <!-- Main Action Box -->
       <div class="redeem-main-card">
         @if (!authService.user()) {
-          <div class="auth-prompt-box">
-            <div class="auth-icon-wrap">
+          <div class="text-center py-4">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-[var(--color-border)] bg-[var(--color-surface)] flex items-center justify-center text-[var(--color-accent)]">
               <i class="fa-solid fa-user-lock text-3xl" aria-hidden="true"></i>
             </div>
             <h2 class="card-heading">เข้าสู่ระบบเพื่อแลกรับสิทธิ์</h2>
             <p class="card-subtext">
               สิทธิพิเศษ VIP จะถูกผูกเข้ากับบัญชี Google ของคุณโดยอัตโนมัติ เพื่อให้ใช้งานได้ในทุกอุปกรณ์
             </p>
-            <button
-              type="button"
-              class="google-btn"
-              (click)="signIn()"
-              [disabled]="loading()">
-              <i class="fa-brands fa-google mr-2" aria-hidden="true"></i>
-              <span>{{ loading() ? 'กำลังเชื่อมต่อ...' : 'เข้าสู่ระบบด้วย Google' }}</span>
-            </button>
+            <div class="flex justify-center">
+              <button
+                type="button"
+                class="google-btn"
+                (click)="signIn()"
+                [disabled]="loading()">
+                <i class="fa-brands fa-google mr-2" aria-hidden="true"></i>
+                <span>{{ loading() ? 'กำลังเชื่อมต่อ...' : 'เข้าสู่ระบบด้วย Google' }}</span>
+              </button>
+            </div>
           </div>
         } @else if (authService.isVip()) {
-          <div class="vip-status-box">
-            <div class="vip-crown-badge">
-              <i class="fa-solid fa-crown text-4xl text-yellow-400" aria-hidden="true"></i>
+          <div class="text-center py-4">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full border-2 border-[var(--color-highlight)] bg-[color-mix(in_srgb,var(--color-highlight)_15%,var(--color-surface))] flex items-center justify-center text-yellow-400">
+              <i class="fa-solid fa-crown text-3xl" aria-hidden="true"></i>
             </div>
-            <h2 class="card-heading text-highlight">คุณเป็นสมาชิก VIP แล้ว</h2>
+            <h2 class="card-heading">คุณเป็นสมาชิก VIP แล้ว</h2>
             <p class="card-subtext">
               บัญชีของคุณเปิดใช้งานสิทธิพิเศษ VIP เรียบร้อยแล้ว ขอบคุณอย่างยิ่งที่ร่วมเป็นส่วนหนึ่งในการสนับสนุน THAI ROM DB
             </p>
-            <div class="vip-active-pill">
-              <span class="status-dot"></span>
+            <div class="inline-flex items-center gap-2 bg-[color-mix(in_srgb,var(--color-status-success)_20%,transparent)] border border-[var(--color-status-success)] text-[var(--color-text)] text-sm font-bold px-3 py-1.5 mb-6">
+              <span class="w-2 h-2 rounded-full bg-[var(--color-status-success)]"></span>
               <span>สถานะ VIP พร้อมใช้งาน</span>
             </div>
-            <div class="action-buttons-group">
+            <div class="flex flex-wrap gap-3 justify-center">
               <a routerLink="/" class="btn-primary-action">
                 <i class="fa-solid fa-gamepad mr-2" aria-hidden="true"></i> สำรวจเกมทั้งหมด
               </a>
@@ -56,33 +58,31 @@
           </div>
         } @else {
           <div class="form-container">
-            <div class="form-header">
+            <div class="mb-4">
               <h2 class="card-heading">กรอกรหัส Transaction No.</h2>
               <p class="card-subtext">
                 กรอกหมายเลขอ้างอิงจากการโอนเงินเพื่อปลดล็อกสถานะ VIP สำหรับบัญชี <strong>{{ authService.user()?.email }}</strong>
               </p>
             </div>
 
-            <form (ngSubmit)="submit()" class="redeem-form">
-              <div class="input-group">
-                <label for="code" class="input-label">
+            <form (ngSubmit)="submit()" class="space-y-4">
+              <div>
+                <label for="code" class="flex justify-between items-center font-bold mb-2 text-[var(--color-text)]">
                   <span>รหัสอ้างอิง (Transaction No.)</span>
-                  <span class="required-indicator">*</span>
+                  <span class="text-[var(--color-brand)]">*</span>
                 </label>
-                <div class="input-wrapper">
-                  <input
-                    id="code"
-                    name="code"
-                    type="text"
-                    [(ngModel)]="code"
-                    required
-                    class="code-input"
-                    placeholder="เช่น T123456789"
-                    autocomplete="off"
-                    spellcheck="false"
-                    [disabled]="loading()" />
-                </div>
-                <p class="input-helper">
+                <input
+                  id="code"
+                  name="code"
+                  type="text"
+                  [(ngModel)]="code"
+                  required
+                  class="code-input"
+                  placeholder="เช่น T123456789"
+                  autocomplete="off"
+                  spellcheck="false"
+                  [disabled]="loading()" />
+                <p class="text-xs sm:text-sm text-[var(--color-text-muted)] mt-1.5 mb-0 leading-relaxed">
                   ตรวจสอบได้จากสลิปหรือประวัติการโอนเงิน (เช่น รหัสที่ขึ้นต้นด้วย T หรือตัวเลขรายการ)
                 </p>
               </div>
@@ -100,13 +100,13 @@
                 }
               </button>
 
-              <div class="notice-callout">
-                <div class="notice-icon">
+              <div class="flex gap-3 bg-[color-mix(in_srgb,var(--color-surface)_60%,transparent)] border border-[var(--color-border)] border-l-4 border-l-[var(--color-highlight)] p-3 text-xs sm:text-sm text-[var(--color-text-muted)] leading-relaxed">
+                <div class="text-[var(--color-highlight)] text-base shrink-0">
                   <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
                 </div>
-                <div class="notice-text">
-                  <p class="notice-title">หมายเหตุการอัปเดตโค้ด</p>
-                  <p>
+                <div class="min-w-0">
+                  <p class="font-bold text-[var(--color-highlight)] mb-0.5">หมายเหตุการอัปเดตโค้ด</p>
+                  <p class="m-0">
                     โค้ดการโอนเงินจะได้รับการอัปเดตเข้าระบบโดยผู้ดูแล หากกรอกแล้วระบบแจ้งว่าไม่พบโค้ด กรุณารอสักครู่แล้วลองใหม่อีกครั้ง
                   </p>
                 </div>
@@ -117,39 +117,39 @@
       </div>
 
       <!-- Perks & Donate Info Column -->
-      <aside class="perks-sidebar">
+      <aside class="perks-sidebar" aria-label="สิทธิพิเศษและข้อมูลการสนับสนุน">
         <!-- VIP Perks Card -->
         <div class="perks-card">
           <h3 class="perks-heading">
-            <i class="fa-solid fa-star text-highlight mr-2" aria-hidden="true"></i>
+            <i class="fa-solid fa-star text-[var(--color-highlight)] mr-2" aria-hidden="true"></i>
             สิทธิพิเศษสำหรับสมาชิก VIP
           </h3>
-          <ul class="perks-list">
-            <li class="perk-item">
-              <div class="perk-icon">
+          <ul class="m-0 p-0 list-none flex flex-col gap-4">
+            <li class="flex gap-3 items-start">
+              <div class="w-8 h-8 shrink-0 border border-[var(--color-border)] bg-[var(--color-surface-light)] text-[var(--color-accent)] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-bolt" aria-hidden="true"></i>
               </div>
-              <div class="perk-desc">
-                <strong>ดึงข้อมูลล่าสุดได้ทันที</strong>
-                <p>สามารถสั่งดึงข้อมูลเกมอัปเดตล่าสุดได้ทันทีโดยไม่ต้องรอรอบแคชของระบบ</p>
+              <div class="min-w-0">
+                <strong class="text-[var(--color-text)] font-bold block">ดึงข้อมูลล่าสุดได้ทันที</strong>
+                <p class="text-sm text-[var(--color-text-muted)] m-0 mt-0.5 leading-relaxed">สามารถสั่งดึงข้อมูลเกมอัปเดตล่าสุดได้ทันทีโดยไม่ต้องรอรอบแคชของระบบ</p>
               </div>
             </li>
-            <li class="perk-item">
-              <div class="perk-icon">
+            <li class="flex gap-3 items-start">
+              <div class="w-8 h-8 shrink-0 border border-[var(--color-border)] bg-[var(--color-surface-light)] text-[var(--color-accent)] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
               </div>
-              <div class="perk-desc">
-                <strong>เข้าใช้งานช่วงปิดปรับปรุง</strong>
-                <p>สามารถเข้าถึงและใช้งานเว็บไซต์ได้ตามปกติแม้ในช่วงที่มีการปิดปรับปรุงเซิร์ฟเวอร์</p>
+              <div class="min-w-0">
+                <strong class="text-[var(--color-text)] font-bold block">เข้าใช้งานช่วงปิดปรับปรุง</strong>
+                <p class="text-sm text-[var(--color-text-muted)] m-0 mt-0.5 leading-relaxed">สามารถเข้าถึงและใช้งานเว็บไซต์ได้ตามปกติแม้ในช่วงที่มีการปิดปรับปรุงเซิร์ฟเวอร์</p>
               </div>
             </li>
-            <li class="perk-item">
-              <div class="perk-icon">
+            <li class="flex gap-3 items-start">
+              <div class="w-8 h-8 shrink-0 border border-[var(--color-border)] bg-[var(--color-surface-light)] text-[var(--color-accent)] flex items-center justify-center text-sm">
                 <i class="fa-solid fa-heart" aria-hidden="true"></i>
               </div>
-              <div class="perk-desc">
-                <strong>ร่วมสนับสนุนชุมชน</strong>
-                <p>ช่วยสมทบทุนค่าใช้จ่ายเซิร์ฟเวอร์เพื่อให้เว็บ THAI ROM DB เปิดให้บริการได้อย่างต่อเนื่อง</p>
+              <div class="min-w-0">
+                <strong class="text-[var(--color-text)] font-bold block">ร่วมสนับสนุนชุมชน</strong>
+                <p class="text-sm text-[var(--color-text-muted)] m-0 mt-0.5 leading-relaxed">ช่วยสมทบทุนค่าใช้จ่ายเซิร์ฟเวอร์เพื่อให้เว็บ THAI ROM DB เปิดให้บริการได้อย่างต่อเนื่อง</p>
               </div>
             </li>
           </ul>
@@ -157,16 +157,14 @@
 
         <!-- Donate Callout Card -->
         <div class="donate-callout-card">
-          <div class="donate-callout-content">
-            <h4>ยังไม่มีรหัส Transaction No. หรือยังไม่ได้สนับสนุน?</h4>
-            <p>
-              สามารถร่วมสนับสนุนค่าเซิร์ฟเวอร์ผ่าน PromptPay หรือ TrueMoney แล้วนำหมายเลขรายการมา Redeem ได้เลย
-            </p>
-            <a routerLink="/donate" class="donate-link-btn">
-              <span>ไปที่หน้าช่วยเหลือค่าเซิร์ฟเวอร์</span>
-              <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
-            </a>
-          </div>
+          <h4 class="text-base sm:text-lg font-bold text-[var(--color-text)] mb-1.5">ยังไม่มีรหัส Transaction No. หรือยังไม่ได้สนับสนุน?</h4>
+          <p class="text-sm text-[var(--color-text-muted)] mb-4 leading-relaxed">
+            สามารถร่วมสนับสนุนค่าเซิร์ฟเวอร์ผ่าน PromptPay หรือ TrueMoney แล้วนำหมายเลขรายการมา Redeem ได้เลย
+          </p>
+          <a routerLink="/donate" class="donate-link-btn">
+            <span>ไปที่หน้าช่วยเหลือค่าเซิร์ฟเวอร์</span>
+            <i class="fa-solid fa-arrow-right ml-2" aria-hidden="true"></i>
+          </a>
         </div>
       </aside>
     </div>

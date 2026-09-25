@@ -8,4 +8,5 @@ export interface RedeemCode {
   redeemedBy?: string; // User UID
   redeemedEmail?: string;
   redeemedAt?: string;
+  donationId?: string; // Public donation push ID
 }

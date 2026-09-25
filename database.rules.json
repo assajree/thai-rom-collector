@@ -44,6 +44,14 @@
         ".validate": "newData.hasChildren(['amount', 'isRedeemed'])"
       }
     },
+    "donations": {
+      ".read": true,
+      ".indexOn": ["donatedAt"],
+      "$donationId": {
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+        ".validate": "newData.hasChildren(['amount', 'donatedAt']) && newData.child('amount').isNumber() && newData.child('donatedAt').isString()"
+      }
+    },
     "admins": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }
   }
 }
