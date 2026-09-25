@@ -24,7 +24,7 @@ import { AuthService } from '../services/auth.service';
             </div>
             <div class="w-full sm:w-32">
               <label for="newAmount" class="block font-bold mb-1">จำนวนเงิน</label>
-              <input id="newAmount" name="newAmount" type="number" [(ngModel)]="newAmount" required min="0" class="app-input w-full" [disabled]="loading()">
+              <input id="newAmount" name="newAmount" type="number" [(ngModel)]="newAmount" required min="0" class="app-input w-full" [disabled]="loading()" (focus)="$any($event.target).select()">
             </div>
             <div class="w-full sm:w-48">
               <label for="newDonatedAt" class="block font-bold mb-1">เวลาที่โอน (ตัวเลือก)</label>
@@ -107,7 +107,7 @@ export class AdminManageRedeemPageComponent implements OnInit {
   protected readonly loading = signal(false);
   
   protected readonly newCode = signal('');
-  protected readonly newAmount = signal(50);
+  protected readonly newAmount = signal(0);
   protected readonly newDonatedAt = signal('');
 
   ngOnInit(): void {
