@@ -38,19 +38,14 @@ export class DonationsPageComponent implements OnInit {
     return diff >= 0 && diff <= DonationsPageComponent.NEW_WINDOW_MS;
   }
 
-  protected formatTime(isoString: string): string {
+  protected formatDate(isoString: string): string {
+    if (!isoString) return '';
     const d = new Date(isoString);
-    const day = d.getDate();
-    const months = [
-      'ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.',
-      'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'
-    ];
-    const month = months[d.getMonth()];
-    const year = d.getFullYear() + 543;
-    const hh = d.getHours().toString().padStart(2, '0');
-    const mm = d.getMinutes().toString().padStart(2, '0');
-    // Using '-' separator per AGENTS.md font compatibility rule
-    return `${day} ${month} ${year} - ${hh}:${mm}`;
+    if (Number.isNaN(d.getTime())) return isoString;
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const day = d.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
   protected readonly groupedDonations = computed(() => {

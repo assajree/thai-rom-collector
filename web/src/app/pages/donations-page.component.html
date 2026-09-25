@@ -105,8 +105,8 @@
               <div
                 class="donation-time text-sm sm:text-base text-[var(--color-text)] font-semibold flex items-center gap-2 flex-wrap">
                 <div class="flex items-center gap-1.5">
-                  <i class="fa-regular fa-clock text-xs text-[var(--color-text-muted)]" aria-hidden="true"></i>
-                  <span>{{ formatTime(donation.donatedAt) }} น.</span>
+                  <i class="fa-regular fa-calendar text-xs text-[var(--color-text-muted)]" aria-hidden="true"></i>
+                  <span>{{ formatDate(donation.donatedAt) }}</span>
                 </div>
                 @if (isNewDonation(donation.donatedAt)) {
                 <span class="inline-flex items-center" title="รายการใหม่ภายใน 24 ชม.">
@@ -134,8 +134,8 @@
       class="donations-footer-note mt-6 p-4 border-l-4 border-[var(--color-accent)] bg-[var(--color-surface-light)] text-sm text-[var(--color-text-muted)]">
       <p class="m-0 leading-relaxed">
         <i class="fa-solid fa-circle-info mr-1 text-[var(--color-accent)]" aria-hidden="true"></i>
-        หากคุณได้ร่วมสนับสนุนค่าเซิร์ฟเวอร์แล้ว สามารถนำรหัส Transaction No. ไปแลกรับสิทธิ์
-        <a routerLink="/redeem" class="inline-link">VIP Member</a> เพื่อรับสิทธิพิเศษในการเข้าถึงเกมได้
+        หากคุณได้ร่วมสนับสนุนค่าเซิร์ฟเวอร์แล้ว เมื่อเห็นยอดขึ้นในหน้านี้ สามารถใช้วันเวลาของ transaction (เช่น 202609241105 โดยปีต้องเป็น ค.ศ.) ไปแลกรับสิทธิ์
+        <a routerLink="/redeem" class="inline-link">VIP Member</a> เพื่อรับสิทธิพิเศษในการใช้งานได้
       </p>
     </footer>
     }

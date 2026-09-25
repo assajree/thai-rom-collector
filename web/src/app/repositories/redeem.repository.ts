@@ -155,6 +155,81 @@ export class RedeemRepository {
     }
   }
 
+  async updateCode(oldCode: string, newCode: string, newAmount: number, newDonatedAt?: string): Promise<void> {
+    const oldCodeStr = oldCode.trim();
+    const newCodeStr = newCode.trim();
+    if (!oldCodeStr || !newCodeStr) throw new RepositoryError('กรุณากรอกโค้ด', 'update');
+    if (newAmount < 0) throw new RepositoryError('จำนวนเงินต้องไม่ติดลบ', 'update');
+
+    try {
+      const snapshot = await get(ref(this.database, `redeemCodes/${oldCodeStr}`));
+      if (!snapshot.exists()) {
+        throw new RepositoryError('ไม่พบโค้ดนี้ในระบบ', 'update');
+      }
+
+      const data = snapshot.val();
+      
+      if (oldCodeStr !== newCodeStr) {
+        const newCodeSnapshot = await get(ref(this.database, `redeemCodes/${newCodeStr}`));
+        if (newCodeSnapshot.exists()) {
+          throw new RepositoryError(`โค้ด ${newCodeStr} มีอยู่ในระบบแล้ว`, 'update');
+        }
+      }
+
+      const updates: any = {};
+
+      if (oldCodeStr !== newCodeStr) {
+        const newData = { ...data };
+        newData.amount = newAmount;
+        if (newDonatedAt) {
+          newData.donatedAt = newDonatedAt;
+        } else {
+          delete newData.donatedAt;
+        }
+        updates[`redeemCodes/${newCodeStr}`] = newData;
+        updates[`redeemCodes/${oldCodeStr}`] = null;
+      } else {
+        updates[`redeemCodes/${oldCodeStr}/amount`] = newAmount;
+        if (newDonatedAt) {
+          updates[`redeemCodes/${oldCodeStr}/donatedAt`] = newDonatedAt;
+        } else if (data.donatedAt) {
+          updates[`redeemCodes/${oldCodeStr}/donatedAt`] = null;
+        }
+      }
+
+      if (data.donationId) {
+        if (newAmount > 0) {
+          updates[`donations/${data.donationId}/amount`] = newAmount;
+          if (newDonatedAt) {
+            updates[`donations/${data.donationId}/donatedAt`] = newDonatedAt;
+          } else if (data.donatedAt) {
+            updates[`donations/${data.donationId}/donatedAt`] = data.createdAt;
+          }
+        } else {
+          updates[`donations/${data.donationId}`] = null;
+          if (oldCodeStr === newCodeStr) {
+            updates[`redeemCodes/${oldCodeStr}/donationId`] = null;
+          } else {
+            delete updates[`redeemCodes/${newCodeStr}`].donationId;
+          }
+        }
+      } else if (newAmount > 0) {
+        const donationId = 'don_' + Date.now().toString(36) + Math.random().toString(36).substring(2);
+        if (oldCodeStr === newCodeStr) {
+          updates[`redeemCodes/${oldCodeStr}/donationId`] = donationId;
+        } else {
+          updates[`redeemCodes/${newCodeStr}`].donationId = donationId;
+        }
+        updates[`donations/${donationId}`] = { amount: newAmount, donatedAt: newDonatedAt || data.createdAt };
+      }
+
+      await update(ref(this.database), updates);
+    } catch (error) {
+      if (error instanceof RepositoryError) throw error;
+      throw new RepositoryError('ไม่สามารถแก้ไขโค้ดได้', 'update');
+    }
+  }
+
   async getRecentCodes(limit = 100): Promise<RedeemCode[]> {
     try {
       const q = query(ref(this.database, 'redeemCodes'), orderByChild('createdAt'), limitToLast(limit));

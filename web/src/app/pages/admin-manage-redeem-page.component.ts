@@ -19,8 +19,8 @@ import { AuthService } from '../services/auth.service';
         <div class="retro-window-content">
           <form (ngSubmit)="addCode()" class="flex flex-col sm:flex-row gap-4 items-end flex-wrap">
             <div class="flex-1 w-full min-w-[200px]">
-              <label for="newCode" class="block font-bold mb-1">Transaction No. (รหัสอ้างอิง)</label>
-              <input id="newCode" name="newCode" type="text" [(ngModel)]="newCode" required class="app-input w-full" placeholder="T123456789" [disabled]="loading()">
+              <label for="newCode" class="block font-bold mb-1">รหัส Redeem (วันเวลาที่โอน YYYYMMDDHHmm)</label>
+              <input id="newCode" name="newCode" type="text" [(ngModel)]="newCode" required class="app-input w-full" placeholder="เช่น 202609241105" [disabled]="loading()">
             </div>
             <div class="w-full sm:w-32">
               <label for="newAmount" class="block font-bold mb-1">จำนวนเงิน</label>
@@ -28,10 +28,9 @@ import { AuthService } from '../services/auth.service';
             </div>
             <div class="w-full sm:w-56">
               <label for="newDonatedAt" class="block font-bold mb-1 flex justify-between items-end">
-                <span>เวลาที่โอน (ตัวเลือก)</span>
-                <button type="button" class="text-xs text-blue-600 hover:underline disabled:text-slate-400 disabled:no-underline" (click)="extractTimeFromCode()" [disabled]="!newCode() || loading()">ดึงจากโค้ด</button>
+                <span>วันที่โอน (ตัวเลือก)</span>
               </label>
-              <input id="newDonatedAt" name="newDonatedAt" type="datetime-local" step="1" [(ngModel)]="newDonatedAt" class="app-input w-full" [disabled]="loading()">
+              <input id="newDonatedAt" name="newDonatedAt" type="date" [(ngModel)]="newDonatedAt" class="app-input w-full" [disabled]="loading()">
             </div>
             <button type="submit" class="retro-system-button font-bold h-[38px] w-full sm:w-auto whitespace-nowrap" [disabled]="!newCode() || newAmount() < 0 || loading()">
               <i class="fa-solid fa-plus mr-1"></i> เพิ่มโค้ด
@@ -54,7 +53,7 @@ import { AuthService } from '../services/auth.service';
           <table class="w-full text-left text-sm border-collapse">
             <thead>
               <tr class="bg-slate-200 border-b-2 border-slate-400">
-                <th class="p-2 border-r border-slate-300">Transaction No.</th>
+                <th class="p-2 border-r border-slate-300">รหัส Redeem (วันเวลาโอน)</th>
                 <th class="p-2 border-r border-slate-300 w-24 text-right">จำนวนเงิน</th>
                 <th class="p-2 border-r border-slate-300 w-28 text-center">สถานะ</th>
                 <th class="p-2 border-r border-slate-300">ถูกใช้โดย</th>
@@ -65,8 +64,20 @@ import { AuthService } from '../services/auth.service';
             <tbody>
               @for (code of codes(); track code.id) {
                 <tr class="border-b border-slate-200 hover:bg-slate-50">
-                  <td class="p-2 border-r border-slate-300 font-mono">{{ code.id }}</td>
-                  <td class="p-2 border-r border-slate-300 text-right">{{ code.amount }}</td>
+                  <td class="p-2 border-r border-slate-300 font-mono">
+                    @if (editingCodeId() === code.id) {
+                      <input type="text" [ngModel]="editCode()" (ngModelChange)="editCode.set($event)" class="app-input w-full p-1 text-sm h-8" [disabled]="loading()">
+                    } @else {
+                      {{ code.id }}
+                    }
+                  </td>
+                  <td class="p-2 border-r border-slate-300 text-right">
+                    @if (editingCodeId() === code.id) {
+                      <input type="number" [ngModel]="editAmount()" (ngModelChange)="editAmount.set($event)" class="app-input w-20 text-right p-1 text-sm h-8" min="0" [disabled]="loading()">
+                    } @else {
+                      {{ code.amount }}
+                    }
+                  </td>
                   <td class="p-2 border-r border-slate-300 text-center">
                     @if (code.isRedeemed) {
                       <span class="text-red-600 font-bold text-xs"><i class="fa-solid fa-check"></i> ถูกใช้แล้ว</span>
@@ -83,21 +94,33 @@ import { AuthService } from '../services/auth.service';
                     }
                   </td>
                   <td class="p-2 border-r border-slate-300 text-xs">
-                    <div class="whitespace-nowrap" title="เวลาสร้างระบบ: {{ code.createdAt | date:'dd/MM/yyyy HH:mm' }}">
-                      @if (code.donatedAt) {
-                        โอน: {{ code.donatedAt | date:'dd/MM/yyyy HH:mm' }}
-                      } @else {
-                        สร้าง: {{ code.createdAt | date:'dd/MM/yyyy HH:mm' }}
-                      }
-                    </div>
+                    @if (editingCodeId() === code.id) {
+                      <input type="date" [ngModel]="editDonatedAt()" (ngModelChange)="editDonatedAt.set($event)" class="app-input w-full p-1 text-sm h-8" [disabled]="loading()">
+                    } @else {
+                      <div class="whitespace-nowrap" title="เวลาสร้างระบบ: {{ code.createdAt | date:'dd/MM/yyyy HH:mm' }}">
+                        @if (code.donatedAt) {
+                          โอน: {{ code.donatedAt | date:'dd/MM/yyyy' }}
+                        } @else {
+                          สร้าง: {{ code.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                        }
+                      </div>
+                    }
                   </td>
                   <td class="p-2 text-center whitespace-nowrap">
                     <div class="inline-flex items-center gap-2">
-                      @if (code.isRedeemed) {
-                        <button type="button" class="text-xs text-amber-700 font-bold hover:underline disabled:text-slate-400" (click)="revokeCode(code.id)" [disabled]="loading()">Revoke</button>
+                      @if (editingCodeId() === code.id) {
+                        <button type="button" class="text-xs text-blue-600 font-bold hover:underline disabled:text-slate-400" (click)="saveEdit(code)" [disabled]="loading()">บันทึก</button>
                         <span class="text-slate-300">|</span>
+                        <button type="button" class="text-xs text-slate-600 font-bold hover:underline disabled:text-slate-400" (click)="cancelEdit()" [disabled]="loading()">ยกเลิก</button>
+                      } @else {
+                        <button type="button" class="text-xs text-blue-600 font-bold hover:underline disabled:text-slate-400" (click)="startEdit(code)" [disabled]="loading()">แก้ไข</button>
+                        <span class="text-slate-300">|</span>
+                        @if (code.isRedeemed) {
+                          <button type="button" class="text-xs text-amber-700 font-bold hover:underline disabled:text-slate-400" (click)="revokeCode(code.id)" [disabled]="loading()">Revoke</button>
+                          <span class="text-slate-300">|</span>
+                        }
+                        <button type="button" class="text-xs text-red-600 font-bold hover:underline disabled:text-slate-400" (click)="deleteCode(code)" [disabled]="loading()">ลบ</button>
                       }
-                      <button type="button" class="text-xs text-red-600 font-bold hover:underline disabled:text-slate-400" (click)="deleteCode(code)" [disabled]="loading()">ลบ</button>
                     </div>
                   </td>
                 </tr>
@@ -124,16 +147,21 @@ export class AdminManageRedeemPageComponent implements OnInit {
   
   protected readonly newCode = signal('');
   protected readonly newAmount = signal(0);
-  protected readonly newDonatedAt = signal(this.getLocalDatetimeString());
+  protected readonly newDonatedAt = signal(this.getLocalDateString());
+
+  protected readonly editingCodeId = signal<string | null>(null);
+  protected readonly editCode = signal<string>('');
+  protected readonly editAmount = signal<number>(0);
+  protected readonly editDonatedAt = signal<string>('');
 
   ngOnInit(): void {
     void this.loadCodes();
   }
   
-  private getLocalDatetimeString(): string {
+  private getLocalDateString(): string {
     const d = new Date();
     d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
-    return d.toISOString().slice(0, 19);
+    return d.toISOString().slice(0, 10);
   }
 
   protected async loadCodes(): Promise<void> {
@@ -142,19 +170,6 @@ export class AdminManageRedeemPageComponent implements OnInit {
       this.codes.set(items);
     } catch (error: any) {
       this.statusMessage.show(error.message || 'ดึงข้อมูลไม่สำเร็จ', 'error');
-    }
-  }
-
-  protected extractTimeFromCode(): void {
-    const code = this.newCode().trim();
-    // Pattern: 14 digits at the beginning (YYYYMMDDHHmmss)
-    const match = code.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/);
-    if (match) {
-      const [, year, month, day, hour, min, sec] = match;
-      this.newDonatedAt.set(`${year}-${month}-${day}T${hour}:${min}:${sec}`);
-      this.statusMessage.show(`ดึงเวลาสำเร็จ: ${day}/${month}/${year} ${hour}:${min}:${sec}`, 'success');
-    } else {
-      this.statusMessage.show('ไม่สามารถดึงเวลาได้ (รูปแบบโค้ดไม่ตรงกัน)', 'error');
     }
   }
 
@@ -177,10 +192,9 @@ export class AdminManageRedeemPageComponent implements OnInit {
     const amount = this.newAmount();
     const donatedAtStr = this.newDonatedAt();
     
-    // convert datetime-local string to ISO if exists, otherwise undefined
     let donatedAtIso: string | undefined;
     if (donatedAtStr) {
-      donatedAtIso = new Date(donatedAtStr).toISOString();
+      donatedAtIso = new Date(donatedAtStr + 'T00:00:00').toISOString();
     }
     
     const adminProfile = this.authService.getAdminProfile();
@@ -194,9 +208,50 @@ export class AdminManageRedeemPageComponent implements OnInit {
       await this.redeemRepo.addCode(code, amount, adminProfile.uid, donatedAtIso);
       this.statusMessage.show(`เพิ่มโค้ด ${code} สำเร็จ`, 'success');
       this.newCode.set('');
-      this.newDonatedAt.set(this.getLocalDatetimeString());
+      this.newDonatedAt.set(this.getLocalDateString());
       
       // Reload list
+      await this.loadCodes();
+    } catch (error: any) {
+      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาด', 'error');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  protected startEdit(code: RedeemCode): void {
+    this.editingCodeId.set(code.id);
+    this.editCode.set(code.id);
+    this.editAmount.set(code.amount);
+    
+    if (code.donatedAt) {
+      const d = new Date(code.donatedAt);
+      d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+      this.editDonatedAt.set(d.toISOString().slice(0, 10));
+    } else {
+      this.editDonatedAt.set('');
+    }
+  }
+
+  protected cancelEdit(): void {
+    this.editingCodeId.set(null);
+  }
+
+  protected async saveEdit(code: RedeemCode): Promise<void> {
+    const newCodeStr = this.editCode();
+    const amount = this.editAmount();
+    const donatedAtStr = this.editDonatedAt();
+    let donatedAtIso: string | undefined;
+    if (donatedAtStr) {
+      donatedAtIso = new Date(donatedAtStr + 'T00:00:00').toISOString();
+    }
+    
+    this.loading.set(true);
+    this.statusMessage.show('กำลังบันทึก...', 'info');
+    try {
+      await this.redeemRepo.updateCode(code.id, newCodeStr, amount, donatedAtIso);
+      this.statusMessage.show('บันทึกเรียบร้อย', 'success');
+      this.editingCodeId.set(null);
       await this.loadCodes();
     } catch (error: any) {
       this.statusMessage.show(error.message || 'เกิดข้อผิดพลาด', 'error');
