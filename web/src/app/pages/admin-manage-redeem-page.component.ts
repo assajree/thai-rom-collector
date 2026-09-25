@@ -111,10 +111,16 @@ export class AdminManageRedeemPageComponent implements OnInit {
   
   protected readonly newCode = signal('');
   protected readonly newAmount = signal(0);
-  protected readonly newDonatedAt = signal('');
+  protected readonly newDonatedAt = signal(this.getLocalDatetimeString());
 
   ngOnInit(): void {
     void this.loadCodes();
+  }
+  
+  private getLocalDatetimeString(): string {
+    const d = new Date();
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 19);
   }
 
   protected async loadCodes(): Promise<void> {
@@ -161,7 +167,7 @@ export class AdminManageRedeemPageComponent implements OnInit {
       await this.redeemRepo.addCode(code, amount, adminProfile.uid, donatedAtIso);
       this.statusMessage.show(`เพิ่มโค้ด ${code} สำเร็จ`, 'success');
       this.newCode.set('');
-      this.newDonatedAt.set('');
+      this.newDonatedAt.set(this.getLocalDatetimeString());
       
       // Reload list
       await this.loadCodes();
