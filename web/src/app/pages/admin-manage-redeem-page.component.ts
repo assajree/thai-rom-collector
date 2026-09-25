@@ -26,9 +26,12 @@ import { AuthService } from '../services/auth.service';
               <label for="newAmount" class="block font-bold mb-1">จำนวนเงิน</label>
               <input id="newAmount" name="newAmount" type="number" [(ngModel)]="newAmount" required min="0" class="app-input w-full" [disabled]="loading()" (focus)="$any($event.target).select()">
             </div>
-            <div class="w-full sm:w-48">
-              <label for="newDonatedAt" class="block font-bold mb-1">เวลาที่โอน (ตัวเลือก)</label>
-              <input id="newDonatedAt" name="newDonatedAt" type="datetime-local" [(ngModel)]="newDonatedAt" class="app-input w-full" [disabled]="loading()">
+            <div class="w-full sm:w-56">
+              <label for="newDonatedAt" class="block font-bold mb-1 flex justify-between items-end">
+                <span>เวลาที่โอน (ตัวเลือก)</span>
+                <button type="button" class="text-xs text-blue-600 hover:underline disabled:text-slate-400 disabled:no-underline" (click)="extractTimeFromCode()" [disabled]="!newCode() || loading()">ดึงจากโค้ด</button>
+              </label>
+              <input id="newDonatedAt" name="newDonatedAt" type="datetime-local" step="1" [(ngModel)]="newDonatedAt" class="app-input w-full" [disabled]="loading()">
             </div>
             <button type="submit" class="retro-system-button font-bold h-[38px] w-full sm:w-auto whitespace-nowrap" [disabled]="!newCode() || newAmount() < 0 || loading()">
               <i class="fa-solid fa-plus mr-1"></i> เพิ่มโค้ด
@@ -120,6 +123,19 @@ export class AdminManageRedeemPageComponent implements OnInit {
       this.codes.set(items);
     } catch (error: any) {
       this.statusMessage.show(error.message || 'ดึงข้อมูลไม่สำเร็จ', 'error');
+    }
+  }
+
+  protected extractTimeFromCode(): void {
+    const code = this.newCode().trim();
+    // Pattern: 14 digits at the beginning (YYYYMMDDHHmmss)
+    const match = code.match(/^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/);
+    if (match) {
+      const [, year, month, day, hour, min, sec] = match;
+      this.newDonatedAt.set(`${year}-${month}-${day}T${hour}:${min}:${sec}`);
+      this.statusMessage.show(`ดึงเวลาสำเร็จ: ${day}/${month}/${year} ${hour}:${min}:${sec}`, 'success');
+    } else {
+      this.statusMessage.show('ไม่สามารถดึงเวลาได้ (รูปแบบโค้ดไม่ตรงกัน)', 'error');
     }
   }
 
