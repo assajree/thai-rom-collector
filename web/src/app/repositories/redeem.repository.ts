@@ -54,7 +54,7 @@ export class RedeemRepository {
   async addCode(code: string, amount: number, adminUid: string, donatedAt?: string): Promise<void> {
     const codeStr = code.trim();
     if (!codeStr) throw new RepositoryError('กรุณากรอกโค้ด', 'create');
-    if (amount <= 0) throw new RepositoryError('จำนวนเงินต้องมากกว่า 0', 'create');
+    if (amount < 0) throw new RepositoryError('จำนวนเงินต้องไม่ติดลบ', 'create');
 
     try {
       const existing = await get(ref(this.database, `redeemCodes/${codeStr}`));

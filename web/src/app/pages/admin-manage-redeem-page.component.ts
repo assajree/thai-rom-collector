@@ -24,13 +24,13 @@ import { AuthService } from '../services/auth.service';
             </div>
             <div class="w-full sm:w-32">
               <label for="newAmount" class="block font-bold mb-1">จำนวนเงิน</label>
-              <input id="newAmount" name="newAmount" type="number" [(ngModel)]="newAmount" required min="1" class="app-input w-full" [disabled]="loading()">
+              <input id="newAmount" name="newAmount" type="number" [(ngModel)]="newAmount" required min="0" class="app-input w-full" [disabled]="loading()">
             </div>
             <div class="w-full sm:w-48">
               <label for="newDonatedAt" class="block font-bold mb-1">เวลาที่โอน (ตัวเลือก)</label>
               <input id="newDonatedAt" name="newDonatedAt" type="datetime-local" [(ngModel)]="newDonatedAt" class="app-input w-full" [disabled]="loading()">
             </div>
-            <button type="submit" class="retro-system-button font-bold h-[38px] w-full sm:w-auto whitespace-nowrap" [disabled]="!newCode() || newAmount() <= 0 || loading()">
+            <button type="submit" class="retro-system-button font-bold h-[38px] w-full sm:w-auto whitespace-nowrap" [disabled]="!newCode() || newAmount() < 0 || loading()">
               <i class="fa-solid fa-plus mr-1"></i> เพิ่มโค้ด
             </button>
           </form>
@@ -136,7 +136,7 @@ export class AdminManageRedeemPageComponent implements OnInit {
     
     const adminProfile = this.authService.getAdminProfile();
 
-    if (!code || amount <= 0 || !adminProfile) return;
+    if (!code || amount < 0 || !adminProfile) return;
 
     this.loading.set(true);
     this.statusMessage.show('กำลังเพิ่มโค้ด...', 'info');
