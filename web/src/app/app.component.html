@@ -48,10 +48,12 @@
       <div class="">
         <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">บทความ</a>
+        <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">Redeem โค้ด VIP</a>
         @if (authService.user()) {
         <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
         } @else {
-        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signIn(); closeSidebar()">เข้าสู่ระบบ (Login)</a>
+        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signIn(); closeSidebar()">เข้าสู่ระบบ</a>
         }
       </div>
     </nav>
@@ -230,8 +232,7 @@
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
         <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
           [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
-        <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
-          (click)="closeSidebar()">Redeem โค้ด VIP</a>
+
       </div>
     </div>
 
