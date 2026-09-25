@@ -37,7 +37,7 @@
     },
     "redeemCodes": {
       ".indexOn": ["redeemedBy", "createdAt"],
-      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".read": "auth != null && (root.child('admins').child(auth.uid).exists() || (query.orderByChild == 'redeemedBy' && query.equalTo == auth.uid))",
       "$code": {
         ".read": "auth != null",
         ".write": "auth != null && root.child('admins').child(auth.uid).exists() || (auth != null && data.exists() && data.child('isRedeemed').val() == false && newData.child('isRedeemed').val() == true && newData.child('redeemedBy').val() == auth.uid && newData.child('amount').val() == data.child('amount').val())",

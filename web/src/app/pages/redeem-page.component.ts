@@ -86,11 +86,9 @@ export class RedeemPageComponent {
     try {
       await this.redeemRepo.redeemCode(codeVal, user.uid, user.email ?? '');
 
-      this.statusMessage.show('Redeem สำเร็จ! คุณได้รับสถานะ VIP แล้ว โปรดรีเฟรชหน้าเว็บหากสถานะยังไม่อัปเดต', 'success');
+      this.statusMessage.show('Redeem สำเร็จ! คุณได้รับสถานะ VIP แล้ว', 'success');
       this.code.set('');
-
-      // We can force reload or just wait for the RTDB subscription in authService to catch the new VIP state.
-      // Usually, the Firebase RTDB listener will automatically trigger and update `isVip` immediately.
+      this.authService.isVip.set(true);
     } catch (error: any) {
       this.statusMessage.show(error.message || 'เกิดข้อผิดพลาด', 'error');
     } finally {
