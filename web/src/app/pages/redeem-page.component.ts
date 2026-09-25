@@ -1,61 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { Router } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../services/auth.service';
 import { RedeemRepository } from '../repositories/redeem.repository';
 import { StatusMessageService } from '../shared/status-message.service';
-import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-redeem-page',
   standalone: true,
-  imports: [CommonModule, FormsModule],
-  template: `
-    <div class="px-4 py-6 sm:px-6">
-      <div class="retro-window max-w-md mx-auto">
-        <div class="retro-window-titlebar">
-          <h1 class="retro-window-title">VIP Redeem (แลกโค้ด VIP)</h1>
-        </div>
-        <div class="retro-window-content">
-          @if (!authService.user()) {
-            <p class="mb-4 text-sm font-bold">คุณต้องเข้าสู่ระบบก่อนจึงจะสามารถ Redeem ได้</p>
-            <button type="button" class="retro-system-button w-full text-center justify-center font-bold" (click)="signIn()">
-              <i class="fa-brands fa-google mr-2"></i> เข้าสู่ระบบด้วย Google
-            </button>
-          } @else if (authService.isVip()) {
-            <div class="text-center py-4">
-              <i class="fa-solid fa-crown text-4xl text-yellow-500 mb-2"></i>
-              <p class="font-bold text-lg">คุณเป็นสมาชิก VIP อยู่แล้ว</p>
-              <p class="text-sm mt-2">ขอบคุณที่สนับสนุนเซิร์ฟเวอร์ของเรา!</p>
-            </div>
-          } @else {
-            <form (ngSubmit)="submit()" class="flex flex-col gap-4">
-              <div class="text-sm mb-4">
-                <p class="mb-2">สนับสนุนเซิร์ฟเวอร์และใช้ Transaction No. ในการ Redeem เพื่อรับสถานะ VIP โดยสมาชิก VIP จะได้รับสิทธิพิเศษดังนี้:</p>
-                <ul class="list-disc pl-5 font-bold text-blue-800 space-y-1">
-                  <li>ดึงข้อมูลล่าสุดได้เมื่อต้องการ</li>
-                  <li>เข้าถึงเว็บไซต์ตอนปิดปรับปรุงได้</li>
-                </ul>
-              </div>
-              
-              <div>
-                <label for="code" class="mb-1 block font-bold">รหัสอ้างอิง (Transaction No.)</label>
-                <input id="code" name="code" type="text" [(ngModel)]="code" required class="app-input w-full" placeholder="เช่น T123456789" [disabled]="loading()">
-              </div>
-              
-              <button type="submit" class="retro-system-button w-full text-center justify-center font-bold" [disabled]="!code() || loading()">
-                {{ loading() ? 'กำลังตรวจสอบ...' : 'Redeem รับสถานะ VIP' }}
-              </button>
-              
-              <div class="mt-2 text-xs text-slate-600 bg-slate-100 p-3 border border-slate-300 rounded">
-                <p><strong>ปล.</strong> โค้ดโอนเงินอาจจะยังไม่ได้อัปเดตเข้าระบบแบบเรียลไทม์นะฮะ เพราะแอดมินต้องมานั่งอัปเดตด้วยตัวเอง ถ้ากรอกแล้วระบบบอกว่าไม่พบโค้ด รบกวนรอแป๊บนึงน้า เดี๋ยวแอดมินมาเติมให้จ้า ❤️</p>
-              </div>
-            </form>
-          }
-        </div>
-      </div>
-    </div>
-  `
+  imports: [CommonModule, FormsModule, RouterLink],
+  templateUrl: './redeem-page.component.html',
+  styleUrl: './redeem-page.component.css'
 })
 export class RedeemPageComponent {
   protected readonly authService = inject(AuthService);
@@ -66,10 +22,15 @@ export class RedeemPageComponent {
   protected readonly loading = signal(false);
 
   protected async signIn(): Promise<void> {
+    this.loading.set(true);
+    this.statusMessage.show('กำลังเข้าสู่ระบบ...', 'info');
     try {
       await this.authService.signInWithGoogle();
+      this.statusMessage.show('เข้าสู่ระบบสำเร็จ', 'success');
     } catch {
       this.statusMessage.show('ไม่สามารถเข้าสู่ระบบได้', 'error');
+    } finally {
+      this.loading.set(false);
     }
   }
 
@@ -90,7 +51,7 @@ export class RedeemPageComponent {
       this.code.set('');
       this.authService.isVip.set(true);
     } catch (error: any) {
-      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาด', 'error');
+      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาดในการตรวจสอบโค้ด', 'error');
     } finally {
       this.loading.set(false);
     }
