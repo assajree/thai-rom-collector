@@ -48,6 +48,11 @@
       <div class="">
         <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">บทความ</a>
+        @if (authService.user()) {
+        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
+        } @else {
+        <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signIn(); closeSidebar()">เข้าสู่ระบบ (Login)</a>
+        }
       </div>
     </nav>
 
