@@ -80,6 +80,23 @@ export class RedeemRepository {
     }
   }
 
+  async revokeCode(code: string): Promise<void> {
+    const codeStr = code.trim();
+    if (!codeStr) return;
+
+    try {
+      const updates = {
+        isRedeemed: false,
+        redeemedBy: null,
+        redeemedEmail: null,
+        redeemedAt: null
+      };
+      await update(ref(this.database, `redeemCodes/${codeStr}`), updates);
+    } catch {
+      throw new RepositoryError('ไม่สามารถยกเลิกการใช้งานโค้ดได้', 'update');
+    }
+  }
+
   async getRecentCodes(limit = 100): Promise<RedeemCode[]> {
     try {
       const q = query(ref(this.database, 'redeemCodes'), orderByChild('createdAt'), limitToLast(limit));

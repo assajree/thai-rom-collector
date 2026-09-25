@@ -55,7 +55,8 @@ import { AuthService } from '../services/auth.service';
                 <th class="p-2 border-r border-slate-300 w-24 text-right">จำนวนเงิน</th>
                 <th class="p-2 border-r border-slate-300 w-28 text-center">สถานะ</th>
                 <th class="p-2 border-r border-slate-300">ถูกใช้โดย</th>
-                <th class="p-2 min-w-[120px]">วันที่เพิ่ม</th>
+                <th class="p-2 border-r border-slate-300 min-w-[120px]">วันที่เพิ่ม</th>
+                <th class="p-2 w-16">จัดการ</th>
               </tr>
             </thead>
             <tbody>
@@ -78,7 +79,7 @@ import { AuthService } from '../services/auth.service';
                       -
                     }
                   </td>
-                  <td class="p-2 text-xs">
+                  <td class="p-2 border-r border-slate-300 text-xs">
                     <div class="whitespace-nowrap" title="เวลาสร้างระบบ: {{ code.createdAt | date:'dd/MM/yyyy HH:mm' }}">
                       @if (code.donatedAt) {
                         โอน: {{ code.donatedAt | date:'dd/MM/yyyy HH:mm' }}
@@ -87,11 +88,16 @@ import { AuthService } from '../services/auth.service';
                       }
                     </div>
                   </td>
+                  <td class="p-2 text-center">
+                    @if (code.isRedeemed) {
+                      <button type="button" class="text-xs text-red-600 font-bold hover:underline" (click)="revokeCode(code.id)" [disabled]="loading()">Revoke</button>
+                    }
+                  </td>
                 </tr>
               }
               @if (codes().length === 0) {
                 <tr>
-                  <td colspan="5" class="p-4 text-center text-slate-500">ไม่มีข้อมูล</td>
+                  <td colspan="6" class="p-4 text-center text-slate-500">ไม่มีข้อมูล</td>
                 </tr>
               }
             </tbody>
@@ -173,6 +179,23 @@ export class AdminManageRedeemPageComponent implements OnInit {
       await this.loadCodes();
     } catch (error: any) {
       this.statusMessage.show(error.message || 'เกิดข้อผิดพลาด', 'error');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  protected async revokeCode(code: string): Promise<void> {
+    if (!confirm(`แน่ใจหรือไม่ว่าต้องการยกเลิกการใช้งานของโค้ด ${code}?`)) return;
+
+    this.loading.set(true);
+    this.statusMessage.show(`กำลังยกเลิกโค้ด ${code}...`, 'info');
+
+    try {
+      await this.redeemRepo.revokeCode(code);
+      this.statusMessage.show(`ยกเลิกการใช้งานโค้ด ${code} สำเร็จ`, 'success');
+      await this.loadCodes();
+    } catch (error: any) {
+      this.statusMessage.show(error.message || 'เกิดข้อผิดพลาดในการยกเลิกโค้ด', 'error');
     } finally {
       this.loading.set(false);
     }
