@@ -30,10 +30,13 @@ import { CommonModule } from '@angular/common';
             </div>
           } @else {
             <form (ngSubmit)="submit()" class="flex flex-col gap-4">
-              <p class="text-sm">
-                สนับสนุนเซิร์ฟเวอร์และรับโค้ด Redeem (Transaction No.) เพื่อรับสถานะ VIP
-                สถานะ VIP สามารถเข้าถึงปุ่มเครื่องมือพิเศษได้จาก Sidebar
-              </p>
+              <div class="text-sm mb-4">
+                <p class="mb-2">สนับสนุนเซิร์ฟเวอร์และรับโค้ด Redeem (Transaction No.) เพื่อรับสถานะ VIP โดยสมาชิก VIP จะได้รับสิทธิพิเศษดังนี้:</p>
+                <ul class="list-disc pl-5 font-bold text-blue-800 space-y-1">
+                  <li>ดึงข้อมูลล่าสุดได้เมื่อต้องการ</li>
+                  <li>เข้าถึงเว็บไซต์ตอนปิดปรับปรุงได้</li>
+                </ul>
+              </div>
               
               <div>
                 <label for="code" class="mb-1 block font-bold">รหัสอ้างอิง (Transaction No.)</label>
