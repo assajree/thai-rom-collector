@@ -1,8 +1,16 @@
 :host {
   display: block;
+  box-sizing: border-box;
+}
+
+:host *,
+:host *::before,
+:host *::after {
+  box-sizing: border-box;
 }
 
 .redeem-page {
+  box-sizing: border-box;
   min-height: calc(100vh - 2.5rem);
   color: var(--color-text);
   background: var(--color-surface);
@@ -134,6 +142,7 @@ h1 span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
   background-color: var(--color-accent);
   color: var(--color-accent-text);
   border: 1px solid var(--color-border);
@@ -303,9 +312,10 @@ h1 span {
 }
 
 .donate-link-btn {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.5rem;
   width: 100%;
   background: var(--color-surface);
   border: 1px solid var(--color-accent);
@@ -315,6 +325,12 @@ h1 span {
   font-size: 0.9rem;
   text-decoration: none;
   min-height: 44px;
+  line-height: 1.4;
+}
+
+.donate-link-btn span {
+  flex: 1;
+  text-align: left;
 }
 
 .donate-link-btn:hover {
