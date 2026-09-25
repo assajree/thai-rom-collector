@@ -91,10 +91,11 @@ export class RedeemRepository {
         throw new RepositoryError('โค้ดนี้มีอยู่ในระบบแล้ว', 'create');
       }
 
+      const createdAt = new Date().toISOString();
       const data: Omit<RedeemCode, 'id'> = {
         amount,
         isRedeemed: false,
-        createdAt: new Date().toISOString(),
+        createdAt,
         createdBy: adminUid
       };
       
@@ -102,7 +103,15 @@ export class RedeemRepository {
         data.donatedAt = donatedAt;
       }
 
-      await set(ref(this.database, `redeemCodes/${codeStr}`), data);
+      const updates: any = {};
+      if (amount > 0) {
+        const donationId = 'don_' + Date.now().toString(36) + Math.random().toString(36).substring(2);
+        data.donationId = donationId;
+        updates[`donations/${donationId}`] = { amount, donatedAt: donatedAt || createdAt };
+      }
+      updates[`redeemCodes/${codeStr}`] = data;
+
+      await update(ref(this.database), updates);
     } catch (error) {
       if (error instanceof RepositoryError) throw error;
       throw new RepositoryError('ไม่สามารถเพิ่มโค้ดได้', 'create');
@@ -160,3 +169,4 @@ export class RedeemRepository {
     }
   }
 }
+

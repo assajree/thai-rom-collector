@@ -208,6 +208,10 @@ export class AdminPatchPageComponent {
         walkthroughUrl: ''
       });
       this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
+      if (this.editId) {
+        this.editId = null;
+        void this.router.navigateByUrl('/add-patch', { replaceUrl: true });
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {
       this.status.show(error instanceof Error ? error.message : 'ไม่สามารถบันทึกแพตช์ได้', 'error');
