@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
           } @else {
             <form (ngSubmit)="submit()" class="flex flex-col gap-4">
               <div class="text-sm mb-4">
-                <p class="mb-2">สนับสนุนเซิร์ฟเวอร์และรับโค้ด Redeem (Transaction No.) เพื่อรับสถานะ VIP โดยสมาชิก VIP จะได้รับสิทธิพิเศษดังนี้:</p>
+                <p class="mb-2">สนับสนุนเซิร์ฟเวอร์และใช้ Transaction No. ในการ Redeem เพื่อรับสถานะ VIP โดยสมาชิก VIP จะได้รับสิทธิพิเศษดังนี้:</p>
                 <ul class="list-disc pl-5 font-bold text-blue-800 space-y-1">
                   <li>ดึงข้อมูลล่าสุดได้เมื่อต้องการ</li>
                   <li>เข้าถึงเว็บไซต์ตอนปิดปรับปรุงได้</li>
@@ -46,6 +46,10 @@ import { CommonModule } from '@angular/common';
               <button type="submit" class="retro-system-button w-full text-center justify-center font-bold" [disabled]="!code() || loading()">
                 {{ loading() ? 'กำลังตรวจสอบ...' : 'Redeem รับสถานะ VIP' }}
               </button>
+              
+              <div class="mt-2 text-xs text-slate-600 bg-slate-100 p-3 border border-slate-300 rounded">
+                <p><strong>ปล.</strong> โค้ดโอนเงินอาจจะยังไม่ได้อัปเดตเข้าระบบแบบเรียลไทม์นะฮะ เพราะแอดมินต้องมานั่งอัปเดตด้วยตัวเอง ถ้ากรอกแล้วระบบบอกว่าไม่พบโค้ด รบกวนรอแป๊บนึงน้า เดี๋ยวแอดมินมาเติมให้จ้า ❤️</p>
+              </div>
             </form>
           }
         </div>
@@ -57,7 +61,7 @@ export class RedeemPageComponent {
   protected readonly authService = inject(AuthService);
   private readonly redeemRepo = inject(RedeemRepository);
   private readonly statusMessage = inject(StatusMessageService);
-  
+
   protected readonly code = signal('');
   protected readonly loading = signal(false);
 
@@ -72,7 +76,7 @@ export class RedeemPageComponent {
   protected async submit(): Promise<void> {
     const user = this.authService.user();
     if (!user) return;
-    
+
     const codeVal = this.code().trim();
     if (!codeVal) return;
 
@@ -81,10 +85,10 @@ export class RedeemPageComponent {
 
     try {
       await this.redeemRepo.redeemCode(codeVal, user.uid, user.email ?? '');
-      
+
       this.statusMessage.show('Redeem สำเร็จ! คุณได้รับสถานะ VIP แล้ว โปรดรีเฟรชหน้าเว็บหากสถานะยังไม่อัปเดต', 'success');
       this.code.set('');
-      
+
       // We can force reload or just wait for the RTDB subscription in authService to catch the new VIP state.
       // Usually, the Firebase RTDB listener will automatically trigger and update `isVip` immediately.
     } catch (error: any) {
