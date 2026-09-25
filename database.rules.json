@@ -35,6 +35,15 @@
         ".validate": "newData.hasChildren(['label','section']) && newData.child('label').isString() && newData.child('label').val().length > 0 && (newData.child('section').val() == 'systems' || newData.child('section').val() == 'translators' || newData.child('section').val() == 'tags' || newData.child('section').val() == 'other') && ((!newData.hasChild('type') || newData.child('type').val() == 'article') ? newData.child('articleSlug').isString() && newData.child('articleSlug').val().length > 0 : newData.child('type').val() == 'external' && newData.child('url').isString() && newData.child('url').val().matches(/^https?:\\/\\/[^\\s]+$/))"
       }
     },
+    "redeemCodes": {
+      ".indexOn": ["redeemedBy", "createdAt"],
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      "$code": {
+        ".read": "auth != null",
+        ".write": "auth != null && root.child('admins').child(auth.uid).exists() || (auth != null && data.exists() && data.child('isRedeemed').val() == false && newData.child('isRedeemed').val() == true && newData.child('redeemedBy').val() == auth.uid && newData.child('amount').val() == data.child('amount').val())",
+        ".validate": "newData.hasChildren(['amount', 'isRedeemed'])"
+      }
+    },
     "admins": { "$uid": { ".read": "auth != null && auth.uid === $uid", ".write": false } }
   }
 }

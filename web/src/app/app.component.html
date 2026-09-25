@@ -1,4 +1,5 @@
-<header class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
+<header
+  class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
   <div class="flex items-center gap-3">
     <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
       aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
@@ -50,12 +51,23 @@
       </div>
     </nav>
 
+    @if (authService.isAdmin() || authService.isVip()) {
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">สิทธิ์ VIP</p>
+      <nav aria-label="VIP tools">
+        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
+      </nav>
+    </div>
+    }
+
     @if (authService.isAdmin()) {
     <div class="retro-system-section">
       <p class="retro-rail-heading">Admin</p>
       <nav aria-label="Main navigation">
         <a class="retro-rail-link" routerLink="/add-patch" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">เพิ่มเกม</a>
+        <a class="retro-rail-link" routerLink="/admin/manage-redeem" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">จัดการโค้ด VIP</a>
         <a class="retro-rail-link" routerLink="/admin/systems" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการเครื่องเกม</a>
         <a class="retro-rail-link" routerLink="/admin/translators" routerLinkActive="retro-rail-link--active"
@@ -213,17 +225,15 @@
         <a class="retro-system-button" target="_blank" href="https://www.base64decode.org/">base64decode.org</a>
         <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
           [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย</a>
-
-        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">Refresh</a>
-
+        <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
+          (click)="closeSidebar()">Redeem โค้ด VIP</a>
       </div>
     </div>
 
 
     <div class="retro-tag-section">
       <label class="theme-picker">
-        <select class="app-select" [value]="theme()" (change)="selectTheme($event)"
-          aria-label="เลือกธีม">
+        <select class="app-select" [value]="theme()" (change)="selectTheme($event)" aria-label="เลือกธีม">
           <option value="default">Blue Neon Theme</option>
           <option value="pocket-pet">LCD Theme</option>
         </select>
@@ -253,11 +263,9 @@
     </div>
     }
     @if (statusMessage(); as message) {
-    <div
-      class="status-message flex items-center gap-2 border-b border-black px-4 py-2 font-bold sm:px-6"
+    <div class="status-message flex items-center gap-2 border-b border-black px-4 py-2 font-bold sm:px-6"
       [class.status-message--info]="message.tone === 'info'" [class.status-message--error]="message.tone === 'error'"
-      [class.status-message--success]="message.tone === 'success'"
-      role="status" aria-live="polite">
+      [class.status-message--success]="message.tone === 'success'" role="status" aria-live="polite">
       <span class="grid h-5 w-5 place-items-center rounded-full border border-current" aria-hidden="true">{{
         message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}

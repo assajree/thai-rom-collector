@@ -1,6 +1,6 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Auth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, user } from '@angular/fire/auth';
-import { Database, get, ref } from '@angular/fire/database';
+import { Database, get, ref, query, orderByChild, equalTo, limitToFirst } from '@angular/fire/database';
 import { Subscription, from } from 'rxjs';
 import type { User } from 'firebase/auth';
 import { AdminProfile } from '../models/patch.models';
@@ -14,15 +14,19 @@ export class AuthService {
   private readonly adminCheckComplete = signal(false);
   private readonly authSubscription: Subscription;
   private adminSubscription?: Subscription;
+  private vipSubscription?: Subscription;
 
   readonly user = this.currentUser.asReadonly();
   readonly isAdmin = this.adminState.asReadonly();
+  readonly isVip = signal(false);
 
   constructor() {
     this.authSubscription = user(this.auth).subscribe((currentUser) => {
       this.currentUser.set(currentUser);
       this.adminSubscription?.unsubscribe();
+      this.vipSubscription?.unsubscribe();
       this.adminState.set(false);
+      this.isVip.set(false);
       this.adminCheckComplete.set(!currentUser);
       if (!currentUser) return;
       this.adminSubscription = from(get(ref(this.database, `admins/${currentUser.uid}`))).subscribe({
@@ -33,6 +37,16 @@ export class AuthService {
         error: () => {
           this.adminState.set(false);
           this.adminCheckComplete.set(true);
+        }
+      });
+      
+      const vipQuery = query(ref(this.database, 'redeemCodes'), orderByChild('redeemedBy'), equalTo(currentUser.uid), limitToFirst(1));
+      this.vipSubscription = from(get(vipQuery)).subscribe({
+        next: (snapshot) => {
+          this.isVip.set(snapshot.exists());
+        },
+        error: () => {
+          this.isVip.set(false);
         }
       });
     });

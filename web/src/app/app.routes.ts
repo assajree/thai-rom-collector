@@ -35,6 +35,15 @@ export const routes: Routes = [
   { path: 'articles', component: ArticlesPageComponent },
   { path: 'article/:slug', component: ArticlePageComponent, data: { includeDrafts: false, backLink: true } },
   { path: 'other/:slug', component: ArticlePageComponent, data: { includeDrafts: true, backLink: false } },
+  { 
+    path: 'redeem', 
+    loadComponent: () => import('./pages/redeem-page.component').then(m => m.RedeemPageComponent)
+  },
+  { 
+    path: 'admin/manage-redeem', 
+    loadComponent: () => import('./pages/admin-manage-redeem-page.component').then(m => m.AdminManageRedeemPageComponent), 
+    canActivate: [adminGuard] 
+  },
   { path: 'admin/articles', component: AdminArticlesPageComponent, canActivate: [adminGuard] },
   { path: 'admin/sidebar-links', component: AdminSidebarLinksPageComponent, canActivate: [adminGuard] },
   { path: 'admin/sample', component: AdminSamplePageComponent, canActivate: [adminGuard] },

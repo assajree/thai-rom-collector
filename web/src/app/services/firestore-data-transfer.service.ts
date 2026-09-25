@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Database, get, ref, update } from '@angular/fire/database';
 import { PatchCacheService } from './patch-cache.service';
 import { FirestoreCacheService } from './firestore-cache.service';
-export const FIRESTORE_BACKUP_COLLECTIONS = ['patches', 'translators', 'tags', 'systems', 'articles', 'sidebarLinks', 'admins'] as const;
+export const FIRESTORE_BACKUP_COLLECTIONS = ['patches', 'translators', 'tags', 'systems', 'articles', 'sidebarLinks', 'admins', 'redeemCodes'] as const;
 export type FirestoreBackupCollection = typeof FIRESTORE_BACKUP_COLLECTIONS[number];
 export type BackupDocument = { id: string; [key: string]: unknown };
 export type FirestoreBackup = { version: 1; exportedAt: string; collections: Record<FirestoreBackupCollection, BackupDocument[]> };
