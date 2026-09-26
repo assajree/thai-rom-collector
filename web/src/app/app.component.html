@@ -60,25 +60,6 @@
 
     </nav>
 
-    <div class="retro-tag-section">
-      <p class="retro-rail-heading">การสนับสนุน</p>
-      <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
-        (click)="closeSidebar()">บริจาค</a>
-      <a class="retro-system-button" routerLink="/donations" routerLinkActive="retro-system-button--active"
-        (click)="closeSidebar()">ข้อมูลการบริจาค</a>
-      <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
-        (click)="closeSidebar()">แลก VIP</a>
-    </div>
-
-    @if (authService.isAdmin() || authService.isVip()) {
-    <div class="retro-tag-section">
-      <p class="retro-rail-heading">สิทธิ์ VIP</p>
-      <nav aria-label="VIP tools">
-        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
-      </nav>
-    </div>
-    }
-
     @if (authService.isAdmin()) {
     <div class="retro-system-section">
       <p class="retro-rail-heading">Admin</p>
@@ -105,6 +86,25 @@
           (click)="closeSidebar()">ตั้งค่าระบบ</a>
         <a class="retro-rail-link" routerLink="/admin/manage-redeem" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการโค้ด VIP</a>
+      </nav>
+    </div>
+    }
+
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">การสนับสนุน</p>
+      <a class="retro-system-button" routerLink="/donate" routerLinkActive="retro-system-button--active"
+        (click)="closeSidebar()">บริจาค</a>
+      <a class="retro-system-button" routerLink="/donations" routerLinkActive="retro-system-button--active"
+        (click)="closeSidebar()">ข้อมูลการบริจาค</a>
+      <a class="retro-rail-link" routerLink="/redeem" routerLinkActive="retro-rail-link--active"
+        (click)="closeSidebar()">แลก VIP</a>
+    </div>
+
+    @if (authService.isAdmin() || authService.isVip()) {
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">สิทธิ์ VIP</p>
+      <nav aria-label="VIP tools">
+        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
       </nav>
     </div>
     }
