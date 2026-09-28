@@ -11,7 +11,7 @@ import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
 import { Patch } from '../models/patch.models';
 
-describe('BrowsePageComponent - Pagination URL Synchronization', () => {
+describe('BrowsePageComponent - Load More Functionality', () => {
   let component: BrowsePageComponent;
   let fixture: ComponentFixture<BrowsePageComponent>;
   let router: jasmine.SpyObj<Router>;
@@ -91,39 +91,32 @@ describe('BrowsePageComponent - Pagination URL Synchronization', () => {
     fixture.detectChanges();
   });
 
-  it('navigates with page number queryParam when setPage(2) is called', () => {
-    (component as unknown as { setPage: (p: number) => void }).setPage(2);
-    expect(router.navigate).toHaveBeenCalledWith([], {
-      relativeTo: jasmine.anything(),
-      queryParams: { page: 2 },
-      queryParamsHandling: 'merge'
-    });
+  it('initializes with 10 patches displayed', () => {
+    expect((component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches().length).toBe(10);
   });
 
-  it('navigates with page: null when returning to page 1', () => {
-    (component as unknown as { setPage: (p: number) => void }).setPage(2);
-    router.navigate.calls.reset();
-    (component as unknown as { setPage: (p: number) => void }).setPage(1);
-    expect(router.navigate).toHaveBeenCalledWith([], {
-      relativeTo: jasmine.anything(),
-      queryParams: { page: null },
-      queryParamsHandling: 'merge'
-    });
+  it('increments displayed patches by 10 when loadMore() is called without adding page queryParam', () => {
+    (component as unknown as { loadMore: () => void }).loadMore();
+    expect((component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches().length).toBe(20);
+    expect(router.navigate).not.toHaveBeenCalledWith([], jasmine.objectContaining({
+      queryParams: jasmine.objectContaining({ page: jasmine.anything() })
+    }));
   });
 
-  it('initializes currentPage from queryParamMap page parameter', () => {
-    queryParamMapSubject.next(convertToParamMap({ page: '3' }));
-    fixture.detectChanges();
-    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(3);
+  it('hasMore becomes false when all patches are loaded', () => {
+    expect((component as unknown as { hasMore: () => boolean }).hasMore()).toBeTrue();
+    (component as unknown as { loadMore: () => void }).loadMore(); // 20
+    (component as unknown as { loadMore: () => void }).loadMore(); // 25 (all)
+    expect((component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches().length).toBe(25);
+    expect((component as unknown as { hasMore: () => boolean }).hasMore()).toBeFalse();
   });
 
   it('resets currentPage to 1 when filters are changed', () => {
-    queryParamMapSubject.next(convertToParamMap({ page: '2' }));
-    fixture.detectChanges();
+    (component as unknown as { loadMore: () => void }).loadMore();
     expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(2);
 
     (component as unknown as { setFilters: (f: unknown) => void }).setFilters({
-      keyword: 'mario',
+      keyword: 'Game 1',
       tag: null,
       translatorId: null,
       system: null,
@@ -133,19 +126,53 @@ describe('BrowsePageComponent - Pagination URL Synchronization', () => {
     expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
   });
 
-  it('clamps currentPage to totalPages if page in URL exceeds maximum pages', () => {
-    queryParamMapSubject.next(convertToParamMap({ page: '999' }));
+  it('does not read page parameter from URL query params', () => {
+    queryParamMapSubject.next(convertToParamMap({ page: '3' }));
     fixture.detectChanges();
-    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(3);
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
   });
 
-  it('defaults to page 1 for invalid page numbers in URL', () => {
-    queryParamMapSubject.next(convertToParamMap({ page: '-5' }));
-    fixture.detectChanges();
-    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
+  it('hides floating add game button when app-topbar is visible in viewport', () => {
+    const topbar = document.createElement('div');
+    topbar.className = 'app-topbar';
+    document.body.appendChild(topbar);
+    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
+      bottom: 50,
+      top: 0,
+      left: 0,
+      right: 100,
+      width: 100,
+      height: 50,
+      x: 0,
+      y: 0,
+      toJSON: () => {}
+    });
 
-    queryParamMapSubject.next(convertToParamMap({ page: 'not-a-number' }));
-    fixture.detectChanges();
-    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
+    (component as unknown as { updateFloatingAddGameVisibility: () => void }).updateFloatingAddGameVisibility();
+    expect((component as unknown as { showFloatingAddGame: () => boolean }).showFloatingAddGame()).toBeFalse();
+
+    document.body.removeChild(topbar);
+  });
+
+  it('shows floating add game button when app-topbar is scrolled past viewport', () => {
+    const topbar = document.createElement('div');
+    topbar.className = 'app-topbar';
+    document.body.appendChild(topbar);
+    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
+      bottom: -10,
+      top: -60,
+      left: 0,
+      right: 100,
+      width: 100,
+      height: 50,
+      x: 0,
+      y: -60,
+      toJSON: () => {}
+    });
+
+    (component as unknown as { updateFloatingAddGameVisibility: () => void }).updateFloatingAddGameVisibility();
+    expect((component as unknown as { showFloatingAddGame: () => boolean }).showFloatingAddGame()).toBeTrue();
+
+    document.body.removeChild(topbar);
   });
 });

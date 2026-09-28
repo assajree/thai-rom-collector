@@ -3,13 +3,28 @@
   <form class="mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
 
     <div>
-      <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
-          class="admin-input" formControlName="gameTitle" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('gameTitle')"
-        [disabled]="pastingField === 'gameTitle'">{{ pastingField === 'gameTitle' ? 'กำลังวาง…' :
-        'Clipboard' }}</button>
+      <label class="required"><i class="fa-solid fa-users mr-1" aria-hidden="true"></i>ทีมแปล</label>
+      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
+          (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
+          (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
+          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options" />
+        <input formControlName="translatorId" type="hidden" />
+        @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
+        <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
+          @for (translator of filteredTranslatorOptions(); track translator.id) {
+          <li><button class="button" type="button" role="option" (click)="selectTranslator(translator)">{{
+              translatorLabel(translator)
+              }}</button></li>
+          }
+        </ul>
+        } @else if (translatorAutocompleteOpen) {
+        <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
+        }
+      </div>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button"
+        (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
     </div>
-
     <div>
       <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
       <div class="tag-autocomplete" (click)="$event.stopPropagation()">
@@ -21,7 +36,8 @@
         @if (systemAutocompleteOpen && filteredSystemOptions().length > 0) {
         <ul id="system-options" class="tag-autocomplete__list" role="listbox">
           @for (system of filteredSystemOptions(); track system.id) {
-          <li><button type="button" class="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system) }}</button></li>
+          <li><button type="button" class="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system)
+              }}</button></li>
           }
         </ul>
         } @else if (systemAutocompleteOpen) {
@@ -32,26 +48,11 @@
         (click)="openSystemDialog()">เพิ่มเครื่องเกม</button>
     </div>
     <div>
-      <label class="required"><i class="fa-solid fa-users mr-1" aria-hidden="true"></i>ทีมแปล</label>
-      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
-        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
-          (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
-          (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
-          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options" />
-        <input formControlName="translatorId" type="hidden" />
-        @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
-        <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
-          @for (translator of filteredTranslatorOptions(); track translator.id) {
-          <li><button class="button" type="button" role="option" (click)="selectTranslator(translator)">{{ translatorLabel(translator)
-              }}</button></li>
-          }
-        </ul>
-        } @else if (translatorAutocompleteOpen) {
-        <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
-        }
-      </div>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button"
-        (click)="openTranslatorDialog()">เพิ่มทีมแปล</button>
+      <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
+          class="admin-input" formControlName="gameTitle" /></label>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('gameTitle')"
+        [disabled]="pastingField === 'gameTitle'">{{ pastingField === 'gameTitle' ? 'กำลังวาง…' :
+        'Clipboard' }}</button>
     </div>
     <div>
       <label><i class="fa-solid fa-image mr-1" aria-hidden="true"></i>ภาพปก</label>
@@ -194,8 +195,8 @@
       <label class="mt-3 block"><i class="fa-solid fa-link mr-1" aria-hidden="true"></i>ลิงก์ทีมแปล<input
           class="admin-input" [value]="newTranslatorLink"
           (input)="newTranslatorLink = $any($event.target).value" /></label>
-      <div class="mt-5 flex gap-2"><button class="border  px-3 py-2 font-bold disabled:opacity-50 button"
-          type="button" (click)="createTranslator()" [disabled]="savingTranslator">{{ savingTranslator ? 'กำลังบันทึก…'
+      <div class="mt-5 flex gap-2"><button class="border  px-3 py-2 font-bold disabled:opacity-50 button" type="button"
+          (click)="createTranslator()" [disabled]="savingTranslator">{{ savingTranslator ? 'กำลังบันทึก…'
           : 'บันทึก'
           }}</button><button class="border border-slate-300 px-3 py-2 font-bold button" type="button"
           (click)="closeTranslatorDialog()">ยกเลิก</button></div>

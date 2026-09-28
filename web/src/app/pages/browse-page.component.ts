@@ -1,4 +1,4 @@
-import { Component, HostListener, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Component, HostListener, OnInit, computed, effect, inject, signal, untracked } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PatchRepository } from '../repositories/patch.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
@@ -19,7 +19,7 @@ import { TagRepository } from '../repositories/tag.repository';
   styleUrl: './browse-page.component.css',
   templateUrl: './browse-page.component.html'
 })
-export class BrowsePageComponent {
+export class BrowsePageComponent implements OnInit {
   private static readonly todayWindowMs = 24 * 60 * 60 * 1000;
   private static readonly weekWindowMs = 7 * 24 * 60 * 60 * 1000;
   private readonly patchRepository = inject(PatchRepository);
@@ -45,6 +45,7 @@ export class BrowsePageComponent {
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly showBackToTop = signal(false);
+  protected readonly showFloatingAddGame = signal(false);
   protected readonly currentPage = signal(1);
   protected readonly pageSize = 10;
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
@@ -64,7 +65,6 @@ export class BrowsePageComponent {
   private readonly queryStateEffect = effect(() => {
     if (!this.queryStateReady()) return;
     const filters = this.filters();
-    const page = untracked(() => this.currentPage());
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -72,8 +72,7 @@ export class BrowsePageComponent {
         translator: this.translators().find((item) => item.id === filters.translatorId)?.shortName || null,
         system: filters.system || null,
         sort: filters.sortBy === 'updateDate' ? null : filters.sortBy,
-        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection,
-        page: page > 1 ? page : null
+        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection
       },
       replaceUrl: true
     });
@@ -135,16 +134,17 @@ export class BrowsePageComponent {
     return a.id.localeCompare(b.id);
   }));
   protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.sortedPatches().length / this.pageSize)));
-  protected readonly pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, index) => index + 1));
   protected readonly paginatedPatches = computed(() => {
-    const page = Math.min(this.currentPage(), this.totalPages());
-    const start = (page - 1) * this.pageSize;
-    return this.sortedPatches().slice(start, start + this.pageSize);
+    const count = Math.min(this.currentPage() * this.pageSize, this.sortedPatches().length);
+    return this.sortedPatches().slice(0, count);
   });
+  protected readonly hasMore = computed(() => this.paginatedPatches().length < this.sortedPatches().length);
+  protected readonly remainingCount = computed(() => Math.max(0, this.sortedPatches().length - this.paginatedPatches().length));
+  protected readonly nextLoadCount = computed(() => Math.min(this.pageSize, this.remainingCount()));
   private readonly paginationClampEffect = effect(() => {
     if (!this.patchesLoaded()) return;
     const lastPage = this.totalPages();
-    if (this.currentPage() > lastPage) this.setPage(lastPage);
+    if (this.currentPage() > lastPage) this.currentPage.set(lastPage);
   }, { allowSignalWrites: true });
   private readonly routeFilterEffect = effect(() => {
     const kind = this.routeKind();
@@ -212,25 +212,9 @@ export class BrowsePageComponent {
   protected clearSystem(): void { this.selectedSystem.set(null); }
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
   protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); this.currentPage.set(1); }
-  protected setPage(page: number): void {
-    const nextPage = Math.max(1, Math.min(page, this.totalPages()));
-    if (nextPage === this.currentPage()) return;
-    this.currentPage.set(nextPage);
-    void this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: { page: nextPage > 1 ? nextPage : null },
-      queryParamsHandling: 'merge'
-    });
-    // Wait until the page state has rendered before scrolling. This is more
-    // reliable on iOS Safari than scrolling an element during the click event.
-    requestAnimationFrame(() => {
-      document.querySelector('.browse-route-label')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      // window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      // // Safari can keep the scroll offset on one of these roots depending on
-      // // the document mode, so keep both in sync as a fallback.
-      // document.documentElement.scrollTop = 0;
-      // document.body.scrollTop = 0;
-    });
+  protected loadMore(): void {
+    if (!this.hasMore()) return;
+    this.currentPage.update((page) => page + 1);
   }
 
   protected retry(): void {
@@ -239,7 +223,29 @@ export class BrowsePageComponent {
     this.loadPatches();
   }
   @HostListener('window:scroll')
-  protected updateBackToTopVisibility(): void { this.showBackToTop.set(window.scrollY > 400); }
+  @HostListener('window:resize')
+  protected updateScrollVisibility(): void {
+    this.updateBackToTopVisibility();
+    this.updateFloatingAddGameVisibility();
+  }
+
+  protected updateBackToTopVisibility(): void {
+    this.showBackToTop.set(typeof window !== 'undefined' && window.scrollY > 400);
+  }
+
+  protected updateFloatingAddGameVisibility(): void {
+    const topbar = typeof document !== 'undefined' ? document.querySelector('.app-topbar') : null;
+    if (topbar) {
+      this.showFloatingAddGame.set(topbar.getBoundingClientRect().bottom <= 0);
+    } else if (typeof window !== 'undefined') {
+      this.showFloatingAddGame.set(window.scrollY > 40);
+    }
+  }
+
+  ngOnInit(): void {
+    this.updateScrollVisibility();
+  }
+
   protected backToTop(): void { window.scrollTo({ top: 0, behavior: 'smooth' }); }
   private loadPatches(): void {
     this.patchRepository.watchAll().subscribe({ next: (patches) => { this.patches.set(patches); this.patchesLoaded.set(true); this.loading.set(false); }, error: () => { this.unavailable.set(true); this.loading.set(false); } });
@@ -267,14 +273,11 @@ export class BrowsePageComponent {
     this.route.queryParamMap.subscribe((params) => {
       const sort = params.get('sort');
       const direction = params.get('dir');
-      const pageParam = params.get('page');
-      const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
       this.keyword.set(params.get('q') ?? '');
       this.translatorQuery.set(params.get('translator'));
       this.filterState.selectedSystem.set(params.get('system'));
       this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' ? sort : 'updateDate');
       this.direction.set(direction === 'asc' ? 'asc' : 'desc');
-      this.currentPage.set(Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1);
     });
   }
 }

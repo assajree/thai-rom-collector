@@ -122,72 +122,73 @@
   line-height: 1;
 }
 
-.pagination {
+.load-more-section {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  display: flex;
-  gap: .55rem;
-  justify-content: space-between;
-  max-width: 42rem;
+  gap: .75rem;
+  margin: 1.75rem auto 0;
+  max-width: 26rem;
+  width: 100%;
 }
 
-.pagination--top {
-  margin: .65rem auto 0;
-}
-
-.pagination--bottom {
-  margin: 1.5rem auto 0;
-}
-
-.pagination__pages {
-  display: flex;
-  flex-wrap: wrap;
-  gap: .35rem;
+.load-more-button {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-}
-
-.pagination__current {
-  color: var(--color-text);
-  font-weight: 800;
-  min-width: 7rem;
-  text-align: center;
-}
-
-.pagination__button {
+  gap: .5rem;
+  width: 100%;
+  min-height: 44px;
+  padding: .75rem 1.25rem;
   background: var(--color-surface);
-  box-shadow: 2px 2px 0 var(--color-shadow);
+  border: 1px solid var(--color-border);
+  box-shadow: 4px 4px 0 var(--color-shadow);
   color: var(--color-text);
-  cursor: pointer;
   font: inherit;
   font-weight: 800;
-  min-width: 2.5rem;
-  padding: .45rem .7rem;
-  border: 1px solid var(--color-shadow);
+  cursor: pointer;
+  transition: transform .1s ease, box-shadow .1s ease;
 }
 
-.pagination__button:hover:not(:disabled) {
-  background: var(--color-surface-light);
+.load-more-button:hover {
+  background: var(--color-accent);
+  color: var(--color-text);
 }
 
-.pagination__button:focus-visible {
+.load-more-button:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+}
+
+.load-more-button:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 3px;
 }
 
-.pagination__button:disabled {
-  background: var(--color-disabled);
-  box-shadow: 1px 1px 0 var(--color-shadow);
+.load-more-status {
+  margin: 0;
   color: var(--color-text-muted);
-  cursor: not-allowed;
+  font-size: .875rem;
+  font-weight: 700;
+  text-align: center;
 }
 
-.pagination__step_button {
-  height: stretch;
+.load-more-end {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .65rem 1.25rem;
+  color: var(--color-text-muted);
+  font-size: .875rem;
+  font-weight: 700;
+  border-top: 1px dashed var(--color-border);
+  width: 100%;
+  text-align: center;
 }
 
-.pagination__page--active,
-.pagination__page--active:hover:not(:disabled) {
-  background: var(--color-accent);
-  color: var(--color-text);
+.load-more-end-icon {
+  color: var(--color-brand);
 }
 
 @keyframes skeleton-pulse {
