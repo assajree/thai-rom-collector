@@ -284,11 +284,11 @@
         message.tone === 'error' ? '!' : message.tone === 'success' ? '✓' : 'i' }}</span>
       {{ message.text }}
       @if (appUpdateReady()) {
-      <button class="retro-system-button ml-auto" type="button" (click)="updateApp()">
-        อัปเดต
+      <button class="retro-system-button ml-auto" type="button" [disabled]="updatingApp()" (click)="updateApp()">
+        {{ updatingApp() ? 'กำลังอัปเดต...' : 'อัปเดต' }}
       </button>
       }
-      <button class="ml-auto text-xl leading-none no-button" type="button" (click)="statusMessageService.clear()"
+      <button class="ml-auto text-xl leading-none no-button" type="button" (click)="dismissStatusMessage()"
         aria-label="Dismiss message">x</button>
     </div>
     }

@@ -31,7 +31,7 @@ export class AdminSamplePageComponent {
 
   protected showToast(tone: 'success' | 'info' | 'error'): void {
     const text = tone === 'success' ? 'ตัวอย่าง success message' : tone === 'error' ? 'ตัวอย่าง error message' : 'ตัวอย่าง info message';
-    this.status.show(text, tone);
+    this.status.show(text, tone, false);
   }
 
   protected async simulateLoading(): Promise<void> {
@@ -39,6 +39,6 @@ export class AdminSamplePageComponent {
     this.loading.set(true);
     await new Promise((resolve) => window.setTimeout(resolve, 900));
     this.loading.set(false);
-    this.status.show('การทำงานตัวอย่างเสร็จแล้ว', 'success');
+    this.status.show('การทำงานตัวอย่างเสร็จแล้ว', 'success', false);
   }
 }

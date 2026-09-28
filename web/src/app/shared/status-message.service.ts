@@ -7,6 +7,10 @@ export interface StatusMessage {
   tone: StatusMessageTone;
 }
 
+export interface StatusMessageOptions {
+  autoDismiss?: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class StatusMessageService {
   private static readonly autoDismissMs = 5000;
@@ -15,13 +19,23 @@ export class StatusMessageService {
 
   readonly message = this.currentMessage.asReadonly();
 
-  show(text: string, tone: StatusMessageTone = 'info'): void {
+  show(
+    text: string,
+    tone: StatusMessageTone = 'info',
+    autoDismissOrOptions: boolean | StatusMessageOptions = true
+  ): void {
+    const autoDismiss = typeof autoDismissOrOptions === 'boolean'
+      ? autoDismissOrOptions
+      : (autoDismissOrOptions.autoDismiss ?? true);
+
     this.clearDismissTimer();
     this.currentMessage.set({ text, tone });
-    this.dismissTimer = setTimeout(() => {
-      this.currentMessage.set(null);
-      this.dismissTimer = null;
-    }, StatusMessageService.autoDismissMs);
+    if (autoDismiss) {
+      this.dismissTimer = setTimeout(() => {
+        this.currentMessage.set(null);
+        this.dismissTimer = null;
+      }, StatusMessageService.autoDismissMs);
+    }
   }
 
   clear(): void {

@@ -51,6 +51,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly browseRoute = browseRoute;
   protected readonly isOffline = signal(false);
   protected readonly appUpdateReady = signal(false);
+  protected readonly updatingApp = signal(false);
   protected sidebarLinksFor(section: SidebarLinkSection): SidebarLink[] { return this.sidebarLinks().filter((link) => link.section === section); }
   protected readonly browserInfo = this.getBrowserInfo();
   protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
@@ -143,7 +144,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     window.addEventListener('offline', this.offlineHandler);
     this.watchForAppUpdates();
     this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) this.statusMessageService.clear();
+      if (event instanceof NavigationStart && !this.appUpdateReady()) {
+        this.statusMessageService.clear();
+      }
     });
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.sidebarLinkRepository.watchAll().subscribe({ next: (links) => this.sidebarLinks.set(links) });
@@ -164,7 +167,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.swUpdate.versionUpdates.subscribe((event) => {
       if (event.type === 'VERSION_READY') {
         this.appUpdateReady.set(true);
-        this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กดอัปเดตเมื่อสะดวก');
+        this.statusMessageService.show('มีเวอร์ชันใหม่พร้อมใช้งาน กดอัปเดตเมื่อสะดวก', 'info', false);
       }
     });
   }
@@ -190,10 +193,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     if (theme === 'pocket-pet') this.document.body.dataset['theme'] = theme;
   }
 
+  protected dismissStatusMessage(): void {
+    this.appUpdateReady.set(false);
+    this.statusMessageService.clear();
+  }
+
   protected async updateApp(): Promise<void> {
-    if (!this.swUpdate?.isEnabled) return;
-    await this.swUpdate.activateUpdate();
-    window.location.reload();
+    if (!this.swUpdate?.isEnabled || this.updatingApp()) return;
+    this.updatingApp.set(true);
+    this.statusMessageService.show('กำลังอัปเดต...', 'info', false);
+    try {
+      await this.swUpdate.activateUpdate();
+      window.location.reload();
+    } catch {
+      this.updatingApp.set(false);
+      this.statusMessageService.show('ไม่สามารถอัปเดตได้ กรุณาลองใหม่อีกครั้ง', 'error');
+    }
   }
 
   protected async signIn(): Promise<void> {
