@@ -59,13 +59,11 @@ export const routes: Routes = [
   { path: 'admin/maintenance', loadComponent: () => import('./pages/admin-maintenance-page.component').then(m => m.AdminMaintenancePageComponent), canActivate: [adminGuard] },
   {
     path: 'add-patch',
-    component: AdminPatchPageComponent,
-    canActivate: [adminGuard]
+    component: AdminPatchPageComponent
   },
   {
     path: 'add-patch/:id',
-    component: AdminPatchPageComponent,
-    canActivate: [adminGuard]
+    component: AdminPatchPageComponent
   },
   {
     path: 'admin/systems',

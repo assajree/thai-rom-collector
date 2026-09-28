@@ -17,7 +17,12 @@ export class ImageProcessorService {
     const { width, height } = calculateCoverDimensions(image.width, image.height);
     const canvas = document.createElement('canvas');
     canvas.width = width; canvas.height = height;
-    canvas.getContext('2d')?.drawImage(image, 0, 0, width, height);
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(image, 0, 0, width, height);
+    }
     const blob = await new Promise<Blob>((resolve, reject) => canvas.toBlob((result) => result ? resolve(result) : reject(new Error('ไม่สามารถแปลงรูปภาพได้')), 'image/png'));
     return { blob, width, height, filename: `cover_max250px_${Date.now()}.png` };
   }

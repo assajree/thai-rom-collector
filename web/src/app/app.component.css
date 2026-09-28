@@ -242,10 +242,23 @@
 }
 
 .sidebar-translator-row>.retro-system-button {
+  align-items: baseline;
+  display: inline-flex;
   flex: 1;
+  gap: .25rem;
   min-width: 0;
+}
+
+.sidebar-translator-row>.retro-system-button .sidebar-link-text {
   overflow: hidden;
   text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-count {
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+  opacity: 0.85;
   white-space: nowrap;
 }
 

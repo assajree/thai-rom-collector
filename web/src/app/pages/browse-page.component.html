@@ -6,54 +6,63 @@
   @if (activeRouteLabel(); as routeLabel) {
   <div class="browse-route-label">
     <span>{{ routeLabel }} ({{ sortedPatches().length }})</span>
-    <button type="button" class=" no-button" aria-label="ล้างตัวกรองทั้งหมด"
-      (click)="clearAllFilters()">x</button>
+    <button type="button" class=" no-button" aria-label="ล้างตัวกรองทั้งหมด" (click)="clearAllFilters()">x</button>
   </div>
   @if (!loading() && !unavailable() && sortedPatches().length > 0 && totalPages() > 1) {
-    <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
-      <button type="button" class="pagination__button no-button" [disabled]="currentPage() === 1"
-        aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
-      <span class="pagination__current" aria-live="polite">หน้า {{ currentPage() }} / {{ totalPages() }}</span>
-      <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"
-        aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
-    </nav>
+  <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
+    <button type="button" class="pagination__button no-button" [disabled]="currentPage() === 1"
+      aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
+    <span class="pagination__current" aria-live="polite">หน้า {{ currentPage() }} / {{ totalPages() }}</span>
+    <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"
+      aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
+  </nav>
   }
   }
 
   @if (loading()) {
-    <div class="skeleton-grid" aria-label="กำลังโหลดรายการแพตช์" aria-busy="true">
-      @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) { <div class="patch-skeleton"><span></span><div><i></i><i></i><i></i></div></div> }
-    </div>
+  <div class="skeleton-grid" aria-label="กำลังโหลดรายการแพตช์" aria-busy="true">
+    @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) { <div class="patch-skeleton"><span></span>
+      <div><i></i><i></i><i></i></div>
+    </div> }
+  </div>
   }
   @if (unavailable()) { <div class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
     กรุณาลองใหม่อีกครั้ง <button type="button" class="retry-button" (click)="retry()">ลองใหม่</button></div> }
-  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">ไม่พบรายการแพตช์ตามเงื่อนไข</p>
+  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">
+    ไม่พบรายการแพตช์ตามเงื่อนไข</p>
   }
 
   @if (!loading() && !unavailable() && sortedPatches().length > 0) {
-    <app-patch-card-list [patches]="paginatedPatches()" [translators]="translators()" [systems]="systemMasters()" [tags]="tags()" [canEdit]="auth.isAdmin()" />
+  <app-patch-card-list [patches]="paginatedPatches()" [translators]="translators()" [systems]="systemMasters()"
+    [tags]="tags()" [canEdit]="auth.isAdmin()" />
 
-    @if (totalPages() > 1) {
-      <nav class="pagination pagination--bottom" aria-label="การแบ่งหน้ารายการแพตช์">
-        <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === 1"
-          aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
-        <div class="pagination__pages">
-          @for (page of pageNumbers(); track page) {
-            <button type="button" class="pagination__button pagination__page"
-              [class.pagination__page--active]="page === currentPage()"
-              [attr.aria-current]="page === currentPage() ? 'page' : null"
-              [attr.aria-label]="'ไปหน้าที่ ' + page" (click)="setPage(page)">{{ page }}</button>
-          }
-        </div>
-        <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === totalPages()"
-          aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
-      </nav>
-    }
+  @if (totalPages() > 1) {
+  <nav class="pagination pagination--bottom" aria-label="การแบ่งหน้ารายการแพตช์">
+    <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === 1"
+      aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
+    <div class="pagination__pages">
+      @for (page of pageNumbers(); track page) {
+      <button type="button" class="pagination__button pagination__page"
+        [class.pagination__page--active]="page === currentPage()"
+        [attr.aria-current]="page === currentPage() ? 'page' : null" [attr.aria-label]="'ไปหน้าที่ ' + page"
+        (click)="setPage(page)">{{ page }}</button>
+      }
+    </div>
+    <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === totalPages()"
+      aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
+  </nav>
+  }
+  }
+
+  @if (auth.isAdmin()) {
+  <a class="floating-add-game button btn-primary" routerLink="/add-patch" aria-label="เพิ่มเกม">
+    <i class="fa-solid fa-plus" aria-hidden="true"></i>
+  </a>
   }
 
   @if (showBackToTop()) {
-    <button class="back-to-top button btn-primary" type="button" (click)="backToTop()" aria-label="กลับไปด้านบน">
-      <span aria-hidden="true">↑</span>กลับไปด้านบน
-    </button>
+  <button class="back-to-top button btn-primary" type="button" (click)="backToTop()" aria-label="กลับไปด้านบน">
+    <span aria-hidden="true">↑</span>กลับไปด้านบน
+  </button>
   }
 </main>

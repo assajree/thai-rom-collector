@@ -142,7 +142,7 @@
 
 .patch-card__description {
   color: var(--color-text);
-  line-height: 1.15;
+  line-height: 2;
   margin: .15rem 0;
 }
 

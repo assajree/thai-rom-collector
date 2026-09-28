@@ -84,9 +84,9 @@
   margin: .7rem;
 }
 
-.back-to-top {
+.back-to-top,
+.floating-add-game {
   align-items: center;
-  bottom: 1rem;
   cursor: pointer;
   display: flex;
   font-weight: 800;
@@ -97,13 +97,28 @@
   z-index: 10;
 }
 
-.back-to-top:focus-visible {
+.back-to-top {
+  bottom: 1rem;
+}
+
+.floating-add-game {
+  text-decoration: none;
+  top: 2.5rem;
+}
+
+.back-to-top:focus-visible,
+.floating-add-game:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 3px;
 }
 
 .back-to-top span {
   font-size: 1.35rem;
+  line-height: 1;
+}
+
+.floating-add-game i {
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -196,13 +211,17 @@
 }
 
 @media (max-width: 768px) {
-  .back-to-top {
-    right: 0.5rem
+
+  .back-to-top,
+  .floating-add-game {
+    right: 0.5rem;
   }
 }
 
 @media (min-width: 1200px) {
-  .back-to-top {
-    right: 300px
+
+  .back-to-top,
+  .floating-add-game {
+    right: 300px;
   }
 }

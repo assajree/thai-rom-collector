@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { GameListFilters, Translator } from '../models/patch.models';
 import { BrowseRouteKind } from '../shared/browse-route.util';
@@ -16,6 +16,14 @@ export class GameListControlsComponent {
   @Input() routeKind: BrowseRouteKind | null = null;
   @Input() draft: GameListFilters = { keyword: '', tag: null, translatorId: null, system: null, sortBy: 'updateDate', sortDirection: 'desc' };
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
+  @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
   protected sortOpen = false;
+
+  protected clearKeyword(): void {
+    this.draft.keyword = '';
+    this.emit();
+    this.searchInput?.nativeElement.focus();
+  }
+
   protected emit(): void { this.filtersChanged.emit({ ...this.draft }); }
 }

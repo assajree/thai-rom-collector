@@ -14,6 +14,7 @@ import { StatusMessageService } from '../shared/status-message.service';
 import { Tag, Translator } from '../models/patch.models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ConfirmDialogComponent } from '../components/confirm-dialog.component';
+import { AuthService } from '../services/auth.service';
 
 const compareDropdownLabels = (a: { shortName: string; name: string }, b: { shortName: string; name: string }): number =>
   a.shortName.localeCompare(b.shortName, 'th', { sensitivity: 'base' }) || a.name.localeCompare(b.name, 'th', { sensitivity: 'base' });
@@ -37,7 +38,12 @@ export class AdminPatchPageComponent {
   private readonly status = inject(StatusMessageService);
   private readonly tagRepository = inject(TagRepository);
   private readonly systemRepository = inject(SystemRepository);
+  private readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
+
+  private async isNotAdmin(): Promise<boolean> {
+    return !this.auth.isAdmin() && !(await this.auth.waitForAdminCheck(1500));
+  }
   protected readonly translators = this.translatorRepository.watchAll();
   protected readonly tags = this.tagRepository.watchAll();
   protected readonly systems = this.systemRepository.watchAll();
@@ -47,8 +53,7 @@ export class AdminPatchPageComponent {
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], haveUpdateFlag: [false], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
-  protected pastingGameTitle = false;
-  protected pastingPatchTool = false;
+  protected pastingField: string | null = null;
   protected deleteConfirmOpen = false;
   protected editId: string | null = null;
   private existingCoverUrl = '';
@@ -163,6 +168,10 @@ export class AdminPatchPageComponent {
   protected async save(): Promise<void> {
     if (this.saving) return;
     if (this.form.invalid) { this.form.markAllAsTouched(); this.status.show('กรุณากรอกข้อมูลที่จำเป็นให้ครบ', 'error'); return; }
+    if (await this.isNotAdmin()) {
+      this.status.show('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถบันทึกแพตช์ได้', 'error');
+      return;
+    }
     this.saving = true;
     this.status.show('กำลังบันทึกแพตช์…');
     try {
@@ -220,34 +229,25 @@ export class AdminPatchPageComponent {
     }
   }
 
-  protected async pasteGameTitle(): Promise<void> {
-    if (this.pastingGameTitle) return;
-    this.pastingGameTitle = true;
+  protected async pasteTo(field: 'gameTitle' | 'patchTool' | 'patchFileUrl' | 'patchedRomUrl' | 'referenceUrl' | 'walkthroughUrl'): Promise<void> {
+    if (this.pastingField) return;
+    this.pastingField = field;
     try {
       const text = (await navigator.clipboard.readText()).trim();
-      if (text) this.form.controls.gameTitle.setValue(text);
+      if (text) this.form.controls[field].setValue(text);
     } catch {
       // Clipboard access can be denied by the browser; leave the current value unchanged.
     } finally {
-      this.pastingGameTitle = false;
-    }
-  }
-
-  protected async pastePatchTool(): Promise<void> {
-    if (this.pastingPatchTool) return;
-    this.pastingPatchTool = true;
-    try {
-      const text = (await navigator.clipboard.readText()).trim();
-      if (text) this.form.controls.patchTool.setValue(text);
-    } catch {
-      // Clipboard access can be denied by the browser; leave the current value unchanged.
-    } finally {
-      this.pastingPatchTool = false;
+      this.pastingField = null;
     }
   }
 
   protected async deletePatch(): Promise<void> {
     if (!this.editId || this.saving) return;
+    if (await this.isNotAdmin()) {
+      this.status.show('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถลบแพตช์ได้', 'error');
+      return;
+    }
     this.deleteConfirmOpen = true;
   }
 
@@ -361,6 +361,10 @@ export class AdminPatchPageComponent {
     if (!name) return;
     const existing = this.tagSuggestions.find((tag) => tag.name.toLocaleLowerCase() === name.toLocaleLowerCase());
     if (existing) { this.selectTag(existing); return; }
+    if (await this.isNotAdmin()) {
+      this.status.show('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถเพิ่ม tag ได้', 'error');
+      return;
+    }
     try {
       const tag = await this.tagRepository.create(name);
       this.selectTag(tag);
@@ -373,6 +377,10 @@ export class AdminPatchPageComponent {
     try {
       const name = this.newTranslatorName.trim();
       if (!name || !this.newTranslatorShortName.trim()) { this.status.show('กรุณาระบุชื่อย่อและชื่อเต็มของทีมแปล', 'error'); return; }
+      if (await this.isNotAdmin()) {
+        this.status.show('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถเพิ่มทีมแปลได้', 'error');
+        return;
+      }
       this.savingTranslator = true;
       this.status.show('กำลังบันทึกทีมแปล…');
       const translator = await this.translatorRepository.create(this.newTranslatorShortName, name, removeFacebookReference(this.newTranslatorLink), this.newTranslatorModTool);
@@ -396,6 +404,10 @@ export class AdminPatchPageComponent {
   protected async createSystem(): Promise<void> {
     if (this.savingSystem) return;
     try {
+      if (await this.isNotAdmin()) {
+        this.status.show('เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถเพิ่มเครื่องเกมได้', 'error');
+        return;
+      }
       this.savingSystem = true;
       this.status.show('กำลังบันทึกเครื่องเกม…');
       const system = await this.systemRepository.create(this.newSystemShortName, this.newSystemName);

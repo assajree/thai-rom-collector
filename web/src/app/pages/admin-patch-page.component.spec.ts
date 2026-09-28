@@ -9,6 +9,7 @@ import { SystemRepository } from '../repositories/system.repository';
 import { PatchRepository } from '../repositories/patch.repository';
 import { CoverStorageService } from '../services/cover-storage.service';
 import { StatusMessageService } from '../shared/status-message.service';
+import { AuthService } from '../services/auth.service';
 import { ParamMap, convertToParamMap } from '@angular/router';
 
 /**
@@ -87,6 +88,13 @@ describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
         { provide: PatchRepository, useValue: patchRepositoryStub },
         { provide: CoverStorageService, useValue: coverStorageStub },
         { provide: StatusMessageService, useValue: statusMessageStub },
+        {
+          provide: AuthService,
+          useValue: {
+            isAdmin: () => true,
+            waitForAdminCheck: () => Promise.resolve(true),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -216,6 +224,13 @@ describe('AdminPatchPageComponent - Preservation Properties', () => {
         { provide: PatchRepository, useValue: patchRepositoryStub },
         { provide: CoverStorageService, useValue: coverStorageStub },
         { provide: StatusMessageService, useValue: statusMessageStub },
+        {
+          provide: AuthService,
+          useValue: {
+            isAdmin: () => true,
+            waitForAdminCheck: () => Promise.resolve(true),
+          },
+        },
       ],
     }).compileComponents();
 
@@ -412,3 +427,111 @@ describe('AdminPatchPageComponent - Preservation Properties', () => {
     expect(c.editId).toBe(testPatchId);
   });
 });
+
+describe('AdminPatchPageComponent - Clipboard Paste', () => {
+  let component: AdminPatchPageComponent;
+  let paramMapSubject: Subject<ParamMap>;
+
+  const patchRepositoryStub = {
+    watchAll: () => of([]),
+    getById: jasmine.createSpy('getById').and.returnValue(Promise.resolve(undefined)),
+    create: jasmine.createSpy('create').and.returnValue(Promise.resolve('new-id')),
+    update: jasmine.createSpy('update').and.returnValue(Promise.resolve()),
+  };
+
+  const translatorRepositoryStub = { watchAll: () => of([]) };
+  const tagRepositoryStub = { watchAll: () => of([]) };
+  const systemRepositoryStub = { watchAll: () => of([]) };
+  const coverStorageStub = { upload: jasmine.createSpy('upload'), remove: jasmine.createSpy('remove') };
+  const statusMessageStub = { show: jasmine.createSpy('show') };
+
+  beforeEach(async () => {
+    paramMapSubject = new Subject<ParamMap>();
+
+    await TestBed.configureTestingModule({
+      imports: [AdminPatchPageComponent, ReactiveFormsModule],
+      providers: [
+        { provide: ActivatedRoute, useValue: { paramMap: paramMapSubject.asObservable() } },
+        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), navigateByUrl: jasmine.createSpy('navigateByUrl') } },
+        { provide: TranslatorRepository, useValue: translatorRepositoryStub },
+        { provide: TagRepository, useValue: tagRepositoryStub },
+        { provide: SystemRepository, useValue: systemRepositoryStub },
+        { provide: PatchRepository, useValue: patchRepositoryStub },
+        { provide: CoverStorageService, useValue: coverStorageStub },
+        { provide: StatusMessageService, useValue: statusMessageStub },
+        {
+          provide: AuthService,
+          useValue: {
+            isAdmin: () => true,
+            waitForAdminCheck: () => Promise.resolve(true),
+          },
+        },
+      ],
+    }).compileComponents();
+
+    const fixture = TestBed.createComponent(AdminPatchPageComponent);
+    component = fixture.componentInstance;
+    paramMapSubject.next(convertToParamMap({}));
+    fixture.detectChanges();
+  });
+
+  it('pastes text from clipboard into patchFileUrl, patchedRomUrl, referenceUrl, and walkthroughUrl', async () => {
+    const c = component as any;
+    spyOn(navigator.clipboard, 'readText').and.resolveTo('  https://example.com/file.zip  ');
+
+    await c.pasteTo('patchFileUrl');
+    expect(c.form.controls.patchFileUrl.value).toBe('https://example.com/file.zip');
+
+    (navigator.clipboard.readText as jasmine.Spy).and.resolveTo('https://example.com/rom.bin');
+    await c.pasteTo('patchedRomUrl');
+    expect(c.form.controls.patchedRomUrl.value).toBe('https://example.com/rom.bin');
+
+    (navigator.clipboard.readText as jasmine.Spy).and.resolveTo('https://example.com/ref');
+    await c.pasteTo('referenceUrl');
+    expect(c.form.controls.referenceUrl.value).toBe('https://example.com/ref');
+
+    (navigator.clipboard.readText as jasmine.Spy).and.resolveTo('https://example.com/guide');
+    await c.pasteTo('walkthroughUrl');
+    expect(c.form.controls.walkthroughUrl.value).toBe('https://example.com/guide');
+  });
+
+  it('rejects save when user is not admin', async () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'isAdmin').and.returnValue(false);
+    spyOn(authService, 'waitForAdminCheck').and.resolveTo(false);
+
+    const c = component as any;
+    c.form.patchValue({
+      gameTitle: 'Test Game',
+      system: 'SFC',
+      translatorId: 'trans-1',
+    });
+
+    await c.save();
+
+    expect(statusMessageStub.show).toHaveBeenCalledWith(
+      'เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถบันทึกแพตช์ได้',
+      'error'
+    );
+    expect(patchRepositoryStub.create).not.toHaveBeenCalled();
+    expect(patchRepositoryStub.update).not.toHaveBeenCalled();
+    expect(coverStorageStub.upload).not.toHaveBeenCalled();
+  });
+
+  it('rejects delete when user is not admin', async () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'isAdmin').and.returnValue(false);
+    spyOn(authService, 'waitForAdminCheck').and.resolveTo(false);
+
+    const c = component as any;
+    c.editId = 'patch-123';
+    await c.deletePatch();
+
+    expect(statusMessageStub.show).toHaveBeenCalledWith(
+      'เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถลบแพตช์ได้',
+      'error'
+    );
+    expect(c.deleteConfirmOpen).toBeFalse();
+  });
+});
+

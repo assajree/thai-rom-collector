@@ -21,6 +21,7 @@ export class PatchCardListComponent {
   @Input() tags: Tag[] = [];
   @Input() canEdit = false;
   protected readonly loadedImages = signal(new Set<string>());
+  protected readonly downloadingPatchId = signal<string | null>(null);
   protected translatorLink(patch: Patch): string | undefined {
     return this.translators.find((translator) => translator.id === patch.translatorId)?.link;
   }
@@ -71,23 +72,35 @@ export class PatchCardListComponent {
     return `${patch.coverUrl}${patch.coverUrl.includes('?') ? '&' : '?'}v=${version}`;
   }
   protected async downloadCover(event: Event, patch: Patch): Promise<void> {
+    const mouseEvent = event as MouseEvent;
+    if (mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.button === 1) {
+      return;
+    }
     event.preventDefault();
-    const card = (event.currentTarget as HTMLElement).closest('.patch-card');
-    const image = card?.querySelector<HTMLImageElement>('.patch-cover-image');
-    const imageUrl = image?.currentSrc || patch.coverUrl;
+    if (this.downloadingPatchId() === patch.id) return;
+    this.downloadingPatchId.set(patch.id);
+
     this.status.show('กำลังดาวน์โหลดภาพปก…');
     try {
-      const response = await fetch(imageUrl);
-      if (!response.ok) throw new Error(`ไม่สามารถดาวน์โหลดรูปได้ (${response.status})`);
-      const blobUrl = URL.createObjectURL(await response.blob());
+      const sep = patch.coverUrl.includes('?') ? '&' : '?';
+      const downloadUrl = `${patch.coverUrl}${sep}download=1`;
+      const response = await fetch(downloadUrl);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
       link.download = this.coverFilename(patch);
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
       this.status.show('ดาวน์โหลดภาพปกสำเร็จ', 'success');
-    } catch (error) {
-      this.status.show(error instanceof Error ? error.message : 'ไม่สามารถดาวน์โหลดภาพปกได้', 'error');
+    } catch {
+      window.open(patch.coverUrl, '_blank', 'noopener,noreferrer');
+      this.status.show('ไม่สามารถดาวน์โหลดภาพปกโดยตรงได้ ระบบได้เปิดรูปในแท็บใหม่ให้แล้ว', 'error');
+    } finally {
+      this.downloadingPatchId.set(null);
     }
   }
   protected isNewGame(updateDate: string): boolean {

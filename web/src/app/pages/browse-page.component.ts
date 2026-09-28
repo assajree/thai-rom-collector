@@ -1,5 +1,5 @@
 import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PatchRepository } from '../repositories/patch.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
 import { Patch, Tag, Translator } from '../models/patch.models';
@@ -15,7 +15,7 @@ import { TagRepository } from '../repositories/tag.repository';
 @Component({
   selector: 'app-browse-page',
   standalone: true,
-  imports: [GameListControlsComponent, PatchCardListComponent],
+  imports: [RouterLink, GameListControlsComponent, PatchCardListComponent],
   styleUrl: './browse-page.component.css',
   templateUrl: './browse-page.component.html'
 })

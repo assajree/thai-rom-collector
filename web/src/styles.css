@@ -66,6 +66,10 @@ body[data-theme='pocket-pet'] .admin-search-field {
   border-radius: 1rem;
 }
 
+body[data-theme='pocket-pet'] .search-clear-btn {
+  border-left-width: 1px;
+}
+
 body[data-theme='pocket-pet'] .app-select {
   background: #dce4d8;
   border-color: var(--color-border);
@@ -246,6 +250,12 @@ body {
   font: inherit;
   outline: 0;
   padding: .35rem 0;
+}
+
+.admin-search-input::-webkit-search-cancel-button,
+.admin-search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .admin-search-input::placeholder {

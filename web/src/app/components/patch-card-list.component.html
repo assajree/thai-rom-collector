@@ -67,7 +67,7 @@
         <div class="patch-card__links-label">ลิ้ง:</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
-          <a [href]="patch.coverUrl" [download]="coverFilename(patch)" (click)="downloadCover($event, patch)">ภาพปก</a>
+          <a [href]="patch.coverUrl" [download]="coverFilename(patch)" target="_blank" rel="noopener noreferrer" [class.pointer-events-none]="downloadingPatchId() === patch.id" (click)="downloadCover($event, patch)">ภาพปก</a>
           }
           @if (patch.patchTool) {
           <a [href]="patch.patchTool" target="_blank">Patch Tool</a>

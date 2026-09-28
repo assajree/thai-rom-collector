@@ -1,18 +1,19 @@
-import { AfterViewInit, Component, effect, inject, OnDestroy, signal } from '@angular/core';
+import { AfterViewInit, Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
-import { Tag, Translator } from './models/patch.models';
+import { Patch, Tag, Translator } from './models/patch.models';
 import { SystemMaster, SystemRepository } from './repositories/system.repository';
 import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
 import { ServerCostRepository } from './repositories/server-cost.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
-import { browseRoute } from './shared/browse-route.util';
+import { browseRoute, normalizeBrowseName } from './shared/browse-route.util';
 import { PatchCacheService } from './services/patch-cache.service';
+import { PatchRepository } from './repositories/patch.repository';
 import { SidebarLink, SidebarLinkSection } from './models/sidebar-link.models';
 import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
 
@@ -34,6 +35,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private readonly systemRepository = inject(SystemRepository);
   private readonly serverCostRepository = inject(ServerCostRepository);
   private readonly patchCache = inject(PatchCacheService);
+  private readonly patchRepository = inject(PatchRepository);
   private readonly sidebarLinkRepository = inject(SidebarLinkRepository);
   private readonly router = inject(Router);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
@@ -44,6 +46,74 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly sidebarLinks = signal<SidebarLink[]>([]);
   protected readonly translators = signal<Translator[]>([]);
   protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
+  protected readonly patches = signal<Patch[]>([]);
+  protected readonly patchesLoaded = signal(false);
+
+  private static readonly todayWindowMs = 24 * 60 * 60 * 1000;
+  private static readonly weekWindowMs = 7 * 24 * 60 * 60 * 1000;
+
+  protected readonly patchCounts = computed(() => {
+    const list = this.patches();
+    const now = Date.now();
+    const total = list.length;
+    let today = 0;
+    let week = 0;
+    let rom = 0;
+    let walkthrough = 0;
+    const bySystem: Record<string, number> = {};
+    const byTranslator: Record<string, number> = {};
+    const byTag: Record<string, number> = {};
+
+    for (const patch of list) {
+      if (patch.patchedRomUrl?.trim()) rom++;
+      if (patch.walkthroughUrl?.trim()) walkthrough++;
+
+      const timestamp = Date.parse(patch.updateDate);
+      if (!Number.isNaN(timestamp) && timestamp <= now) {
+        if (timestamp >= now - AppComponent.todayWindowMs) today++;
+        if (timestamp >= now - AppComponent.weekWindowMs) week++;
+      }
+
+      const sysKey = normalizeBrowseName(patch.system).toLocaleLowerCase('th');
+      if (sysKey) {
+        bySystem[sysKey] = (bySystem[sysKey] ?? 0) + 1;
+      }
+
+      if (patch.translatorId) {
+        byTranslator[patch.translatorId] = (byTranslator[patch.translatorId] ?? 0) + 1;
+      }
+
+      if (Array.isArray(patch.tags)) {
+        for (const tagId of patch.tags) {
+          if (tagId) {
+            byTag[tagId] = (byTag[tagId] ?? 0) + 1;
+          }
+        }
+      }
+    }
+
+    return { total, today, week, rom, walkthrough, bySystem, byTranslator, byTag };
+  });
+
+  protected systemCount(shortName: string): number {
+    const key = normalizeBrowseName(shortName).toLocaleLowerCase('th');
+    return this.patchCounts().bySystem[key] ?? 0;
+  }
+
+  protected translatorCount(translatorId: string): number {
+    return this.patchCounts().byTranslator[translatorId] ?? 0;
+  }
+
+  protected tagCount(tagId: string): number {
+    return this.patchCounts().byTag[tagId] ?? 0;
+  }
+
+  private readonly patchRefreshEffect = effect(() => {
+    const req = this.patchCache.refreshRequested();
+    if (req > 0) {
+      this.loadPatches();
+    }
+  }, { allowSignalWrites: true });
   private readonly sidebarScrollLock = effect(() => {
     this.document.body.classList.toggle('sidebar-open', this.sidebarOpen());
   });
@@ -120,12 +190,23 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
   protected forceRefreshPatches(): void {
     this.patchCache.requestForceRefresh();
+    this.loadPatches();
     this.tagRepository.refreshAll();
     this.translatorRepository.refreshAll();
     this.systemRepository.refreshAll();
     this.loadServerCost();
     this.statusMessageService.show('รีเฟรชข้อมูลล่าสุดเรียบร้อยแล้ว', 'success');
     this.closeSidebar();
+  }
+
+  private loadPatches(): void {
+    this.patchRepository.watchAll().subscribe({
+      next: (patches) => {
+        this.patches.set(patches);
+        this.patchesLoaded.set(true);
+      },
+      error: () => {}
+    });
   }
 
   private loadServerCost(): void {
@@ -148,6 +229,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.statusMessageService.clear();
       }
     });
+    this.loadPatches();
     this.tagRepository.watchAll().subscribe({ next: (tags) => this.tags.set(tags) });
     this.sidebarLinkRepository.watchAll().subscribe({ next: (links) => this.sidebarLinks.set(links) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });

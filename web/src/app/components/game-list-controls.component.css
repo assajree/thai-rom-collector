@@ -4,6 +4,64 @@
     max-width: 48rem;
 }
 
+.search-console .admin-search-field {
+  align-items: stretch;
+  gap: 0.55rem;
+  min-height: 2.5rem;
+  overflow: hidden;
+  padding: 0 0 0 0.75rem;
+}
+
+.search-console .admin-search-icon {
+  align-self: center;
+  flex-shrink: 0;
+}
+
+.search-console .admin-search-input {
+  align-self: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.5rem 0.75rem 0.5rem 0;
+}
+
+.search-clear-btn {
+  align-items: center;
+  align-self: stretch;
+  background: transparent;
+  border: none;
+  border-left: 2px solid var(--color-border);
+  box-shadow: none;
+  color: var(--color-text);
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 2.5rem;
+  font-size: 1rem;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  width: 2.5rem;
+}
+
+.search-console .admin-search-field:focus-within .search-clear-btn {
+  border-left-color: var(--color-accent);
+}
+
+.search-clear-btn:hover {
+  background: var(--color-surface-light);
+  color: var(--color-accent);
+}
+
+.search-clear-btn:active {
+  background: var(--color-accent);
+  color: var(--color-shadow);
+}
+
+.search-clear-btn:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
 .filter-chips {
     display: flex;
     gap: 1rem;

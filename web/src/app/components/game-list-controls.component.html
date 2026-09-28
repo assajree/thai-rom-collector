@@ -1,10 +1,15 @@
 
 <div class="search-console">
-  <label class="admin-search-field" for="game-search">
+  <div class="admin-search-field">
     <span class="admin-search-icon" aria-hidden="true">⌕</span>
-    <span class="sr-only">ค้นหาเกม</span>
-    <input id="game-search" class="admin-search-input" type="search" placeholder="ค้นหาเกม..." [(ngModel)]="draft.keyword" (ngModelChange)="emit()" />
-  </label>
+    <label for="game-search" class="sr-only">ค้นหาเกม</label>
+    <input #searchInput id="game-search" class="admin-search-input" type="search" placeholder="ค้นหาเกม..." [(ngModel)]="draft.keyword" (ngModelChange)="emit()" />
+    @if (draft.keyword) {
+      <button type="button" class="search-clear-btn" (click)="clearKeyword()" aria-label="ล้างข้อความค้นหา" title="ล้างข้อความค้นหา">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    }
+  </div>
 </div>
 
 <button type="button" class="sort-toggle" [attr.aria-expanded]="sortOpen" aria-controls="game-sort-row" (click)="sortOpen = !sortOpen">ตัวกรอง</button>
