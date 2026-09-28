@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, Subject } from 'rxjs';
@@ -430,6 +430,7 @@ describe('AdminPatchPageComponent - Preservation Properties', () => {
 
 describe('AdminPatchPageComponent - Clipboard Paste', () => {
   let component: AdminPatchPageComponent;
+  let fixture: ComponentFixture<AdminPatchPageComponent>;
   let paramMapSubject: Subject<ParamMap>;
 
   const patchRepositoryStub = {
@@ -469,7 +470,7 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
       ],
     }).compileComponents();
 
-    const fixture = TestBed.createComponent(AdminPatchPageComponent);
+    fixture = TestBed.createComponent(AdminPatchPageComponent);
     component = fixture.componentInstance;
     paramMapSubject.next(convertToParamMap({}));
     fixture.detectChanges();
@@ -532,6 +533,14 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
       'error'
     );
     expect(c.deleteConfirmOpen).toBeFalse();
+  });
+
+  it('renders patchVersion as a textarea element', () => {
+    fixture.detectChanges();
+    const textarea = fixture.nativeElement.querySelector('textarea[formControlName="patchVersion"]');
+    expect(textarea).toBeTruthy();
+    expect(textarea.tagName.toLowerCase()).toBe('textarea');
+    expect(textarea.classList.contains('admin-input')).toBeTrue();
   });
 });
 

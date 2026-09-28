@@ -9,6 +9,10 @@
   padding: .65rem;
 }
 
+textarea.admin-input {
+  resize: vertical;
+}
+
 .system-dialog-backdrop {
   position: fixed;
   inset: 0;
