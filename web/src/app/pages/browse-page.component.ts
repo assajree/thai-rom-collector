@@ -1,4 +1,4 @@
-import { Component, HostListener, computed, effect, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, effect, inject, signal, untracked } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PatchRepository } from '../repositories/patch.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
@@ -64,6 +64,7 @@ export class BrowsePageComponent {
   private readonly queryStateEffect = effect(() => {
     if (!this.queryStateReady()) return;
     const filters = this.filters();
+    const page = untracked(() => this.currentPage());
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -71,7 +72,8 @@ export class BrowsePageComponent {
         translator: this.translators().find((item) => item.id === filters.translatorId)?.shortName || null,
         system: filters.system || null,
         sort: filters.sortBy === 'updateDate' ? null : filters.sortBy,
-        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection
+        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection,
+        page: page > 1 ? page : null
       },
       replaceUrl: true
     });
@@ -139,13 +141,10 @@ export class BrowsePageComponent {
     const start = (page - 1) * this.pageSize;
     return this.sortedPatches().slice(start, start + this.pageSize);
   });
-  private readonly paginationResetEffect = effect(() => {
-    this.sortedPatches();
-    this.currentPage.set(1);
-  }, { allowSignalWrites: true });
   private readonly paginationClampEffect = effect(() => {
+    if (!this.patchesLoaded()) return;
     const lastPage = this.totalPages();
-    if (this.currentPage() > lastPage) this.currentPage.set(lastPage);
+    if (this.currentPage() > lastPage) this.setPage(lastPage);
   }, { allowSignalWrites: true });
   private readonly routeFilterEffect = effect(() => {
     const kind = this.routeKind();
@@ -203,19 +202,25 @@ export class BrowsePageComponent {
   protected clearKeyword(): void { this.keyword.set(''); }
   protected clearAllFilters(): void {
     this.filterState.clearAll();
+    this.currentPage.set(1);
     void this.router.navigateByUrl('/', { replaceUrl: true });
   }
-  protected toggleTag(tag: string): void { this.selectedTag.update((current) => current === tag ? null : tag); }
-  protected clearTag(): void { this.selectedTag.set(null); }
+  protected toggleTag(tag: string): void { this.selectedTag.update((current) => current === tag ? null : tag); this.currentPage.set(1); }
+  protected clearTag(): void { this.selectedTag.set(null); this.currentPage.set(1); }
   protected setTranslator(value: string): void { this.selectedTranslatorId.set(value || null); }
   protected setSystem(value: string): void { this.selectedSystem.set(value || null); }
   protected clearSystem(): void { this.selectedSystem.set(null); }
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
-  protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); }
+  protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); this.currentPage.set(1); }
   protected setPage(page: number): void {
     const nextPage = Math.max(1, Math.min(page, this.totalPages()));
     if (nextPage === this.currentPage()) return;
     this.currentPage.set(nextPage);
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { page: nextPage > 1 ? nextPage : null },
+      queryParamsHandling: 'merge'
+    });
     // Wait until the page state has rendered before scrolling. This is more
     // reliable on iOS Safari than scrolling an element during the click event.
     requestAnimationFrame(() => {
@@ -262,11 +267,14 @@ export class BrowsePageComponent {
     this.route.queryParamMap.subscribe((params) => {
       const sort = params.get('sort');
       const direction = params.get('dir');
+      const pageParam = params.get('page');
+      const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
       this.keyword.set(params.get('q') ?? '');
       this.translatorQuery.set(params.get('translator'));
       this.filterState.selectedSystem.set(params.get('system'));
       this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' ? sort : 'updateDate');
       this.direction.set(direction === 'asc' ? 'asc' : 'desc');
+      this.currentPage.set(Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1);
     });
   }
 }

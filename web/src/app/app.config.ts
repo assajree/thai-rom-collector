@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideHttpClient(),
     provideRouter(routes, withHashLocation(), withInMemoryScrolling({
-      scrollPositionRestoration: 'top'
+      scrollPositionRestoration: 'disabled'
     })),
     provideFirebaseApp(() => initializeApp(environment.firebase)),
     provideDatabase(() => getDatabase()),

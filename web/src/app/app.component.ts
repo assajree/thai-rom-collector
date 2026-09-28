@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { NavigationEnd, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
 import { StatusMessageService } from './shared/status-message.service';
@@ -224,9 +224,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     window.addEventListener('online', this.onlineHandler);
     window.addEventListener('offline', this.offlineHandler);
     this.watchForAppUpdates();
+    let lastPath = '';
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationStart && !this.appUpdateReady()) {
         this.statusMessageService.clear();
+      }
+      if (event instanceof NavigationEnd) {
+        const currentPath = event.urlAfterRedirects.split('?')[0];
+        if (lastPath && lastPath !== currentPath) {
+          window.scrollTo(0, 0);
+        }
+        lastPath = currentPath;
       }
     });
     this.loadPatches();
