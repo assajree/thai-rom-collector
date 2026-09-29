@@ -7,7 +7,7 @@
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
         [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)"
         [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
-      @if (canEdit) { <a class="edit-button button brand" [routerLink]="['/add-patch', patch.id]" target="_blank"
+      @if (canEdit) { <a class="edit-button button btn-primary" [routerLink]="['/add-patch', patch.id]" target="_blank"
         rel="noopener noreferrer">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
@@ -56,7 +56,8 @@
       </div>
       @if (cardTags(patch).length > 0 || patch.walkthroughUrl.trim()) {
       <span class="patch-card__tags-label">แท็ก: </span>
-      <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim() && (!patch.walkthroughUrl.trim() || tag.name.trim() !== 'บทสรุป')) { <li>
+      <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim() &&
+        (!patch.walkthroughUrl.trim() || tag.name.trim() !== 'บทสรุป')) { <li>
           <a [routerLink]="browseRoute('tag', tag.slug)">{{ tag.name }}</a>
         </li> } }@if (patch.walkthroughUrl.trim()) { <li>
           <a [routerLink]="browseRoute('walkthrough')">บทสรุป</a>
@@ -67,7 +68,9 @@
         <div class="patch-card__links-label">ลิ้ง:</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
-          <a [href]="patch.coverUrl" [download]="coverFilename(patch)" target="_blank" rel="noopener noreferrer" [class.pointer-events-none]="downloadingPatchId() === patch.id" (click)="downloadCover($event, patch)">ภาพปก</a>
+          <a [href]="patch.coverUrl" [download]="coverFilename(patch)" target="_blank" rel="noopener noreferrer"
+            [class.pointer-events-none]="downloadingPatchId() === patch.id"
+            (click)="downloadCover($event, patch)">ภาพปก</a>
           }
           @if (patch.patchTool) {
           <a [href]="patch.patchTool" target="_blank">Patch Tool</a>

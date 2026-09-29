@@ -11,6 +11,32 @@ Split a section out of this file into its own `rules/*.md` file (referenced back
 
 Keep a section inline in `AGENTS.md` when it's short and stable (a one-off convention or constraint that doesn't keep growing) and broadly relevant to most tasks in this repo — splitting those out just fragments the file without saving tokens.
 
+## Project Structure
+
+```text
+.
+├── firestore.rules              # Firestore security rules
+├── database.rules.json          # Realtime Database security rules
+├── storage.rules                # Firebase Storage security rules
+├── firebase.json                # Firebase hosting, headers, and emulator config
+├── docs/                        # Architecture, design system, and task documentation
+├── rules/                       # AI workflows (e.g. `rules/ai-workflow.md`)
+├── r2-worker/                   # Cloudflare Worker for R2 storage integration
+└── web/                         # Main Angular standalone frontend application
+    ├── scripts/                 # Maintenance, migration, and backfill scripts
+    └── src/
+        ├── environments/        # Firebase and environment configurations
+        └── app/
+            ├── components/      # Reusable UI components
+            ├── guards/          # Route guards (auth, admin, etc.)
+            ├── mock-data/       # Mock data fixtures
+            ├── models/          # TypeScript models and interfaces
+            ├── pages/           # Routed view/page components
+            ├── repositories/    # Data access layer (Firestore / RTDB)
+            ├── services/        # Business logic, state, and API services
+            └── shared/          # Shared utilities, pipes, and status messages
+```
+
 ## Async Task Feedback
 
 For any task that performs asynchronous processing or changes user data—such as save, import/export, delete, upload, or similar operations—provide visible toast/status feedback for the full operation:

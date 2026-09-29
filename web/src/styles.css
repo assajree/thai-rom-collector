@@ -166,6 +166,7 @@ body[data-theme='pocket-pet'] main {
 
   .btn-primary:hover {
     background-color: var(--color-accent-hover);
+    color: var(--color-accent-text);
   }
 
   .no-button {

@@ -245,20 +245,28 @@
   align-items: baseline;
   display: inline-flex;
   flex: 1;
-  gap: .25rem;
+  gap: 0;
   min-width: 0;
+  text-decoration: none;
 }
 
 .sidebar-translator-row>.retro-system-button .sidebar-link-text {
+  border-bottom: 1px solid currentColor;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+.sidebar-translator-row .sidebar-count {
+  border-bottom: 1px solid currentColor;
+}
+
+.sidebar-translator-row .sidebar-count::before {
+  content: "\00a0";
+}
+
 .sidebar-count {
   flex-shrink: 0;
-  margin-left: 0.25rem;
-  opacity: 0.85;
   white-space: nowrap;
 }
 
