@@ -198,8 +198,7 @@
   color: var(--color-highlight);
 }
 
-.retro-system-section,
-.retro-tag-section {
+.retro-sidebar-section {
   margin-top: 1rem;
   padding-top: 1rem;
   background: url("https://theoldnet.com/images/anibar.gif") top center no-repeat;
@@ -365,8 +364,7 @@
   }
 
   .retro-rail nav,
-  .retro-system-section>div,
-  .retro-tag-section>div {
+  .retro-sidebar-section>div {
     padding-top: 0.35rem;
   }
 
@@ -410,4 +408,10 @@
   .right-ad-sidebar {
     display: block;
   }
+}
+
+.right-ad-sidebar .first-section {
+  margin-top: 0;
+  padding-top: 0;
+  background: none;
 }
