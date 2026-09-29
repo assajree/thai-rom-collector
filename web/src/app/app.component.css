@@ -12,7 +12,7 @@
   display: flex;
   gap: .5rem;
   justify-content: center;
-  margin: 0 auto 1rem;
+  margin: 1rem auto 1rem;
   width: min(100%, 14rem);
 }
 
@@ -162,6 +162,7 @@
   min-height: calc(100vh - 5rem);
   width: 288px;
   padding: 1rem;
+  overflow-x: hidden;
 }
 
 .right-ad-slot {

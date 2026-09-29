@@ -224,6 +224,28 @@
     </div>
     }
 
+    @if (!isDesktop()) {
+    <ng-container *ngTemplateOutlet="secondarySidebar"></ng-container>
+    }
+
+  </aside>
+
+  <ng-template #secondarySidebar>
+    <div class="">
+      <div class="hit-counter">
+        <div class="retro-rail-heading">จำนวนผู้เข้าชม</div>
+        <a href='https://www.counter12.com'><img src='https://www.counter12.com/img-00y4C51BcA675b33-1.gif' border='0'
+            alt='free counter'></a>
+        <script type='text/javascript' src='https://www.counter12.com/ad.js?id=00y4C51BcA675b33'></script>
+      </div>
+      <label class="theme-picker mt-4">
+        <select class="app-select" [value]="theme()" (change)="selectTheme($event)" aria-label="เลือกธีม">
+          <option value="default">Blue Neon Theme</option>
+          <option value="pocket-pet">LCD Theme</option>
+        </select>
+      </label>
+    </div>
+
     @if (articles().length > 0) {
     <div class="retro-tag-section">
       <p class="retro-rail-heading">บทความ</p>
@@ -270,26 +292,7 @@
 
       </div>
     </div>
-
-
-    <div class="retro-tag-section">
-      <label class="theme-picker">
-        <select class="app-select" [value]="theme()" (change)="selectTheme($event)" aria-label="เลือกธีม">
-          <option value="default">Blue Neon Theme</option>
-          <option value="pocket-pet">LCD Theme</option>
-        </select>
-      </label>
-      <div class="hit-counter">
-        <div class="retro-rail-heading">จำนวนผู้เข้าชม</div>
-        <a href='https://www.counter12.com'><img src='https://www.counter12.com/img-00y4C51BcA675b33-1.gif' border='0'
-            alt='free counter'></a>
-        <script type='text/javascript' src='https://www.counter12.com/ad.js?id=00y4C51BcA675b33'></script>
-      </div>
-    </div>
-
-
-
-  </aside>
+  </ng-template>
 
   @if (sidebarOpen()) {
   <button class="mobile-sidebar-backdrop" type="button" (click)="closeSidebar()"
@@ -329,7 +332,13 @@
     </footer>
   </section>
 
-  <aside class="right-ad-sidebar" aria-label="โฆษณา">
+  <aside class="right-ad-sidebar" aria-label="แถบข้อมูลเสริมและโฆษณา">
+
+
+    @if (isDesktop()) {
+    <ng-container *ngTemplateOutlet="secondarySidebar"></ng-container>
+    }
+
     <div class="right-ad-slot">
       <!-- Right Sidebar -->
       <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-8608614975459436" data-ad-slot="5687262285"
@@ -338,5 +347,6 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
       </script>
     </div>
+
   </aside>
 </div>

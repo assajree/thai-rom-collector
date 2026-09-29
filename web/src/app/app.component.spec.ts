@@ -180,4 +180,30 @@ describe('AppComponent', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     expect(compiled.textContent).toContain('คู่มือการเล่น');
   });
+
+  it('should render secondary sections in left sidebar when not desktop', () => {
+    const isDesktopSignal = (app as unknown as { isDesktop: { set: (val: boolean) => void } }).isDesktop;
+    isDesktopSignal.set(false);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const leftHitCounter = compiled.querySelector('#system-sidebar .hit-counter');
+    const rightHitCounter = compiled.querySelector('.right-ad-sidebar .hit-counter');
+
+    expect(leftHitCounter).toBeTruthy();
+    expect(rightHitCounter).toBeNull();
+  });
+
+  it('should render secondary sections in right sidebar when desktop', () => {
+    const isDesktopSignal = (app as unknown as { isDesktop: { set: (val: boolean) => void } }).isDesktop;
+    isDesktopSignal.set(true);
+    fixture.detectChanges();
+
+    const compiled = fixture.nativeElement as HTMLElement;
+    const leftHitCounter = compiled.querySelector('#system-sidebar .hit-counter');
+    const rightHitCounter = compiled.querySelector('.right-ad-sidebar .hit-counter');
+
+    expect(leftHitCounter).toBeNull();
+    expect(rightHitCounter).toBeTruthy();
+  });
 });

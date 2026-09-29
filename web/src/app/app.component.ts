@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { AfterViewInit, Component, computed, effect, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
 
@@ -22,11 +22,23 @@ import { ArticleRepository } from './repositories/article.repository';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, NgTemplateOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+  protected readonly isDesktop = signal(
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function'
+      ? window.matchMedia('(min-width: 1200px)').matches
+      : false
+  );
+
+  @HostListener('window:resize')
+  protected onResize(): void {
+    if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+      this.isDesktop.set(window.matchMedia('(min-width: 1200px)').matches);
+    }
+  }
   private static readonly themeStorageKey = 'rom-collector-theme';
   protected readonly theme = signal<'default' | 'pocket-pet'>('default');
   private readonly document = inject(DOCUMENT);
