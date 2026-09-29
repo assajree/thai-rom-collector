@@ -24,8 +24,6 @@
 #last-update {
   color: var(--color-highlight);
   flex: 0 1 auto;
-  font-size: 0.75rem;
-  font-weight: 700;
   line-height: 1.2;
   margin-left: 1rem;
   text-align: right;

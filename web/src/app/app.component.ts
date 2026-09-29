@@ -16,6 +16,8 @@ import { PatchCacheService } from './services/patch-cache.service';
 import { PatchRepository } from './repositories/patch.repository';
 import { SidebarLink, SidebarLinkSection } from './models/sidebar-link.models';
 import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
+import { Article } from './models/article.models';
+import { ArticleRepository } from './repositories/article.repository';
 
 @Component({
   selector: 'app-root',
@@ -37,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private readonly patchCache = inject(PatchCacheService);
   private readonly patchRepository = inject(PatchRepository);
   private readonly sidebarLinkRepository = inject(SidebarLinkRepository);
+  private readonly articleRepository = inject(ArticleRepository);
   private readonly router = inject(Router);
   private readonly swUpdate = inject(SwUpdate, { optional: true });
   protected readonly filterState = inject(BrowseFilterStateService);
@@ -45,6 +48,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly tags = signal<Tag[]>([]);
   protected readonly sidebarLinks = signal<SidebarLink[]>([]);
   protected readonly translators = signal<Translator[]>([]);
+  protected readonly articles = signal<Article[]>([]);
   protected readonly serverCost = signal<number | null>(this.serverCostRepository.getCached());
   protected readonly patches = signal<Patch[]>([]);
   protected readonly patchesLoaded = signal(false);
@@ -194,6 +198,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.tagRepository.refreshAll();
     this.translatorRepository.refreshAll();
     this.systemRepository.refreshAll();
+    this.articleRepository.refreshAll();
     this.loadServerCost();
     this.statusMessageService.show('รีเฟรชข้อมูลล่าสุดเรียบร้อยแล้ว', 'success');
     this.closeSidebar();
@@ -242,6 +247,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.sidebarLinkRepository.watchAll().subscribe({ next: (links) => this.sidebarLinks.set(links) });
     this.translatorRepository.watchAll().subscribe({ next: (translators) => this.translators.set(translators) });
     this.systemRepository.watchAll().subscribe({ next: (systems) => this.platforms.set(systems) });
+    this.articleRepository.watchAll().subscribe({ next: (articles) => this.articles.set(articles) });
     this.loadServerCost();
   }
 

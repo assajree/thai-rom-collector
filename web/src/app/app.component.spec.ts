@@ -12,6 +12,7 @@ import { ServerCostRepository } from './repositories/server-cost.repository';
 import { PatchCacheService } from './services/patch-cache.service';
 import { PatchRepository } from './repositories/patch.repository';
 import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
+import { ArticleRepository } from './repositories/article.repository';
 import { Patch } from './models/patch.models';
 
 describe('AppComponent', () => {
@@ -106,6 +107,13 @@ describe('AppComponent', () => {
           }
         },
         {
+          provide: ArticleRepository,
+          useValue: {
+            watchAll: () => of([{ id: 'art1', title: 'คู่มือการเล่น', slug: 'guide-1', status: 'published' }]),
+            refreshAll: jasmine.createSpy('refreshAll')
+          }
+        },
+        {
           provide: ServerCostRepository,
           useValue: {
             read: () => Promise.resolve(null),
@@ -166,5 +174,10 @@ describe('AppComponent', () => {
     expect(text).toContain('เกมทั้งหมด (2)');
     expect(text).toContain('รอมแปลไทย (1)');
     expect(text).toContain('บทสรุป (1)');
+  });
+
+  it('should render published articles in sidebar', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.textContent).toContain('คู่มือการเล่น');
   });
 });

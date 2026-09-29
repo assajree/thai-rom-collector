@@ -1,6 +1,6 @@
 <header class="app-header">
-  <div class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-4 sm:px-6">
-    <div class="flex items-center gap-3">
+  <div class="app-topbar no-radius flex min-h-10 items-center justify-between border-b-2 border-slate-300 px-1">
+    <div class="flex items-center">
       <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
         aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
       <a class="site-title" routerLink="/"><img src="assets/images/logo.png" alt="THAI ROM DB"></a>
@@ -219,6 +219,25 @@
           rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
           [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
           (click)="closeSidebar()">{{ link.label }}</a> }
+        }
+      </div>
+    </div>
+    }
+
+    @if (articles().length > 0) {
+    <div class="retro-tag-section">
+      <p class="retro-rail-heading">บทความ</p>
+      @if (authService.isAdmin()) {
+      <a class="retro-rail-admin-link" routerLink="/admin/articles" aria-label="จัดการบทความ" (click)="closeSidebar()">
+        <i class="fa-solid fa-user-gear"></i>
+      </a>
+      }
+      <div>
+        @for (article of articles(); track article.id) {
+        <a class="retro-system-button" [routerLink]="['/article', article.slug]"
+          routerLinkActive="retro-system-button--active" (click)="closeSidebar()">
+          {{ article.title }}
+        </a>
         }
       </div>
     </div>
