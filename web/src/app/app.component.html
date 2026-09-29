@@ -54,8 +54,6 @@
       <a class="retro-rail-link" routerLink="/walkthrough" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">บทสรุป @if (patchesLoaded()) {<span
           class="sidebar-count">({{ patchCounts().walkthrough }})</span>}</a>
-      <a class="retro-rail-link" routerLink="/articles" routerLinkActive="retro-rail-link--active"
-        (click)="closeSidebar()">บทความ</a>
 
       @if (authService.user()) {
       <a class="retro-rail-link" href="#" (click)="$event.preventDefault(); signOut(); closeSidebar()">ออกจากระบบ</a>
@@ -97,7 +95,7 @@
 
     @if (authService.isAdmin() || authService.isVip()) {
     <div class="retro-sidebar-section">
-      <p class="retro-rail-heading">สิทธิ์ VIP</p>
+      <p class="retro-rail-heading">สมาชิก VIP</p>
       <nav aria-label="VIP tools">
         <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
       </nav>
@@ -191,6 +189,35 @@
     }
 
 
+
+
+    @if (!isDesktop()) {
+    <ng-container *ngTemplateOutlet="secondarySidebar"></ng-container>
+    }
+
+  </aside>
+
+  <ng-template #secondarySidebar>
+
+    @if (articles().length > 0) {
+    <div class="retro-sidebar-section first-section">
+      <p class="retro-rail-heading">บทความ</p>
+      @if (authService.isAdmin()) {
+      <a class="retro-rail-admin-link" routerLink="/admin/articles" aria-label="จัดการบทความ" (click)="closeSidebar()">
+        <i class="fa-solid fa-user-gear"></i>
+      </a>
+      }
+      <div>
+        @for (article of articles(); track article.id) {
+        <a class="retro-system-button" [routerLink]="['/article', article.slug]"
+          routerLinkActive="retro-system-button--active" (click)="closeSidebar()">
+          {{ article.title }}
+        </a>
+        }
+      </div>
+    </div>
+    }
+
     @if (tags().length > 0) {
     <div class="retro-sidebar-section">
       <p class="retro-rail-heading">Tags</p>
@@ -220,33 +247,6 @@
           rel="noopener noreferrer">{{ link.label }}</a> } @else { <a class="retro-system-button"
           [routerLink]="['/other', link.articleSlug]" routerLinkActive="retro-system-button--active"
           (click)="closeSidebar()">{{ link.label }}</a> }
-        }
-      </div>
-    </div>
-    }
-
-    @if (!isDesktop()) {
-    <ng-container *ngTemplateOutlet="secondarySidebar"></ng-container>
-    }
-
-  </aside>
-
-  <ng-template #secondarySidebar>
-
-    @if (articles().length > 0) {
-    <div class="retro-sidebar-section first-section">
-      <p class="retro-rail-heading">บทความ</p>
-      @if (authService.isAdmin()) {
-      <a class="retro-rail-admin-link" routerLink="/admin/articles" aria-label="จัดการบทความ" (click)="closeSidebar()">
-        <i class="fa-solid fa-user-gear"></i>
-      </a>
-      }
-      <div>
-        @for (article of articles(); track article.id) {
-        <a class="retro-system-button" [routerLink]="['/article', article.slug]"
-          routerLinkActive="retro-system-button--active" (click)="closeSidebar()">
-          {{ article.title }}
-        </a>
         }
       </div>
     </div>

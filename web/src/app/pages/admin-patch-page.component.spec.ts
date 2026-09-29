@@ -542,5 +542,70 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
     expect(textarea.tagName.toLowerCase()).toBe('textarea');
     expect(textarea.classList.contains('admin-input')).toBeTrue();
   });
+
+  it('hides floating save button when app-topbar is visible in viewport', () => {
+    const topbar = document.createElement('div');
+    topbar.className = 'app-topbar';
+    document.body.appendChild(topbar);
+    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
+      bottom: 50,
+      top: 0,
+      left: 0,
+      right: 100,
+      width: 100,
+      height: 50,
+      x: 0,
+      y: 0,
+      toJSON: () => {}
+    });
+
+    (component as unknown as { updateFloatingSaveVisibility: () => void }).updateFloatingSaveVisibility();
+    expect((component as unknown as { showFloatingSave: () => boolean }).showFloatingSave()).toBeFalse();
+
+    document.body.removeChild(topbar);
+  });
+
+  it('shows floating save button when app-topbar is scrolled past viewport', () => {
+    const topbar = document.createElement('div');
+    topbar.className = 'app-topbar';
+    document.body.appendChild(topbar);
+    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
+      bottom: -10,
+      top: -60,
+      left: 0,
+      right: 100,
+      width: 100,
+      height: 50,
+      x: 0,
+      y: -60,
+      toJSON: () => {}
+    });
+
+    (component as unknown as { updateFloatingSaveVisibility: () => void }).updateFloatingSaveVisibility();
+    expect((component as unknown as { showFloatingSave: () => boolean }).showFloatingSave()).toBeTrue();
+
+    document.body.removeChild(topbar);
+  });
+
+  it('renders floating save button when showFloatingSave is true and calls save on click', () => {
+    (component as unknown as { showFloatingSave: { set: (v: boolean) => void } }).showFloatingSave.set(true);
+    fixture.detectChanges();
+
+    const floatingBtn: HTMLButtonElement | null = fixture.nativeElement.querySelector('.floating-save-patch');
+    expect(floatingBtn).toBeTruthy();
+    expect(floatingBtn?.disabled).toBeTrue(); // initially invalid form
+
+    (component as any).form.patchValue({
+      gameTitle: 'Test Game',
+      system: 'SFC',
+      translatorId: 'trans-1',
+    });
+    fixture.detectChanges();
+    expect(floatingBtn?.disabled).toBeFalse();
+
+    spyOn(component as any, 'save');
+    floatingBtn?.click();
+    expect((component as any).save).toHaveBeenCalled();
+  });
 });
 

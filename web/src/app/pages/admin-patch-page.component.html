@@ -207,4 +207,11 @@
   <app-confirm-dialog title="ยืนยันการลบแพตช์" message="แพตช์นี้จะถูกลบออกจากระบบอย่างถาวร และไม่สามารถย้อนกลับได้"
     confirmLabel="ยืนยันลบแพตช์" [danger]="true" (confirmed)="confirmDelete()" (cancelled)="cancelDelete()" />
   }
+
+  @if (showFloatingSave()) {
+  <button class="floating-save-patch button btn-primary" type="button" (click)="save()"
+    [disabled]="form.invalid || saving" [attr.aria-busy]="saving" aria-label="บันทึกแพตช์" title="บันทึกแพตช์">
+    <i class="fa-solid" [class.fa-floppy-disk]="!saving" [class.fa-circle-notch]="saving" [class.fa-spin]="saving" aria-hidden="true"></i>
+  </button>
+  }
 </main>
