@@ -29,16 +29,58 @@
 
 .browse-route-label {
   align-items: center;
+  background: var(--color-surface);
+  border: 1px solid var(--color-shadow);
+  box-shadow: 2px 2px var(--color-shadow);
   color: var(--color-highlight);
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0.75rem 0 0;
+  padding: .35rem 2.5rem .45rem;
+  position: relative;
+  row-gap: 0.25rem;
+  text-align: center;
+}
+
+.browse-route-label__title {
+  color: var(--color-highlight);
   font-size: 1.5rem;
   font-weight: bold;
-  justify-content: space-between;
-  margin: 0.75rem 0 0;
-  background: var(--color-surface);
-  padding: .15rem .35rem .15rem 1rem;
-  box-shadow: 2px 2px var(--color-shadow);
-  border: 1px solid var(--color-shadow);
+  text-align: center;
+  width: 100%;
+}
+
+.browse-stat-bar {
+  align-items: baseline;
+  color: var(--color-text);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.95rem;
+  font-weight: normal;
+  gap: 0.35rem 0.5rem;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+.browse-stat-bar i {
+  color: var(--color-highlight);
+  font-size: 0.85rem;
+}
+
+.browse-stat-label {
+  color: var(--color-text-muted);
+}
+
+.browse-stat-value {
+  color: var(--color-highlight);
+  font-weight: bold;
+}
+
+.browse-stat-subtext {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
 }
 
 .browse-route-label__clear {
@@ -48,11 +90,33 @@
   line-height: 1;
   min-width: 1.8rem;
   padding: .15rem .3rem;
+  position: absolute;
+  right: 0.5rem;
+  top: 0.35rem;
 }
 
 .browse-route-label__clear:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .browse-route-label {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .browse-route-label__title {
+    font-size: 1.25rem;
+  }
+
+  .browse-route-label__clear {
+    right: 0.35rem;
+  }
+
+  .browse-stat-bar {
+    font-size: 0.875rem;
+  }
 }
 
 .skeleton-grid {
@@ -96,7 +160,7 @@
   z-index: 10;
 }
 
-.browse-floating-actions > * {
+.browse-floating-actions>* {
   pointer-events: auto;
 }
 

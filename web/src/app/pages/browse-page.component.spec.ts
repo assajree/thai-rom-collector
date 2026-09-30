@@ -161,4 +161,51 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     expect(children[0].classList.contains('floating-add-game')).toBeTrue();
     expect(children[1].classList.contains('back-to-top')).toBeTrue();
   });
+
+  it('calculates total play time stats correctly and renders HUD stat bar with formatted duration', () => {
+    const patchesSignal = (component as unknown as { patches: { set: (v: Patch[]) => void } }).patches;
+    patchesSignal.set([
+      { ...mockPatches[0], id: 'p1', playTime: 12.5 },
+      { ...mockPatches[1], id: 'p2', playTime: 20 },
+      { ...mockPatches[2], id: 'p3', playTime: null }
+    ]);
+    fixture.detectChanges();
+
+    const stats = (component as unknown as { playTimeStats: () => { formattedDuration: string; count: number; hasData: boolean } }).playTimeStats();
+    expect(stats.hasData).toBeTrue();
+    expect(stats.formattedDuration).toBe('1 วัน 8.5 ชั่วโมง');
+    expect(stats.count).toBe(2);
+
+    const statBar = fixture.nativeElement.querySelector('.browse-stat-bar');
+    expect(statBar).toBeTruthy();
+    expect(statBar.textContent).toContain('1 วัน 8.5 ชั่วโมง');
+    expect(statBar.textContent).toContain('(จาก 2 เกม)');
+  });
+
+  it('formats large duration into years, months, days, and hours correctly', () => {
+    const patchesSignal = (component as unknown as { patches: { set: (v: Patch[]) => void } }).patches;
+    // 8760 (1 year) + 720 (1 month) + 48 (2 days) + 3 hours = 9531 hours
+    patchesSignal.set([
+      { ...mockPatches[0], id: 'p1', playTime: 9531 }
+    ]);
+    fixture.detectChanges();
+
+    const stats = (component as unknown as { playTimeStats: () => { formattedDuration: string } }).playTimeStats();
+    expect(stats.formattedDuration).toBe('1 ปี 1 เดือน 2 วัน 3 ชั่วโมง');
+  });
+
+  it('does not render HUD stat bar when no games have play time', () => {
+    const patchesSignal = (component as unknown as { patches: { set: (v: Patch[]) => void } }).patches;
+    patchesSignal.set([
+      { ...mockPatches[0], id: 'p1', playTime: null },
+      { ...mockPatches[1], id: 'p2', playTime: 0 }
+    ]);
+    fixture.detectChanges();
+
+    const stats = (component as unknown as { playTimeStats: () => { hasData: boolean } }).playTimeStats();
+    expect(stats.hasData).toBeFalse();
+
+    const statBar = fixture.nativeElement.querySelector('.browse-stat-bar');
+    expect(statBar).toBeNull();
+  });
 });

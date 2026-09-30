@@ -140,6 +140,52 @@ export class BrowsePageComponent implements OnInit {
   protected readonly hasMore = computed(() => this.paginatedPatches().length < this.sortedPatches().length);
   protected readonly remainingCount = computed(() => Math.max(0, this.sortedPatches().length - this.paginatedPatches().length));
   protected readonly nextLoadCount = computed(() => Math.min(this.pageSize, this.remainingCount()));
+  protected readonly playTimeStats = computed(() => {
+    let total = 0;
+    let count = 0;
+    for (const patch of this.sortedPatches()) {
+      if (patch.playTime && patch.playTime > 0) {
+        total += patch.playTime;
+        count++;
+      }
+    }
+    return {
+      formattedDuration: this.formatPlayDuration(total),
+      count,
+      hasData: count > 0
+    };
+  });
+
+  private formatPlayDuration(totalHours: number): string {
+    if (totalHours <= 0) return '0 ชั่วโมง';
+
+    const hoursInDay = 24;
+    const daysInMonth = 30;
+    const daysInYear = 365;
+
+    let remaining = totalHours;
+
+    const years = Math.floor(remaining / (daysInYear * hoursInDay));
+    remaining %= (daysInYear * hoursInDay);
+
+    const months = Math.floor(remaining / (daysInMonth * hoursInDay));
+    remaining %= (daysInMonth * hoursInDay);
+
+    const days = Math.floor(remaining / hoursInDay);
+    remaining %= hoursInDay;
+
+    const hours = Number(remaining.toFixed(1));
+
+    const parts: string[] = [];
+    if (years > 0) parts.push(`${years} ปี`);
+    if (months > 0) parts.push(`${months} เดือน`);
+    if (days > 0) parts.push(`${days} วัน`);
+    if (hours > 0 || parts.length === 0) {
+      parts.push(`${hours} ชั่วโมง`);
+    }
+
+    return parts.join(' ');
+  }
   private readonly paginationClampEffect = effect(() => {
     if (!this.patchesLoaded()) return;
     const lastPage = this.totalPages();
