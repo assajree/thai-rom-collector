@@ -45,15 +45,19 @@
   }
   }
 
-  @if (auth.isAdmin() && showFloatingAddGame()) {
-  <a class="floating-add-game button btn-primary" routerLink="/add-patch" aria-label="เพิ่มเกม">
-    <i class="fa-solid fa-plus" aria-hidden="true"></i>
-  </a>
-  }
+  @if (auth.isAdmin() || showBackToTop()) {
+  <div class="browse-floating-actions">
+    @if (auth.isAdmin()) {
+    <a class="floating-add-game button btn-primary" routerLink="/add-patch" aria-label="เพิ่มเกม">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+    </a>
+    }
 
-  @if (showBackToTop()) {
-  <button class="back-to-top button btn-primary" type="button" (click)="backToTop()" aria-label="กลับไปด้านบน">
-    <span aria-hidden="true">↑</span>กลับไปด้านบน
-  </button>
+    @if (showBackToTop()) {
+    <button class="back-to-top button btn-primary" type="button" (click)="backToTop()" aria-label="กลับไปด้านบน">
+      <span aria-hidden="true">↑</span>กลับไปด้านบน
+    </button>
+    }
+  </div>
   }
 </main>

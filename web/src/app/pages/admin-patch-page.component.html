@@ -1,8 +1,9 @@
-<main class="admin-page-shell article-container">
+<main class="admin-page-shell article-container pb-24 sm:pb-8">
   <h1 class="mt-1 ">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
   <form class="relative mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
     @if (loadingData) {
-    <div class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--color-bg)]/60 backdrop-blur-sm">
+    <div
+      class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--color-bg)]/60 backdrop-blur-sm">
       <div class="flex flex-col items-center">
         <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-slate-400" aria-hidden="true"></i>
         <p class="font-bold text-slate-400">กำลังโหลดข้อมูลแพตช์…</p>
@@ -16,7 +17,8 @@
         <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
           (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
           (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
-          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options" [disabled]="loadingData" />
+          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options"
+          [disabled]="loadingData" />
         <input formControlName="translatorId" type="hidden" />
         @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
         <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
@@ -30,8 +32,8 @@
         <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
         }
       </div>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button"
-        (click)="openTranslatorDialog()" [disabled]="loadingData">เพิ่มทีมแปล</button>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openTranslatorDialog()"
+        [disabled]="loadingData">เพิ่มทีมแปล</button>
     </div>
     <div>
       <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
@@ -52,8 +54,8 @@
         <p class="tag-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</p>
         }
       </div>
-      <button class="mt-2 border  px-3 py-2 font-bold button" type="button"
-        (click)="openSystemDialog()" [disabled]="loadingData">เพิ่มเครื่องเกม</button>
+      <button class="mt-2 border  px-3 py-2 font-bold button" type="button" (click)="openSystemDialog()"
+        [disabled]="loadingData">เพิ่มเครื่องเกม</button>
     </div>
     <div>
       <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
@@ -71,9 +73,10 @@
       <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
           formControlName="patchTool" /></label>
       <div class="mt-2 flex flex-wrap gap-2">
-        <button class="border px-3 py-2 font-bold button" type="button" (click)="setDefaultPatchTool()" [disabled]="loadingData">Default</button>
-        <button class="border px-3 py-2 font-bold button" type="button"
-          (click)="setRomPatcherTool()" [disabled]="loadingData">RomPatcher.js</button>
+        <button class="border px-3 py-2 font-bold button" type="button" (click)="setDefaultPatchTool()"
+          [disabled]="loadingData">Default</button>
+        <button class="border px-3 py-2 font-bold button" type="button" (click)="setRomPatcherTool()"
+          [disabled]="loadingData">RomPatcher.js</button>
         <button class="border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchTool')"
           [disabled]="pastingField === 'patchTool' || loadingData">{{ pastingField === 'patchTool' ? 'กำลังวาง…' :
           'Clipboard' }}</button>
@@ -111,7 +114,8 @@
       <label><i class="fa-solid fa-book-open mr-1" aria-hidden="true"></i>บทสรุป<input class="admin-input"
           formControlName="walkthroughUrl" type="url" /></label>
       <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('walkthroughUrl')"
-        [disabled]="pastingField === 'walkthroughUrl' || loadingData">{{ pastingField === 'walkthroughUrl' ? 'กำลังวาง…' :
+        [disabled]="pastingField === 'walkthroughUrl' || loadingData">{{ pastingField === 'walkthroughUrl' ? 'กำลังวาง…'
+        :
         'Clipboard' }}</button>
     </div>
     <fieldset class="border border-slate-600 p-3 relative">
@@ -155,15 +159,16 @@
     <div>
       <label><i class="fa-solid fa-calendar-days mr-1" aria-hidden="true"></i>วันที่และเวลาอัปเดต<input
           class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()" [disabled]="loadingData">ตอนนี้</button>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()"
+        [disabled]="loadingData">ตอนนี้</button>
     </div>
-    <div class="mt-8 flex w-full items-center justify-between">
+    <div class="form-actions mt-8 flex w-full flex-wrap items-center justify-between">
       <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button btn-primary" type="submit"
         [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' :
         'บันทึกแพตช์' }}</button>
       @if (editId) {
-      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button btn-danger" type="button" [disabled]="saving || loadingData"
-        (click)="deletePatch()">ลบแพตช์</button>
+      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button btn-danger" type="button"
+        [disabled]="saving || loadingData" (click)="deletePatch()">ลบแพตช์</button>
       }
     </div>
   </form>
@@ -218,8 +223,10 @@
 
   @if (showFloatingSave()) {
   <button class="floating-save-patch button btn-primary" type="button" (click)="save()"
-    [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving" aria-label="บันทึกแพตช์" title="บันทึกแพตช์">
-    <i class="fa-solid" [class.fa-floppy-disk]="!saving" [class.fa-circle-notch]="saving" [class.fa-spin]="saving" aria-hidden="true"></i>
+    [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving" aria-label="บันทึกแพตช์"
+    title="บันทึกแพตช์">
+    <i class="fa-solid" [class.fa-floppy-disk]="!saving" [class.fa-circle-notch]="saving" [class.fa-spin]="saving"
+      aria-hidden="true"></i>
   </button>
   }
 </main>

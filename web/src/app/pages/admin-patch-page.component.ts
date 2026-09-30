@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, HostListener, OnInit, ViewChild, inject, signal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, HostListener, ViewChild, inject, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -26,7 +26,7 @@ const defaultDocumentTitle = 'เกมแปลไทย เกมย้อน�
   imports: [ReactiveFormsModule, AsyncPipe, CoverInputComponent, ConfirmDialogComponent],
   templateUrl: './admin-patch-page.component.html'
 })
-export class AdminPatchPageComponent implements OnInit {
+export class AdminPatchPageComponent {
   @ViewChild(CoverInputComponent) private coverInput?: CoverInputComponent;
   @ViewChild('tagInput') private tagInput?: ElementRef<HTMLInputElement>;
   private readonly route = inject(ActivatedRoute);
@@ -53,7 +53,7 @@ export class AdminPatchPageComponent implements OnInit {
   protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], haveUpdateFlag: [false], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
-  protected readonly showFloatingSave = signal(false);
+  protected readonly showFloatingSave = signal(true);
   protected pastingField: string | null = null;
   protected deleteConfirmOpen = false;
   protected editId: string | null = null;
@@ -83,24 +83,7 @@ export class AdminPatchPageComponent implements OnInit {
     });
   }
 
-  @HostListener('window:scroll')
-  @HostListener('window:resize')
-  protected updateScrollVisibility(): void {
-    this.updateFloatingSaveVisibility();
-  }
 
-  protected updateFloatingSaveVisibility(): void {
-    const topbar = typeof document !== 'undefined' ? document.querySelector('.app-topbar') : null;
-    if (topbar) {
-      this.showFloatingSave.set(topbar.getBoundingClientRect().bottom <= 0);
-    } else if (typeof window !== 'undefined') {
-      this.showFloatingSave.set(window.scrollY > 40);
-    }
-  }
-
-  ngOnInit(): void {
-    this.updateScrollVisibility();
-  }
 
   protected translatorOptions: Translator[] = [];
 

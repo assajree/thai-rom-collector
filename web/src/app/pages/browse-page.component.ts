@@ -45,7 +45,6 @@ export class BrowsePageComponent implements OnInit {
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly showBackToTop = signal(false);
-  protected readonly showFloatingAddGame = signal(false);
   protected readonly currentPage = signal(1);
   protected readonly pageSize = 10;
   protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
@@ -226,20 +225,10 @@ export class BrowsePageComponent implements OnInit {
   @HostListener('window:resize')
   protected updateScrollVisibility(): void {
     this.updateBackToTopVisibility();
-    this.updateFloatingAddGameVisibility();
   }
 
   protected updateBackToTopVisibility(): void {
     this.showBackToTop.set(typeof window !== 'undefined' && window.scrollY > 400);
-  }
-
-  protected updateFloatingAddGameVisibility(): void {
-    const topbar = typeof document !== 'undefined' ? document.querySelector('.app-topbar') : null;
-    if (topbar) {
-      this.showFloatingAddGame.set(topbar.getBoundingClientRect().bottom <= 0);
-    } else if (typeof window !== 'undefined') {
-      this.showFloatingAddGame.set(window.scrollY > 40);
-    }
   }
 
   ngOnInit(): void {

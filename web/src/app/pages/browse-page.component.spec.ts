@@ -132,47 +132,33 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
   });
 
-  it('hides floating add game button when app-topbar is visible in viewport', () => {
-    const topbar = document.createElement('div');
-    topbar.className = 'app-topbar';
-    document.body.appendChild(topbar);
-    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
-      bottom: 50,
-      top: 0,
-      left: 0,
-      right: 100,
-      width: 100,
-      height: 50,
-      x: 0,
-      y: 0,
-      toJSON: () => {}
-    });
-
-    (component as unknown as { updateFloatingAddGameVisibility: () => void }).updateFloatingAddGameVisibility();
-    expect((component as unknown as { showFloatingAddGame: () => boolean }).showFloatingAddGame()).toBeFalse();
-
-    document.body.removeChild(topbar);
+  it('does not render floating add game button when user is not admin', () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'isAdmin').and.returnValue(false);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.floating-add-game')).toBeNull();
   });
 
-  it('shows floating add game button when app-topbar is scrolled past viewport', () => {
-    const topbar = document.createElement('div');
-    topbar.className = 'app-topbar';
-    document.body.appendChild(topbar);
-    spyOn(topbar, 'getBoundingClientRect').and.returnValue({
-      bottom: -10,
-      top: -60,
-      left: 0,
-      right: 100,
-      width: 100,
-      height: 50,
-      x: 0,
-      y: -60,
-      toJSON: () => {}
-    });
+  it('renders floating add game button when user is admin regardless of scroll position', () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'isAdmin').and.returnValue(true);
+    fixture.detectChanges();
+    const floatingBtn = fixture.nativeElement.querySelector('.floating-add-game');
+    expect(floatingBtn).toBeTruthy();
+    expect(floatingBtn.getAttribute('routerLink')).toBe('/add-patch');
+  });
 
-    (component as unknown as { updateFloatingAddGameVisibility: () => void }).updateFloatingAddGameVisibility();
-    expect((component as unknown as { showFloatingAddGame: () => boolean }).showFloatingAddGame()).toBeTrue();
+  it('renders back to top button below floating add game inside browse-floating-actions', () => {
+    const authService = TestBed.inject(AuthService);
+    spyOn(authService, 'isAdmin').and.returnValue(true);
+    (component as unknown as { showBackToTop: { set: (v: boolean) => void } }).showBackToTop.set(true);
+    fixture.detectChanges();
 
-    document.body.removeChild(topbar);
+    const actionsContainer = fixture.nativeElement.querySelector('.browse-floating-actions');
+    expect(actionsContainer).toBeTruthy();
+    const children = actionsContainer.children;
+    expect(children.length).toBe(2);
+    expect(children[0].classList.contains('floating-add-game')).toBeTrue();
+    expect(children[1].classList.contains('back-to-top')).toBeTrue();
   });
 });
