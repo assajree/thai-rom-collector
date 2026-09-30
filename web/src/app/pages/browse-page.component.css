@@ -60,6 +60,8 @@
   font-weight: normal;
   gap: 0.35rem 0.5rem;
   justify-content: center;
+  margin-top: 0.15rem;
+  padding-top: 0.3rem;
   text-align: center;
   width: 100%;
 }
@@ -92,7 +94,6 @@
   padding: .15rem .3rem;
   position: absolute;
   right: 0.5rem;
-  top: 0.35rem;
 }
 
 .browse-route-label__clear:focus-visible {
