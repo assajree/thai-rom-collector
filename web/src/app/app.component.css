@@ -189,6 +189,8 @@
 .retro-system-button {
   color: var(--color-link);
   display: block;
+  width: fit-content;
+  max-width: 100%;
   font-family: inherit;
   font-weight: 700;
   line-height: 0.98;
@@ -247,7 +249,7 @@
 .sidebar-translator-row>.retro-system-button {
   align-items: baseline;
   display: inline-flex;
-  flex: 1;
+  flex: 0 1 auto;
   gap: 0;
   min-width: 0;
   text-decoration: none;
@@ -384,10 +386,6 @@
   .retro-rail-link+.retro-rail-link,
   .retro-system-button+.retro-system-button {
     margin-top: 0.15rem;
-  }
-
-  .sidebar-translator-row {
-    align-items: baseline;
   }
 
   .sidebar-translator-row>.retro-system-button {

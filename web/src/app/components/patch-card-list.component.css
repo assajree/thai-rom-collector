@@ -16,8 +16,9 @@
 }
 
 .patch-card .heading {
-  color: var(--color-brand);
-  line-height: 1.05;
+  color: var(--color-highlight);
+  font-size: 1.2rem;
+  font-weight: bold;
 }
 
 .patch-card__tags {
@@ -56,6 +57,7 @@
   opacity: 0;
   position: relative;
   transition: opacity .2s ease;
+  border: 1px solid var(--color-border);
 }
 
 .patch-cover-image--loaded {
@@ -97,9 +99,17 @@
   width: min(100%, 250px);
 }
 
+.heading span:first-child {
+  margin-right: 0.5rem;
+}
+
 .new-game-badge img {
   background-image: linear-gradient(to right, var(--color-badge-start), var(--color-badge-end));
-  padding: 1px 12px;
+  padding: 1px 11px;
+}
+
+.update-game-badge img {
+  margin-top: 4px;
 }
 
 @media (min-width: 34.01rem) {
@@ -111,7 +121,7 @@
 .patch-card__body {
   display: flex;
   flex-direction: column;
-  padding: .05rem 0;
+  padding: 0 0.5rem;
 }
 
 .patch-card__links {
@@ -130,6 +140,17 @@
 .patch-card__tags-label,
 .patch-card__links-label {
   color: var(--color-highlight);
+}
+
+.patch-card__label {
+  flex-shrink: 0;
+}
+
+.patch-card__description>div {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
 .patch-card__download-list {
@@ -160,34 +181,61 @@
   word-break: break-word;
 }
 
+.patch-card__version-text {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: pre-line;
+}
+
 .translator-link-icon {
   display: inline-block;
   font-size: 1rem;
-  line-height: 1;
+  line-height: inherit;
+  vertical-align: baseline;
 }
 
 .translator-links {
-  align-items: center;
+  align-items: baseline;
   display: inline-flex;
   gap: .8rem;
-  line-height: 1;
-  vertical-align: middle;
+  line-height: inherit;
+  vertical-align: baseline;
+}
+
+.translator-links a {
+  align-items: baseline;
+  display: inline-flex;
+  line-height: inherit;
 }
 
 .translator-tool-link {
+  align-items: baseline;
   display: inline-flex;
-  align-items: center;
-  line-height: 1;
+  line-height: inherit;
   white-space: nowrap;
 }
 
+.patch-card__tags-row {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+  margin-top: 0.35rem;
+}
+
 .patch-card__tags-label {
-  padding-top: 10px;
+  flex-shrink: 0;
+  padding-top: 0;
 }
 
 .patch-card__tags {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  margin: -10px 0 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .patch-card__tags li {
@@ -201,6 +249,10 @@
   .patch-card {
     grid-template-columns: 1fr;
     padding-top: 18pt;
+  }
+
+  .patch-card .heading {
+    text-align: center;
   }
 
   .patch-cover-wrap {
@@ -231,5 +283,6 @@
     align-items: center;
     flex-direction: row;
   }
+
 
 }

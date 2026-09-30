@@ -531,3 +531,13 @@ app-article-page {
 .text-xs {
   font-size: 1rem;
 }
+
+a,
+.button {
+  cursor: url("https://blob.gifcities.org/gifcities/XGHNKJVI5FI2QANGLYHGGAW3JZGOYVYW.gif"), pointer;
+}
+
+*:disabled,
+.loading {
+  cursor: url("https://blob.gifcities.org/gifcities/24NMRXMRFGJS54ANSFVFT3FMOTYM3F2A.gif"), not-allowed;
+}
