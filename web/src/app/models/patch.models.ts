@@ -23,6 +23,7 @@ export interface Patch {
   updateDate: string;
   haveUpdateFlag: boolean;
   patchVersion: string;
+  playTime?: number | null;
   gameTitle: string;
   system: string;
   translatorId: string;
@@ -42,22 +43,7 @@ export interface AdminProfile {
   email: string;
 }
 
-export interface PatchDraft {
-  updateDate: string;
-  haveUpdateFlag: boolean;
-  patchVersion: string;
-  gameTitle: string;
-  system: string;
-  translatorId: string;
-  patchTool: string;
-  tags: string[];
-  patchFileUrl: string;
-  patchedRomUrl: string;
-  referenceText: string;
-  referenceUrl: string;
-  walkthroughUrl: string;
-  coverFile?: File;
-}
+export type PatchDraft = Omit<Patch, 'id' | 'translatedBy' | 'coverUrl'>;
 
 export interface ProcessedCover {
   blob: Blob;

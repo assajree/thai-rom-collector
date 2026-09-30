@@ -72,4 +72,33 @@ describe('PatchCardListComponent', () => {
     const versionEl = fixture.nativeElement.querySelector('.patch-card__version');
     expect(versionEl).toBeNull();
   });
+
+  it('renders playTime when specified and greater than 0', () => {
+    component.patches = [{ ...basePatch, playTime: 0.5 }];
+    fixture.detectChanges();
+
+    const descEl = fixture.nativeElement.querySelector('.patch-card__description');
+    expect(descEl?.textContent).toContain('เวลาเล่นจบ: 0.5 ชั่วโมง');
+  });
+
+  it('does not render playTime when null or 0', () => {
+    component.patches = [{ ...basePatch, playTime: null }];
+    fixture.detectChanges();
+
+    const descEl = fixture.nativeElement.querySelector('.patch-card__description');
+    expect(descEl?.textContent).not.toContain('เวลาเล่นจบ:');
+  });
+
+  it('renders card labels with patch-card__label class', () => {
+    component.patches = [{ ...basePatch, patchVersion: 'v1.0', playTime: 10 }];
+    fixture.detectChanges();
+
+    const labels = Array.from(fixture.nativeElement.querySelectorAll('.patch-card__label'))
+      .map((el: any) => el.textContent?.trim());
+    expect(labels).toContain('โดย:');
+    expect(labels).toContain('ระบบ:');
+    expect(labels).toContain('เวอร์ชันแพตช์:');
+    expect(labels).toContain('เวลาเล่นจบ:');
+    expect(labels).toContain('เพิ่มเมื่อ:');
+  });
 });

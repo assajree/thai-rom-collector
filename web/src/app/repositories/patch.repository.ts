@@ -24,6 +24,7 @@ export class PatchRepository {
         updateDate: String(row['updateDate'] ?? ''),
         haveUpdateFlag: row['haveUpdateFlag'] === true,
         patchVersion: String(row['patchVersion'] ?? ''),
+        playTime: typeof row['playTime'] === 'number' ? row['playTime'] : null,
         gameTitle: String(row['gameTitle'] ?? ''),
         system: String(row['system'] ?? ''),
         translatorId: String(row['translatorId'] ?? ''),
@@ -111,7 +112,9 @@ export class PatchRepository {
     const fields = [draft.gameTitle, draft.system];
     if (fields.some((field) => !clean(field))) throw new RepositoryError('ข้อมูลแพตช์ไม่ครบถ้วน', 'create');
     return {
-      updateDate, haveUpdateFlag: draft.haveUpdateFlag === true, patchVersion: draft.patchVersion.trim(), gameTitle: clean(draft.gameTitle), system: system.shortName,
+      updateDate, haveUpdateFlag: draft.haveUpdateFlag === true, patchVersion: draft.patchVersion.trim(),
+      playTime: typeof draft.playTime === 'number' && draft.playTime >= 0 ? draft.playTime : null,
+      gameTitle: clean(draft.gameTitle), system: system.shortName,
       translatorId: translator.id, translatedBy: translator.name, patchTool: clean(draft.patchTool),
       tags, coverUrl: coverUrl.trim(), patchFileUrl: draft.patchFileUrl.trim(),
       patchedRomUrl: draft.patchedRomUrl.trim(), referenceText: clean(draft.referenceText), referenceUrl: draft.referenceUrl.trim(),

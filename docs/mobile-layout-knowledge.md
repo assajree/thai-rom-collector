@@ -18,9 +18,11 @@
   <div class="app-topbar ...">
     <!-- โลโก้, ปุ่ม Hamburger, วันที่อัปเดต -->
   </div>
+  @if (!authService.isVip()) {
   <div class="marquee ...">
-    <!-- แถบข้อความวิ่ง -->
+    <!-- แถบข้อความวิ่ง (ซ่อนเมื่อเป็น VIP) -->
   </div>
+  }
 </header>
 ```
 และใน CSS กำหนด `position: fixed` ที่คอนเทนเนอร์แม่เท่านั้น:
@@ -36,57 +38,108 @@
 }
 ```
 - **ผลลัพธ์:** ทั้ง Topbar และ Marquee จะไหลต่อกันตาม Flow ธรรมชาติ (Normal Document Flow) ภายใน `.app-header` ทำให้ติดกันสนิท 100% เสมอ ไม่ว่าฟอนต์หรือหน้าจอจะเปลี่ยนไปอย่างไร
-- **การคำนวณความสูงรวม:** Topbar (42px) + Marquee (38px) = 80px (5rem)
-  - ความสูงของ Drawer ด้านล่าง: `.retro-rail { top: 5rem; max-height: calc(100vh - 5rem); }`
-  - ระยะดันเนื้อหาด้านหลัง: `:host-context(body.sidebar-open) .app-shell { padding-top: 5rem; }`
-  - ความสูงขั้นต่ำของหน้าจอ: `.app-shell { min-height: calc(100vh - 5rem); }`
 
 ---
 
-## 2. Mobile Drawer Horizontal Scrollbar Prevention (การป้องกัน Scrollbar แนวนอนใน Sidebar)
+## 2. Mobile Drawer Scrolling & Height Constraints (การจำกัดความสูงและ Scroll ใน Sidebar)
 
-### 2.1 พฤติกรรมตามสเปกของ CSS `overflow-y`
+### 2.1 กับดัก `position: fixed` กับ `height: auto` (สาเหตุที่ Sidebar เลื่อนไม่ได้)
+เมื่อตั้งค่า Drawer บน Mobile เป็น `position: fixed; top: 0;` โดย**ไม่มีการระบุ `bottom: 0` หรือ `max-height`**:
+- บราวเซอร์จะคำนวณความสูงของกล่องเป็น `height: auto` ตามธรรมชาติ
+- ความสูงของ Drawer จะยืดขยายยาวลงไปข้างล่างตามเนื้อหาทั้งหมด (เช่น รายการเกมและทีมแปลที่ยาวเกิน 2,000px)
+- เมื่อตัวกล่องขยายครอบเนื้อหาไว้ทั้งหมด เนื้อหาจึงไม่เกิดการล้น (overflow) ภายในกล่อง
+- ส่งผลให้ `overflow-y: auto` **ไม่สร้าง Scrollbar และไม่สามารถเลื่อนดูเนื้อหาได้**
+- และเนื่องจากบนมือถือมีกฎ `body.sidebar-open { overflow: hidden; }` จึงทำให้ทั้งหน้าจอถูกล็อกอย่างสมบูรณ์
+
+### 2.2 พฤติกรรมตามสเปกของ CSS `overflow-y`
 ตามมาตรฐาน CSS Specification (W3C):
 > หากกำหนด `overflow-y: auto;` หรือ `scroll;` โดยไม่ได้ระบุ `overflow-x` ตัวบราวเซอร์จะคำนวณค่า `overflow-x` เป็น `auto` โดยอัตโนมัติ (ไม่ใช่ `visible`)
 
-ส่งผลให้หากมีคอนเทนต์ภายในกว้างเกินกล่องแม้แต่ 1px (เช่น Padding, คำยาว, หรือข้อจำกัดความกว้างจาก Desktop) จะเกิดแถบ Scrollbar แนวนอนทันที
+ส่งผลให้หากมีคอนเทนต์ภายในกว้างเกินกล่องแม้แต่ 1px จะเกิดแถบ Scrollbar แนวนอนทันที จึงต้องระบุ `overflow-x: hidden;` ควบคู่เสมอ
 
-### 2.2 โซลูชันที่ถูกต้อง
-1. **ระบุ `overflow-x: hidden;` คู่เสมอ:**
-   ```css
-   @media (max-width: 900px) {
-     .retro-rail {
-       max-height: calc(100vh - 5rem);
-       min-width: 0;            /* ปลด min-width: 16rem ของ Desktop */
-       overflow-x: hidden;      /* ป้องกัน Scrollbar แนวนอนเด็ดขาด */
-       overflow-y: auto;        /* เลื่อนเฉพาะแนวตั้ง */
-       position: fixed;
-       top: 5rem;
-       width: min(18rem, 85vw);
-       z-index: 20;
-     }
-   }
-   ```
-2. **บังคับตัดคำในปุ่มและลิงก์:**
-   ```css
-   .retro-rail-link,
-   .retro-system-button {
-     overflow-wrap: break-word;
-     word-break: break-word;
-   }
-   ```
+### 2.3 โซลูชันที่ถูกต้อง: Top-0 Full Height Pattern พร้อม Dynamic VIP Padding
+เพื่อให้รองรับทั้งผู้ใช้ทั่วไป (มี Marquee สูง 5rem) และผู้ใช้ VIP (ซ่อน Marquee เหลือ Header ~2.75rem):
+1. **กำหนด `top: 0; bottom: 0;` และ `max-height: 100dvh;`:** ตรึงกล่องให้อยู่ในหน้าจอตลอดเวลาเพื่อเปิดใช้งาน `overflow-y: auto;`
+2. **ใช้ `padding-top` แทน `top: 5rem`:** ให้ Sidebar อยู่เลเยอร์ใต้ Header (`z-index: 20` ใต้ Header `z-index: 30`) แล้วดันเนื้อหาลงมาด้วย Padding:
+   - ผู้ใช้ทั่วไป (มี Marquee): `padding-top: 5rem;`
+   - ผู้ใช้ VIP (ไม่มี Marquee): `padding-top: 2.75rem;` ผ่านคลาส `.is-vip`
+
+```css
+@media (max-width: 900px) {
+  .retro-rail {
+    background: var(--color-surface);
+    bottom: 0;                  /* ตรึงขอบล่างกับหน้าจอ */
+    display: none;
+    left: 0;
+    max-height: 100vh;
+    max-height: 100dvh;         /* บังคับความสูงไม่ให้เกินหน้าจอ เพื่อให้ scroll ได้ */
+    min-width: 0;
+    overflow-x: hidden;          /* ป้องกัน Scrollbar แนวนอน */
+    overflow-y: auto;            /* เลื่อนแนวตั้ง */
+    position: fixed;
+    top: 0;                     /* เริ่มจากด้านบนสุด */
+    width: min(18rem, 85vw);
+    z-index: 20;
+    padding: 5rem 1rem 1rem 0.5rem;
+  }
+
+  .retro-rail.is-vip {
+    padding-top: 2.75rem;       /* สำหรับ VIP ที่ไม่มี Marquee */
+  }
+
+  .retro-rail.mobile-sidebar-open {
+    display: block;
+    padding-bottom: 8rem;        /* พื้นที่ด้านล่างให้กดเมนูสุดท้ายได้ง่าย */
+  }
+
+  :host-context(body.sidebar-open) .app-shell {
+    padding-top: 5rem;
+  }
+
+  :host-context(body.sidebar-open) .app-shell.is-vip {
+    padding-top: 2.75rem;
+  }
+}
+```
+
+3. **บังคับตัดคำในปุ่มและลิงก์:**
+```css
+.retro-rail-link,
+.retro-system-button {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+```
 
 ---
 
-## 3. Flexbox Baseline Alignment (การจัดแนวตัวอักษรกับไอคอนในระดับเดียวกัน)
+## 3. Desktop Padding Isolation (การแยก Padding ระหว่าง Desktop กับ Mobile)
 
-### 3.1 ปัญหาของ `align-items: center` กับ Element ต่างชนิด
+บนหน้าจอ Desktop (`min-width: 769px`):
+- `.app-shell` เป็น CSS Grid และ `<header class="app-header">` อยู่ใน Normal Document Flow (ไม่ได้เป็น `position: fixed`)
+- หากคลาสแม่ `.retro-rail` กำหนด `padding: 5rem ...` จะส่งผลให้เมนูบน Desktop ถูกดันลงมา 5rem เกิดช่องว่างเปล่าด้านบนโดยไม่จำเป็น
+- **วิธีแก้:** ต้องรีเซ็ต `padding-top: 1rem;` ภายใต้ `@media (min-width: 769px)` เสมอ:
+```css
+@media (min-width: 769px) {
+  .retro-rail {
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+  }
+}
+```
+
+---
+
+## 4. Flexbox Baseline Alignment (การจัดแนวตัวอักษรกับไอคอนในระดับเดียวกัน)
+
+### 4.1 ปัญหาของ `align-items: center` กับ Element ต่างชนิด
 ในแถวรายการที่มีทั้งปุ่มข้อความยาวและไอคอน เช่น แถวทีมแปล (`.sidebar-translator-row`):
 - บน Mobile ปุ่มข้อความ (`.retro-system-button`) ถูกกำหนด `min-height: 44px;` และ `padding: 0.65rem 0.75rem;` เพื่อให้ผ่านเกณฑ์ Mobile Touch Target
 - ตัวอักษรจึงถูกดันลงมาด้วย `padding-top: 0.65rem` (~10px) และอยู่ที่ครึ่งบนของกล่อง 44px
 - แต่ไอคอน (เช่น ไอคอนดินสอแก้ข้อมูล หรือไอคอนโซเชียล) มีความสูงเพียง ~16px หากแถวใช้ `align-items: center;` ไอคอนจะถูกจัดไว้ตรงกึ่งกลางกล่อง 44px (ระดับ ~22px) ทำให้ไอคอนห้อยต่ำกว่าระดับตัวอักษร (~8px) ไม่เป็นระนาบเดียวกัน
 
-### 3.2 โซลูชันที่ถูกต้อง (Baseline Alignment Pattern)
+### 4.2 โซลูชันที่ถูกต้อง (Baseline Alignment Pattern)
 1. **กำหนด Flexbox Container ให้จัดแนวด้วย Baseline:**
    ```css
    .sidebar-translator-row {

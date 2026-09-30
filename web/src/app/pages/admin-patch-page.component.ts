@@ -50,7 +50,7 @@ export class AdminPatchPageComponent {
   protected systemOptions: SystemMaster[] = [];
   protected systemSearchText = '';
   protected systemAutocompleteOpen = false;
-  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], haveUpdateFlag: [false], patchVersion: [''], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
+  protected readonly form = this.fb.nonNullable.group({ updateDate: [this.todayInputDate(), Validators.required], haveUpdateFlag: [false], patchVersion: [''], playTime: [null as number | null, [Validators.min(0)]], gameTitle: ['', Validators.required], system: ['', Validators.required], translatorId: ['', Validators.required], patchTool: [''], patchFileUrl: [''], patchedRomUrl: [''], referenceText: [''], referenceUrl: [''], walkthroughUrl: [''] });
   protected cover?: Blob;
   protected saving = false;
   protected readonly showFloatingSave = signal(true);
@@ -182,6 +182,7 @@ export class AdminPatchPageComponent {
       const value = this.form.getRawValue();
       const draft = {
         ...value,
+        playTime: value.playTime != null && (value.playTime as unknown) !== '' && !Number.isNaN(Number(value.playTime)) && Number(value.playTime) >= 0 ? Number(value.playTime) : null,
         gameTitle: this.normalizeGameTitle(value.gameTitle.trim()),
         updateDate: this.toIsoDate(value.updateDate),
         patchTool: removeFacebookReference(value.patchTool),
@@ -210,6 +211,7 @@ export class AdminPatchPageComponent {
         updateDate: this.todayInputDate(),
         haveUpdateFlag: false,
         patchVersion: '',
+        playTime: null,
         gameTitle: '',
         system: value.system,
         translatorId: value.translatorId,
@@ -244,6 +246,13 @@ export class AdminPatchPageComponent {
     } finally {
       this.pastingField = null;
     }
+  }
+
+  protected openHowLongToBeat(): void {
+    const title = this.form.controls.gameTitle.value.trim();
+    const query = encodeURIComponent(encodeURIComponent(title));
+    const url = title ? `https://howlongtobeat.com/?q=${query}` : 'https://howlongtobeat.com';
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   protected async deletePatch(): Promise<void> {
@@ -287,6 +296,7 @@ export class AdminPatchPageComponent {
       updateDate: this.todayInputDate(),
       haveUpdateFlag: false,
       patchVersion: '',
+      playTime: null,
       gameTitle: '',
       system: '',
       translatorId: '',
@@ -306,7 +316,7 @@ export class AdminPatchPageComponent {
       this.editId = id;
       document.title = `${patch.gameTitle} | THAI ROM DB`;
       this.existingCoverUrl = patch.coverUrl ?? '';
-      this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
+      this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', playTime: patch.playTime ?? null, gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
       const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
       if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
       const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);

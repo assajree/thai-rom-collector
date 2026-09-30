@@ -496,6 +496,22 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
     expect(c.form.controls.walkthroughUrl.value).toBe('https://example.com/guide');
   });
 
+  it('opens howlongtobeat with query when gameTitle is set', () => {
+    const c = component as any;
+    spyOn(window, 'open');
+    c.form.controls.gameTitle.setValue('gta sa');
+    c.openHowLongToBeat();
+    expect(window.open).toHaveBeenCalledWith('https://howlongtobeat.com/?q=gta%2520sa', '_blank', 'noopener,noreferrer');
+  });
+
+  it('opens howlongtobeat home when gameTitle is empty', () => {
+    const c = component as any;
+    spyOn(window, 'open');
+    c.form.controls.gameTitle.setValue('');
+    c.openHowLongToBeat();
+    expect(window.open).toHaveBeenCalledWith('https://howlongtobeat.com', '_blank', 'noopener,noreferrer');
+  });
+
   it('rejects save when user is not admin', async () => {
     const authService = TestBed.inject(AuthService);
     spyOn(authService, 'isAdmin').and.returnValue(false);

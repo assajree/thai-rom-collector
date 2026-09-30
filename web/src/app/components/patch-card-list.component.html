@@ -23,7 +23,7 @@
       <div class="patch-card__description">
 
         <div>
-          โดย:
+          <span class="patch-card__label">โดย:</span>
           <span class="translator-links">
             <a routerLink="/translator"
               [queryParams]="{ translator: translatorShortName(patch) ?? translatorName(patch) }">{{
@@ -44,20 +44,23 @@
           </span>
         </div>
 
-        <div>ระบบ: <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a>
+        <div><span class="patch-card__label">ระบบ:</span> <a routerLink="/system" [queryParams]="{ system: patch.system }">{{ systemName(patch.system) }}</a>
         </div>
         @if (patch.patchVersion.trim()) {
-        <div class="patch-card__version">เวอร์ชันแพตช์: {{ patch.patchVersion.trim() }}</div>
+        <div class="patch-card__version"><span class="patch-card__label">เวอร์ชันแพตช์:</span> {{ patch.patchVersion.trim() }}</div>
+        }
+        @if (patch.playTime != null && patch.playTime > 0) {
+        <div><span class="patch-card__label">เวลาเล่นจบ:</span> {{ patch.playTime }} ชั่วโมง</div>
         }
 
         @if (formatUpdateDate(patch.updateDate); as updateDate) {
-        <div>{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}: {{ updateDate }}</div>
+        <div><span class="patch-card__label">{{ patch.haveUpdateFlag ? 'อัพเดท' : 'เพิ่มเมื่อ' }}:</span> {{ updateDate }}</div>
         }
 
 
       </div>
       @if (cardTags(patch).length > 0 || patch.walkthroughUrl.trim()) {
-      <span class="patch-card__tags-label">แท็ก: </span>
+      <span class="patch-card__label patch-card__tags-label">แท็ก: </span>
       <ul class="patch-card__tags">@for (tag of cardTags(patch); track tag.id) { @if (tag.name.trim() &&
         (!patch.walkthroughUrl.trim() || tag.name.trim() !== 'บทสรุป')) { <li>
           <a [routerLink]="browseRoute('tag', tag.slug)">{{ tag.name }}</a>
@@ -67,7 +70,7 @@
       }
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
-        <div class="patch-card__links-label">ลิ้ง:</div>
+        <div class="patch-card__label patch-card__links-label">ลิ้ง:</div>
         <div class="patch-card__download-list">
           @if (patch.coverUrl) {
           <a [href]="patch.coverUrl" [download]="coverFilename(patch)" target="_blank" rel="noopener noreferrer"

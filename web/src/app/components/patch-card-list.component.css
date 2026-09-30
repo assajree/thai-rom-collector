@@ -16,7 +16,7 @@
 }
 
 .patch-card .heading {
-  color: var(--color-highlight);
+  color: var(--color-brand);
   line-height: 1.05;
 }
 
@@ -124,6 +124,12 @@
 
 .patch-card__links-label {
   flex-basis: 100%;
+}
+
+.patch-card__label,
+.patch-card__tags-label,
+.patch-card__links-label {
+  color: var(--color-highlight);
 }
 
 .patch-card__download-list {

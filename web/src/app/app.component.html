@@ -4,6 +4,9 @@
       <button class="mobile-menu-button" type="button" (click)="toggleSidebar()" [attr.aria-expanded]="sidebarOpen()"
         aria-controls="system-sidebar" aria-label="Toggle navigation menu">☰</button>
       <a class="site-title" routerLink="/"><img src="assets/images/logo.png" alt="THAI ROM DB"></a>
+      @if (authService.isAdmin() || authService.isVip()) {
+      <img src="https://blob.gifcities.org/gifcities/2XDEMOQU7I6GA66JGL6GBR4PKL3BYUSY.gif" alt="VIP" />
+      }
     </div>
 
     <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด:' + patchCacheLastUpdatedLabel()">
@@ -13,6 +16,7 @@
     </div>
   </div>
 
+  @if (!authService.isVip()) {
   <div class="marquee border-b-2 border-slate-300 py-1 flex items-center">
     <marquee scrollamount="5">
       <span class="inline-flex items-center align-middle">
@@ -29,10 +33,13 @@
       </span>
     </marquee>
   </div>
+  }
+
 </header>
 
-<div class="app-shell min-h-[calc(100vh-5rem)]">
+<div class="app-shell min-h-[calc(100vh-5rem)]" [class.is-vip]="authService.isVip()">
   <aside id="system-sidebar" class="retro-rail" [class.mobile-sidebar-open]="sidebarOpen()"
+    [class.is-vip]="authService.isVip()"
     (click)="$event.stopPropagation()" aria-label="Main navigation">
 
     <p class="retro-rail-heading">THAI ROM DB</p>
