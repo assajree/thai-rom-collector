@@ -74,6 +74,7 @@ export class AdminPatchPageComponent implements OnInit {
   protected systemDialogOpen = false;
   protected savingTranslator = false;
   protected savingSystem = false;
+  protected loadingData = false;
   private editLoadRequest = 0;
   constructor() {
     this.initializeFilenameGeneration();
@@ -314,18 +315,25 @@ export class AdminPatchPageComponent implements OnInit {
       walkthroughUrl: ''
     });
     if (!id) return;
-    const patch = await this.patchRepository.getById(id);
-    if (request !== this.editLoadRequest) return;
-    if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
-    this.editId = id;
-    document.title = `${patch.gameTitle} | THAI ROM DB`;
-    this.existingCoverUrl = patch.coverUrl ?? '';
-    this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
-    const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
-    if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
-    const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
-    if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
-    this.selectedTags = patch.tags.filter((id) => this.tagSuggestions.some((tag) => tag.id === id));
+    this.loadingData = true;
+    try {
+      const patch = await this.patchRepository.getById(id);
+      if (request !== this.editLoadRequest) return;
+      if (!patch) { this.status.show('ไม่พบแพตช์ที่ต้องการแก้ไข', 'error'); return; }
+      this.editId = id;
+      document.title = `${patch.gameTitle} | THAI ROM DB`;
+      this.existingCoverUrl = patch.coverUrl ?? '';
+      this.form.patchValue({ updateDate: this.toInputDate(patch.updateDate), haveUpdateFlag: patch.haveUpdateFlag === true, patchVersion: patch.patchVersion ?? '', gameTitle: patch.gameTitle, system: patch.system, translatorId: patch.translatorId, patchTool: patch.patchTool, patchFileUrl: patch.patchFileUrl, patchedRomUrl: patch.patchedRomUrl ?? '', referenceText: patch.referenceText ?? '', referenceUrl: patch.referenceUrl ?? '', walkthroughUrl: patch.walkthroughUrl ?? '' }, { emitEvent: false });
+      const selectedTranslator = this.translatorOptions.find((item) => item.id === patch.translatorId);
+      if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
+      const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
+      if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
+      this.selectedTags = patch.tags.filter((tagId) => this.tagSuggestions.some((tag) => tag.id === tagId));
+    } finally {
+      if (request === this.editLoadRequest) {
+        this.loadingData = false;
+      }
+    }
   }
   private todayInputDate(): string {
     const now = new Date();
