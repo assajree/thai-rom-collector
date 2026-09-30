@@ -146,6 +146,14 @@
   margin: .15rem 0;
 }
 
+.patch-card__version {
+  line-height: 1.45;
+  margin: 0.25rem 0;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
 .translator-link-icon {
   display: inline-block;
   font-size: 1rem;
@@ -207,6 +215,10 @@
     gap: 0.5rem;
     line-height: 1.5;
     margin: 0.4rem 0;
+  }
+
+  .patch-card__version {
+    margin: 0;
   }
 
   .patch-card__links {
