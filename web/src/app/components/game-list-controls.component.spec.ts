@@ -71,4 +71,146 @@ describe('GameListControlsComponent', () => {
     fixture.detectChanges();
     expect(btn.textContent?.trim()).toBe('มาก → น้อย');
   });
+
+  it('opens translator autocomplete on focus and displays full name', () => {
+    component.translators = [
+      { id: 't1', name: 'Pixel Thai', shortName: 'PT' },
+      { id: 't2', name: 'Siam Quest', shortName: 'SQ' }
+    ];
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-translator') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+
+    const options = fixture.nativeElement.querySelectorAll('#filter-translator-options button');
+    expect(options.length).toBe(3);
+    expect(options[0].textContent.trim()).toBe('ทุกทีม');
+    expect(options[1].textContent.trim()).toBe('Pixel Thai');
+    expect(options[2].textContent.trim()).toBe('Siam Quest');
+  });
+
+  it('filters translator autocomplete by short name and full name', () => {
+    component.translators = [
+      { id: 't1', name: 'Pixel Thai', shortName: 'PT' },
+      { id: 't2', name: 'Siam Quest', shortName: 'SQ' }
+    ];
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-translator') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    input.value = 'SQ';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    const options = fixture.nativeElement.querySelectorAll('#filter-translator-options button');
+    expect(options.length).toBe(2);
+    expect(options[1].textContent.trim()).toBe('Siam Quest');
+  });
+
+  it('selects translator when clicked and emits filtersChanged', () => {
+    spyOn(component.filtersChanged, 'emit');
+    component.translators = [
+      { id: 't1', name: 'Pixel Thai', shortName: 'PT' }
+    ];
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-translator') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+
+    const options = fixture.nativeElement.querySelectorAll('#filter-translator-options button');
+    options[1].click();
+    fixture.detectChanges();
+
+    expect(component.draft.translatorId).toBe('t1');
+    expect(input.value).toBe('Pixel Thai');
+    expect(component.filtersChanged.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+      translatorId: 't1'
+    }));
+  });
+
+  it('clears translator when clear button is clicked', () => {
+    spyOn(component.filtersChanged, 'emit');
+    component.translators = [
+      { id: 't1', name: 'Pixel Thai', shortName: 'PT' }
+    ];
+    component.draft.translatorId = 't1';
+    component.ngOnChanges();
+    fixture.detectChanges();
+
+    const clearBtn = fixture.nativeElement.querySelector('.control-autocomplete__clear') as HTMLButtonElement;
+    expect(clearBtn).toBeTruthy();
+    clearBtn.click();
+    fixture.detectChanges();
+
+    expect(component.draft.translatorId).toBeNull();
+    expect(component.filtersChanged.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+      translatorId: null
+    }));
+  });
+
+  it('filters system autocomplete by short name and displays full name', () => {
+    component.systems = ['GBA', 'SFC'];
+    component.systemMasters = [
+      { id: '1', shortName: 'GBA', name: 'Game Boy Advance' },
+      { id: '2', shortName: 'SFC', name: 'Super Famicom' }
+    ];
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-system') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    input.value = 'GBA';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    const options = fixture.nativeElement.querySelectorAll('#filter-system-options button');
+    expect(options.length).toBe(2);
+    expect(options[1].textContent.trim()).toBe('Game Boy Advance');
+  });
+
+  it('navigates with keyboard and selects with Enter', () => {
+    spyOn(component.filtersChanged, 'emit');
+    component.systems = ['GBA', 'SFC'];
+    component.systemMasters = [
+      { id: '1', shortName: 'GBA', name: 'Game Boy Advance' },
+      { id: '2', shortName: 'SFC', name: 'Super Famicom' }
+    ];
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-system') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    fixture.detectChanges();
+
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown' }));
+    fixture.detectChanges();
+    input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    fixture.detectChanges();
+
+    expect(component.draft.system).toBe('GBA');
+    expect(input.value).toBe('Game Boy Advance');
+    expect(component.filtersChanged.emit).toHaveBeenCalledWith(jasmine.objectContaining({
+      system: 'GBA'
+    }));
+  });
+
+  it('reverts unselected text on document click', () => {
+    component.translators = [
+      { id: 't1', name: 'Pixel Thai', shortName: 'PT' }
+    ];
+    component.draft.translatorId = 't1';
+    component.ngOnChanges();
+    fixture.detectChanges();
+
+    const input = fixture.nativeElement.querySelector('#filter-translator') as HTMLInputElement;
+    input.dispatchEvent(new Event('focus'));
+    input.value = 'Random non-matching text';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    document.dispatchEvent(new MouseEvent('click'));
+    fixture.detectChanges();
+
+    expect(input.value).toBe('Pixel Thai');
+  });
 });

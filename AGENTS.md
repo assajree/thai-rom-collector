@@ -77,7 +77,12 @@ When designing, modifying, or fixing mobile layouts, header bars, marquees, side
 
 Do not commit git changes automatically. Always wait for the user to explicitly request or instruct a commit before executing `git commit`.
 
+## Development Server & Build Workflow
+
+The user normally keeps `web/_run_web.bat` (`npm start` / `ng serve`) running in the background. Do not run `npm run build` during routine development tasks, as changes are automatically recompiled incrementally by the dev server. Only run `npm run build` when explicitly requested, when verifying production bundle budgets, or when preparing for deployment.
+
 ## Unit Testing Workflow
 
 When executing unit tests, prioritize testing against the active Karma runner at `http://localhost:9876/` (e.g. using `npx karma run` or checking the active runner) instead of triggering a cold build. If `http://localhost:9876/` is not running or cannot be reached, inform the user to run `_run_debug.bat` (located in `web/_run_debug.bat`) to start the test server.
+
 
