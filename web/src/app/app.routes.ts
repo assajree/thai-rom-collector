@@ -25,6 +25,7 @@ export const routes: Routes = [
     component: BrowsePageComponent,
     canActivate: [maintenanceGuard]
   },
+  { path: 'page', component: BrowsePageComponent, data: { pageMode: true }, canActivate: [maintenanceGuard] },
   { path: 'today', component: BrowsePageComponent, data: { browseKind: 'today' }, canActivate: [maintenanceGuard] },
   { path: 'new', component: BrowsePageComponent, data: { browseKind: 'week' }, canActivate: [maintenanceGuard] },
   { path: 'system', component: BrowsePageComponent, data: { browseKind: 'system' }, canActivate: [maintenanceGuard] },

@@ -38,7 +38,7 @@ describe('FirestoreCacheService', () => {
     let loadFreshCalled = false;
     service.get('systems', () => {
       loadFreshCalled = true;
-      return of([]);
+      return of<Array<{ id: string; name: string }>>([]);
     }).subscribe((data) => {
       expect(data).toEqual(cachedData);
       expect(loadFreshCalled).toBeFalse();

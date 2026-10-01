@@ -71,7 +71,8 @@
   font-size: 0.85rem;
 }
 
-.browse-stat-label {
+.browse-stat-label,
+.browse-stat-subtext {
   color: var(--color-text-muted);
 }
 
@@ -81,7 +82,6 @@
 }
 
 .browse-stat-subtext {
-  color: var(--color-text-muted);
   font-size: 0.85rem;
 }
 
@@ -99,25 +99,6 @@
 .browse-route-label__clear:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 2px;
-}
-
-@media (max-width: 768px) {
-  .browse-route-label {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-
-  .browse-route-label__title {
-    font-size: 1.25rem;
-  }
-
-  .browse-route-label__clear {
-    right: 0.35rem;
-  }
-
-  .browse-stat-bar {
-    font-size: 0.875rem;
-  }
 }
 
 .skeleton-grid {
@@ -188,12 +169,6 @@
   width: 2.75rem;
 }
 
-.back-to-top:focus-visible,
-.floating-add-game:focus-visible {
-  outline: 3px solid var(--color-text);
-  outline-offset: 3px;
-}
-
 .back-to-top span {
   font-size: 1.35rem;
   line-height: 1;
@@ -204,22 +179,37 @@
   line-height: 1;
 }
 
-.load-more-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: .75rem;
+.load-more-section,
+.mode-toggle-section {
   margin: 1.75rem auto 0;
   max-width: 26rem;
   width: 100%;
 }
 
-.load-more-button {
+.load-more-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+}
+
+.mode-toggle-section {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.load-more-button,
+.mode-toggle-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: .5rem;
   width: 100%;
+  cursor: pointer;
+}
+
+.load-more-button {
   min-height: 44px;
   padding: .75rem 1.25rem;
   background: var(--color-surface);
@@ -228,7 +218,6 @@
   color: var(--color-text);
   font: inherit;
   font-weight: 800;
-  cursor: pointer;
   transition: transform .1s ease, box-shadow .1s ease;
 }
 
@@ -242,17 +231,25 @@
   box-shadow: 2px 2px 0 var(--color-shadow);
 }
 
-.load-more-button:focus-visible {
+.back-to-top:focus-visible,
+.floating-add-game:focus-visible,
+.load-more-button:focus-visible,
+.mode-toggle-link:focus-visible,
+.pagination__button:focus-visible {
   outline: 3px solid var(--color-text);
   outline-offset: 3px;
 }
 
-.load-more-status {
-  margin: 0;
+.load-more-status,
+.load-more-end {
   color: var(--color-text-muted);
   font-size: .875rem;
   font-weight: 700;
   text-align: center;
+}
+
+.load-more-status {
+  margin: 0;
 }
 
 .load-more-end {
@@ -261,16 +258,75 @@
   justify-content: center;
   gap: .5rem;
   padding: .65rem 1.25rem;
-  color: var(--color-text-muted);
-  font-size: .875rem;
-  font-weight: 700;
   border-top: 1px dashed var(--color-border);
   width: 100%;
-  text-align: center;
 }
 
 .load-more-end-icon {
   color: var(--color-brand);
+}
+
+.pagination {
+  align-items: center;
+  display: flex;
+  gap: .55rem;
+  justify-content: space-between;
+  max-width: 42rem;
+}
+
+.pagination--top {
+  margin: .65rem auto 0;
+}
+
+.pagination--bottom {
+  margin: 1.5rem auto 0;
+}
+
+.pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  justify-content: center;
+}
+
+.pagination__current {
+  color: var(--color-text);
+  font-weight: 800;
+  min-width: 7rem;
+  text-align: center;
+}
+
+.pagination__button {
+  background: var(--color-surface);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  color: var(--color-text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+  min-width: 2.5rem;
+  padding: .45rem .7rem;
+  border: 1px solid var(--color-shadow);
+}
+
+.pagination__button:hover:not(:disabled) {
+  background: var(--color-surface-light);
+}
+
+.pagination__button:disabled {
+  background: var(--color-disabled);
+  box-shadow: 1px 1px 0 var(--color-shadow);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+
+.pagination__step_button {
+  height: stretch;
+}
+
+.pagination__page--active,
+.pagination__page--active:hover:not(:disabled) {
+  background: var(--color-accent);
+  color: var(--color-text);
 }
 
 @keyframes skeleton-pulse {
@@ -294,6 +350,22 @@
 }
 
 @media (max-width: 768px) {
+  .browse-route-label {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  .browse-route-label__title {
+    font-size: 1.25rem;
+  }
+
+  .browse-route-label__clear {
+    right: 0.35rem;
+  }
+
+  .browse-stat-bar {
+    font-size: 0.875rem;
+  }
 
   .browse-floating-actions {
     right: 0.5rem;
@@ -301,7 +373,6 @@
 }
 
 @media (min-width: 1200px) {
-
   .browse-floating-actions {
     right: 300px;
   }

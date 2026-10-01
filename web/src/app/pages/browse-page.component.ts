@@ -45,6 +45,8 @@ export class BrowsePageComponent implements OnInit {
   protected readonly loading = signal(true);
   protected readonly unavailable = signal(false);
   protected readonly showBackToTop = signal(false);
+  protected readonly showFloatingAddGame = signal(false);
+  protected readonly isPageMode = signal(!!this.route.snapshot.data['pageMode']);
   protected readonly currentPage = signal(1);
   protected readonly pageSize = 10;
   protected readonly sortBy = signal<GameListSortField>('updateDate');
@@ -64,6 +66,7 @@ export class BrowsePageComponent implements OnInit {
   private readonly queryStateEffect = effect(() => {
     if (!this.queryStateReady()) return;
     const filters = this.filters();
+    const page = untracked(() => this.currentPage());
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
@@ -71,7 +74,8 @@ export class BrowsePageComponent implements OnInit {
         translator: this.translators().find((item) => item.id === filters.translatorId)?.shortName || null,
         system: filters.system || null,
         sort: filters.sortBy === 'updateDate' ? null : filters.sortBy,
-        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection
+        dir: filters.sortDirection === 'desc' ? null : filters.sortDirection,
+        page: this.isPageMode() && page > 1 ? page : null
       },
       replaceUrl: true
     });
@@ -143,7 +147,13 @@ export class BrowsePageComponent implements OnInit {
     return a.id.localeCompare(b.id);
   }));
   protected readonly totalPages = computed(() => Math.max(1, Math.ceil(this.sortedPatches().length / this.pageSize)));
+  protected readonly pageNumbers = computed(() => Array.from({ length: this.totalPages() }, (_, index) => index + 1));
   protected readonly paginatedPatches = computed(() => {
+    if (this.isPageMode()) {
+      const page = Math.min(this.currentPage(), this.totalPages());
+      const start = (page - 1) * this.pageSize;
+      return this.sortedPatches().slice(start, start + this.pageSize);
+    }
     const count = Math.min(this.currentPage() * this.pageSize, this.sortedPatches().length);
     return this.sortedPatches().slice(0, count);
   });
@@ -199,7 +209,13 @@ export class BrowsePageComponent implements OnInit {
   private readonly paginationClampEffect = effect(() => {
     if (!this.patchesLoaded()) return;
     const lastPage = this.totalPages();
-    if (this.currentPage() > lastPage) this.currentPage.set(lastPage);
+    if (this.currentPage() > lastPage) {
+      if (this.isPageMode()) {
+        this.setPage(lastPage);
+      } else {
+        this.currentPage.set(lastPage);
+      }
+    }
   }, { allowSignalWrites: true });
   private readonly routeFilterEffect = effect(() => {
     const kind = this.routeKind();
@@ -258,7 +274,8 @@ export class BrowsePageComponent implements OnInit {
   protected clearAllFilters(): void {
     this.filterState.clearAll();
     this.currentPage.set(1);
-    void this.router.navigateByUrl('/', { replaceUrl: true });
+    const targetUrl = this.isPageMode() ? '/page' : '/';
+    void this.router.navigateByUrl(targetUrl, { replaceUrl: true });
   }
   protected toggleTag(tag: string): void { this.selectedTag.update((current) => current === tag ? null : tag); this.currentPage.set(1); }
   protected clearTag(): void { this.selectedTag.set(null); this.currentPage.set(1); }
@@ -267,6 +284,32 @@ export class BrowsePageComponent implements OnInit {
   protected clearSystem(): void { this.selectedSystem.set(null); }
   protected clearTranslator(): void { this.selectedTranslatorId.set(null); }
   protected setFilters(value: import('../models/patch.models').GameListFilters): void { this.keyword.set(value.keyword); this.selectedTag.set(value.tag); this.selectedTranslatorId.set(value.translatorId); this.selectedSystem.set(value.system); this.sortBy.set(value.sortBy); this.direction.set(value.sortDirection); this.currentPage.set(1); }
+  protected setPage(page: number): void {
+    const nextPage = Math.max(1, Math.min(page, this.totalPages()));
+    if (nextPage === this.currentPage()) return;
+    this.currentPage.set(nextPage);
+    if (this.isPageMode()) {
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { page: nextPage > 1 ? nextPage : null },
+        queryParamsHandling: 'merge'
+      });
+    }
+    requestAnimationFrame(() => {
+      document.querySelector('.browse-route-label')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+  protected readonly currentFilterQueryParams = computed(() => {
+    const filters = this.filters();
+    const translator = this.translators().find((item) => item.id === filters.translatorId)?.shortName || null;
+    const params: Record<string, string> = {};
+    if (filters.keyword.trim()) params['q'] = filters.keyword.trim();
+    if (translator) params['translator'] = translator;
+    if (filters.system) params['system'] = filters.system;
+    if (filters.sortBy !== 'updateDate') params['sort'] = filters.sortBy;
+    if (filters.sortDirection !== 'desc') params['dir'] = filters.sortDirection;
+    return params;
+  });
   protected loadMore(): void {
     if (!this.hasMore()) return;
     this.currentPage.update((page) => page + 1);
@@ -302,6 +345,15 @@ export class BrowsePageComponent implements OnInit {
     this.tagRepository.watchAll().subscribe({ next: (tags) => { this.tags.set(tags); this.tagsLoaded.set(true); }, error: () => this.unavailable.set(true) });
     this.route.data.subscribe((data) => {
       this.routeKind.set((data['browseKind'] as BrowseRouteKind | undefined) ?? null);
+      const pageMode = !!data['pageMode'];
+      this.isPageMode.set(pageMode);
+      if (pageMode) {
+        const pageParam = this.route.snapshot.queryParamMap.get('page');
+        const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
+        if (Number.isInteger(parsedPage) && parsedPage > 0) {
+          this.currentPage.set(parsedPage);
+        }
+      }
     });
     this.route.paramMap.subscribe((params) => {
       const slug = params.get('slug');
@@ -323,6 +375,11 @@ export class BrowsePageComponent implements OnInit {
       this.filterState.selectedSystem.set(params.get('system'));
       this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' || sort === 'playTime' ? sort : 'updateDate');
       this.direction.set(direction === 'asc' ? 'asc' : 'desc');
+      if (this.isPageMode()) {
+        const pageParam = params.get('page');
+        const parsedPage = pageParam ? Number.parseInt(pageParam, 10) : 1;
+        this.currentPage.set(Number.isInteger(parsedPage) && parsedPage > 0 ? parsedPage : 1);
+      }
     });
   }
 }

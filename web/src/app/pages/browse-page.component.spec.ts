@@ -258,4 +258,184 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     fixture.detectChanges();
     expect((component as unknown as { sortBy: () => string }).sortBy()).toBe('playTime');
   });
+
+  it('renders mode toggle link to /page in load more mode', () => {
+    fixture.detectChanges();
+    const modeToggle = fixture.nativeElement.querySelector('.mode-toggle-link');
+    expect(modeToggle).toBeTruthy();
+    expect(modeToggle.getAttribute('routerLink')).toBe('/page');
+    expect(modeToggle.textContent).toContain('สลับไปโหมดแบ่งหน้า');
+  });
 });
+
+describe('BrowsePageComponent - Page Mode Functionality', () => {
+  let component: BrowsePageComponent;
+  let fixture: ComponentFixture<BrowsePageComponent>;
+  let router: jasmine.SpyObj<Router>;
+  let queryParamMapSubject: BehaviorSubject<ParamMap>;
+
+  const mockPatches: Patch[] = Array.from({ length: 25 }, (_, i) => ({
+    id: `patch-${i + 1}`,
+    gameTitle: `Game ${i + 1}`,
+    system: 'SNES',
+    patchVersion: '1.0',
+    translatedBy: 'Team A',
+    translatorId: 'translator-1',
+    haveUpdateFlag: false,
+    patchTool: '',
+    referenceText: '',
+    referenceUrl: '',
+    patchFileUrl: '',
+    patchedRomUrl: '',
+    walkthroughUrl: '',
+    coverUrl: '',
+    tags: [],
+    updateDate: '2026-01-01T00:00:00Z'
+  }));
+
+  beforeEach(async () => {
+    queryParamMapSubject = new BehaviorSubject<ParamMap>(convertToParamMap({}));
+
+    await TestBed.configureTestingModule({
+      imports: [BrowsePageComponent],
+      providers: [
+        provideRouter([]),
+        {
+          provide: PatchRepository,
+          useValue: { watchAll: () => of(mockPatches) }
+        },
+        {
+          provide: TranslatorRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: TagRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: SystemRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: PatchCacheService,
+          useValue: { refreshRequested: () => 0 }
+        },
+        {
+          provide: AuthService,
+          useValue: { isAdmin: () => false }
+        },
+        BrowseFilterStateService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            data: of({ pageMode: true }),
+            paramMap: of(convertToParamMap({})),
+            queryParamMap: queryParamMapSubject.asObservable(),
+            snapshot: {
+              data: { pageMode: true },
+              queryParamMap: convertToParamMap({})
+            }
+          }
+        }
+      ]
+    }).compileComponents();
+
+    router = TestBed.inject(Router) as jasmine.SpyObj<Router>;
+    spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
+    spyOn(router, 'navigateByUrl').and.returnValue(Promise.resolve(true));
+    fixture = TestBed.createComponent(BrowsePageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('initializes with pageMode true and displays only first 10 patches', () => {
+    expect((component as unknown as { isPageMode: () => boolean }).isPageMode()).toBeTrue();
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    const paginated = (component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches();
+    expect(paginated.length).toBe(10);
+    expect(paginated).toEqual(sorted.slice(0, 10));
+  });
+
+  it('navigates with page number queryParam when setPage(2) is called', () => {
+    (component as unknown as { setPage: (p: number) => void }).setPage(2);
+    expect(router.navigate).toHaveBeenCalledWith([], {
+      relativeTo: jasmine.anything(),
+      queryParams: { page: 2 },
+      queryParamsHandling: 'merge'
+    });
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    const paginated = (component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches();
+    expect(paginated.length).toBe(10);
+    expect(paginated).toEqual(sorted.slice(10, 20));
+  });
+
+  it('navigates with page: null when returning to page 1', () => {
+    (component as unknown as { setPage: (p: number) => void }).setPage(2);
+    router.navigate.calls.reset();
+    (component as unknown as { setPage: (p: number) => void }).setPage(1);
+    expect(router.navigate).toHaveBeenCalledWith([], {
+      relativeTo: jasmine.anything(),
+      queryParams: { page: null },
+      queryParamsHandling: 'merge'
+    });
+  });
+
+  it('initializes currentPage from queryParamMap page parameter when in pageMode', () => {
+    queryParamMapSubject.next(convertToParamMap({ page: '3' }));
+    fixture.detectChanges();
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(3);
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    const paginated = (component as unknown as { paginatedPatches: () => Patch[] }).paginatedPatches();
+    expect(paginated.length).toBe(5);
+    expect(paginated).toEqual(sorted.slice(20, 25));
+  });
+
+  it('resets currentPage to 1 when filters are changed in pageMode', () => {
+    queryParamMapSubject.next(convertToParamMap({ page: '2' }));
+    fixture.detectChanges();
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(2);
+
+    (component as unknown as { setFilters: (f: unknown) => void }).setFilters({
+      keyword: 'Game 1',
+      tag: null,
+      translatorId: null,
+      system: null,
+      sortBy: 'updateDate',
+      sortDirection: 'desc'
+    });
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
+  });
+
+  it('clamps currentPage to totalPages if page in URL exceeds maximum pages', () => {
+    queryParamMapSubject.next(convertToParamMap({ page: '99' }));
+    fixture.detectChanges();
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(3);
+  });
+
+  it('defaults to page 1 for invalid page numbers in URL', () => {
+    queryParamMapSubject.next(convertToParamMap({ page: '-5' }));
+    fixture.detectChanges();
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
+
+    queryParamMapSubject.next(convertToParamMap({ page: 'not-a-number' }));
+    fixture.detectChanges();
+    expect((component as unknown as { currentPage: () => number }).currentPage()).toBe(1);
+  });
+
+  it('stays on /page when clearAllFilters() is called in pageMode', () => {
+    (component as unknown as { clearAllFilters: () => void }).clearAllFilters();
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/page', { replaceUrl: true });
+  });
+
+  it('renders top and bottom pagination controls and mode toggle link to /', () => {
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.pagination--top')).toBeTruthy();
+    expect(fixture.nativeElement.querySelector('.pagination--bottom')).toBeTruthy();
+
+    const modeToggle = fixture.nativeElement.querySelector('.mode-toggle-link');
+    expect(modeToggle).toBeTruthy();
+    expect(modeToggle.getAttribute('routerLink')).toBe('/');
+    expect(modeToggle.textContent).toContain('สลับไปโหมดโหลดต่อเนื่อง');
+  });
+});
+
