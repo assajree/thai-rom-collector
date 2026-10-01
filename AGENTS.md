@@ -77,3 +77,7 @@ When designing, modifying, or fixing mobile layouts, header bars, marquees, side
 
 Do not commit git changes automatically. Always wait for the user to explicitly request or instruct a commit before executing `git commit`.
 
+## Unit Testing Workflow
+
+When executing unit tests, prioritize testing against the active Karma runner at `http://localhost:9876/` (e.g. using `npx karma run` or checking the active runner) instead of triggering a cold build. If `http://localhost:9876/` is not running or cannot be reached, inform the user to run `_run_debug.bat` (located in `web/_run_debug.bat`) to start the test server.
+

@@ -10,7 +10,7 @@
     </div>
 
     <div id="last-update" [attr.aria-label]="'อัปเดต cache ล่าสุด:' + patchCacheLastUpdatedLabel()">
-      อัปเดตล่าสุด
+      อัปเดต
       <br />
       {{ patchCacheLastUpdatedLabel() }}
     </div>
@@ -39,8 +39,7 @@
 
 <div class="app-shell min-h-[calc(100vh-5rem)]" [class.is-vip]="authService.isVip()">
   <aside id="system-sidebar" class="retro-rail" [class.mobile-sidebar-open]="sidebarOpen()"
-    [class.is-vip]="authService.isVip()"
-    (click)="$event.stopPropagation()" aria-label="Main navigation">
+    [class.is-vip]="authService.isVip()" (click)="$event.stopPropagation()" aria-label="Main navigation">
 
     <p class="retro-rail-heading">THAI ROM DB</p>
     <nav aria-label="Main navigation">
@@ -70,6 +69,15 @@
 
     </nav>
 
+    @if (authService.isAdmin() || authService.isVip()) {
+    <div class="retro-sidebar-section">
+      <p class="retro-rail-heading">สมาชิก VIP</p>
+      <nav aria-label="VIP tools">
+        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
+      </nav>
+    </div>
+    }
+
     @if (authService.isAdmin()) {
     <div class="retro-sidebar-section">
       <p class="retro-rail-heading">Admin</p>
@@ -96,15 +104,6 @@
           (click)="closeSidebar()">ตั้งค่าระบบ</a>
         <a class="retro-rail-link" routerLink="/admin/manage-redeem" routerLinkActive="retro-rail-link--active"
           (click)="closeSidebar()">จัดการโค้ด VIP</a>
-      </nav>
-    </div>
-    }
-
-    @if (authService.isAdmin() || authService.isVip()) {
-    <div class="retro-sidebar-section">
-      <p class="retro-rail-heading">สมาชิก VIP</p>
-      <nav aria-label="VIP tools">
-        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
       </nav>
     </div>
     }

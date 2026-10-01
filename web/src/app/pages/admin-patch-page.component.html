@@ -69,6 +69,15 @@
       <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value" [system]="form.controls.system.value"
         (selected)="cover = $event" />
     </div>
+
+    <div>
+      <label><i class="fa-solid fa-clock mr-1" aria-hidden="true"></i>เวลาที่ใช้ในการเล่นจนจบ (ชั่วโมง)<input
+          class="admin-input" formControlName="playTime" type="number" step="0.1" min="0"
+          placeholder="เช่น 15 หรือ 0.5" /></label>
+      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openHowLongToBeat()"
+        [disabled]="loadingData">HowLongToBeat</button>
+    </div>
+
     <div>
       <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
           formControlName="patchTool" /></label>
@@ -118,13 +127,7 @@
         :
         'Clipboard' }}</button>
     </div>
-    <div>
-      <label><i class="fa-solid fa-clock mr-1" aria-hidden="true"></i>เวลาที่ใช้ในการเล่นจนจบ (ชั่วโมง)<input
-          class="admin-input" formControlName="playTime" type="number" step="0.1" min="0"
-          placeholder="เช่น 15 หรือ 0.5" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openHowLongToBeat()"
-        [disabled]="loadingData">HowLongToBeat</button>
-    </div>
+
     <fieldset class="border border-slate-600 p-3 relative">
       <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>
       <button class="mb-3 border px-3 py-2 font-bold button" type="button" (click)="createTag()"

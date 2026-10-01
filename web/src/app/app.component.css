@@ -325,7 +325,6 @@
   .retro-rail {
     display: flex;
     flex-direction: column;
-    padding-top: 1rem;
   }
 }
 
@@ -356,7 +355,6 @@
     top: 0;
     width: min(18rem, 85vw);
     z-index: 20;
-    padding: 5rem 1rem 1rem 0.5rem;
   }
 
   .retro-rail.is-vip {
