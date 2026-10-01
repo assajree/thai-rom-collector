@@ -59,11 +59,11 @@ export const routes: Routes = [
   { path: 'admin/server-cost', component: AdminServerCostPageComponent, canActivate: [adminGuard] },
   { path: 'admin/maintenance', loadComponent: () => import('./pages/admin-maintenance-page.component').then(m => m.AdminMaintenancePageComponent), canActivate: [adminGuard] },
   {
-    path: 'add-patch',
+    path: 'add',
     component: AdminPatchPageComponent
   },
   {
-    path: 'add-patch/:id',
+    path: 'add/:id',
     component: AdminPatchPageComponent
   },
   {

@@ -27,6 +27,7 @@ import { ParamMap, convertToParamMap } from '@angular/router';
 describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
   let component: AdminPatchPageComponent;
   let routerNavigateSpy: jasmine.Spy;
+  let routerNavigateByUrlSpy: jasmine.Spy;
   let paramMapSubject: Subject<ParamMap>;
 
   // Minimal stub for PatchRepository - update() resolves successfully to simulate a successful save
@@ -103,6 +104,7 @@ describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
 
     // Grab the router spy after TestBed is created
     routerNavigateSpy = TestBed.inject(Router).navigate as jasmine.Spy;
+    routerNavigateByUrlSpy = TestBed.inject(Router).navigateByUrl as jasmine.Spy;
 
     // Emit an initial null paramMap so constructor subscription doesn't hang
     paramMapSubject.next(convertToParamMap({}));
@@ -115,13 +117,13 @@ describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
    * Validates: Requirements 1.1, 1.2
    *
    * For any non-null patch ID (editId != null) when save() completes successfully,
-   * the component SHALL call router.navigate(['/add-patch'], { replaceUrl: true })
+   * the component SHALL call router.navigateByUrl('/add', { replaceUrl: true })
    * and editId SHALL be null after save completes.
    *
    * EXPECTED TO FAIL on unfixed code - this failure IS the success criterion for Task 1.
-   * Counterexamples: router.navigate not called; editId still 'patch-abc123' after save.
+   * Counterexamples: router.navigateByUrl not called; editId still 'patch-abc123' after save.
    */
-  it('Property 1 (Bug Condition): save() in edit mode should navigate to /add-patch and clear editId', async () => {
+  it('Property 1 (Bug Condition): save() in edit mode should navigate to /add and clear editId', async () => {
     // Use type cast to access protected members from outside the class in tests.
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const comp = component as any;
@@ -138,12 +140,10 @@ describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
     // Act: call save() - it should succeed because patchRepository.update resolves
     await comp.save();
 
-    // Assert 1: router.navigate(['/add-patch'], { replaceUrl: true }) must have been called
-    // ON UNFIXED CODE: this will FAIL because save() never calls router.navigate
-    expect(routerNavigateSpy).toHaveBeenCalledWith(['/add-patch'], { replaceUrl: true });
+    // Assert 1: router.navigateByUrl('/add', { replaceUrl: true }) must have been called
+    expect(routerNavigateByUrlSpy).toHaveBeenCalledWith('/add', { replaceUrl: true });
 
     // Assert 2: editId must be null after save completes
-    // ON UNFIXED CODE: this will FAIL because save() never clears editId
     expect(comp.editId).toBeNull();
   });
 });
@@ -157,7 +157,7 @@ describe('AdminPatchPageComponent - Bug Condition Exploration', () => {
  * non-buggy inputs (cases where isBugCondition returns false).
  *
  * Covered preservation requirements:
- *  2.3 - save() in add-new mode (editId = null) does NOT navigate — URL stays at /add-patch
+ *  2.3 - save() in add-new mode (editId = null) does NOT navigate — URL stays at /add
  *  3.1 - save() in add-new mode resets form, clears cover, scrolls to top, shows success toast
  *  3.2 - confirmDelete() navigates to '/' via router.navigateByUrl('/', { replaceUrl: true })
  *  3.3 - loadEditRecord(id) with preserveFormOnNextLoad=false populates the form from Firestore

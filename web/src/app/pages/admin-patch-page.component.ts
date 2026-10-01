@@ -225,7 +225,7 @@ export class AdminPatchPageComponent {
       this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
       if (this.editId) {
         this.editId = null;
-        void this.router.navigateByUrl('/add-patch', { replaceUrl: true });
+        void this.router.navigateByUrl('/add', { replaceUrl: true });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

@@ -145,7 +145,7 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     fixture.detectChanges();
     const floatingBtn = fixture.nativeElement.querySelector('.floating-add-game');
     expect(floatingBtn).toBeTruthy();
-    expect(floatingBtn.getAttribute('routerLink')).toBe('/add-patch');
+    expect(floatingBtn.getAttribute('routerLink')).toBe('/add');
   });
 
   it('renders back to top button below floating add game inside browse-floating-actions', () => {
