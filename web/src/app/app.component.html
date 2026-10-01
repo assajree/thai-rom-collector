@@ -57,6 +57,9 @@
       <a class="retro-rail-link" routerLink="/rom" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">รอมแปลไทย @if (patchesLoaded()) {<span
           class="sidebar-count">({{ patchCounts().rom }})</span>}</a>
+      <a class="retro-rail-link" routerLink="/port" routerLinkActive="retro-rail-link--active"
+        [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">Port Master @if (patchesLoaded()) {<span
+          class="sidebar-count">({{ patchCounts().port }})</span>}</a>
       <a class="retro-rail-link" routerLink="/walkthrough" routerLinkActive="retro-rail-link--active"
         [routerLinkActiveOptions]="{ exact: true }" (click)="clearAllFilters()">บทสรุป @if (patchesLoaded()) {<span
           class="sidebar-count">({{ patchCounts().walkthrough }})</span>}</a>
@@ -73,7 +76,8 @@
     <div class="retro-sidebar-section">
       <p class="retro-rail-heading">สมาชิก VIP</p>
       <nav aria-label="VIP tools">
-        <a class="retro-rail-link" href="#" [class.pointer-events-none]="refreshingPatches()" [class.opacity-50]="refreshingPatches()" (click)="$event.preventDefault(); forceRefreshPatches()">
+        <a class="retro-rail-link" href="#" [class.pointer-events-none]="refreshingPatches()"
+          [class.opacity-50]="refreshingPatches()" (click)="$event.preventDefault(); forceRefreshPatches()">
           {{ refreshingPatches() ? 'กำลังดึงข้อมูล...' : 'ดึงข้อมูลล่าสุด' }}
         </a>
       </nav>
@@ -110,7 +114,7 @@
     </div>
     }
 
-    @if (platforms().length > 0) {
+    @if (sidebarPlatforms().length > 0) {
     <div class="retro-sidebar-section">
       <p class="retro-rail-heading">ระบบเกม</p>
       @if (authService.isAdmin()) {
@@ -119,7 +123,7 @@
       </a>
       }
       <div>
-        @for (platform of platforms(); track platform.id) {
+        @for (platform of sidebarPlatforms(); track platform.id) {
         <a class="retro-system-button" routerLink="/system" [queryParams]="{ system: platform.shortName }"
           routerLinkActive="retro-system-button--active" [routerLinkActiveOptions]="{ exact: true }"
           (click)="selectPlatform(platform.shortName)">

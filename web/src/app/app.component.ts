@@ -12,7 +12,7 @@ import { TagRepository } from './repositories/tag.repository';
 import { TranslatorRepository } from './repositories/translator.repository';
 import { ServerCostRepository } from './repositories/server-cost.repository';
 import { BrowseFilterStateService } from './shared/browse-filter-state.service';
-import { browseRoute, normalizeBrowseName } from './shared/browse-route.util';
+import { browseRoute, isPortMasterSystem, normalizeBrowseName } from './shared/browse-route.util';
 import { PatchCacheService } from './services/patch-cache.service';
 import { PatchRepository } from './repositories/patch.repository';
 import { SidebarLink, SidebarLinkSection } from './models/sidebar-link.models';
@@ -69,19 +69,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   private static readonly todayWindowMs = 24 * 60 * 60 * 1000;
   private static readonly weekWindowMs = 7 * 24 * 60 * 60 * 1000;
 
+  protected readonly sidebarPlatforms = computed(() =>
+    this.platforms().filter((p) => !isPortMasterSystem(p.shortName) && !isPortMasterSystem(p.name))
+  );
+
   protected readonly patchCounts = computed(() => {
     const list = this.patches();
     const now = Date.now();
-    const total = list.length;
+    let total = 0;
     let today = 0;
     let week = 0;
     let rom = 0;
+    let port = 0;
     let walkthrough = 0;
     const bySystem: Record<string, number> = {};
     const byTranslator: Record<string, number> = {};
     const byTag: Record<string, number> = {};
 
     for (const patch of list) {
+      const isPortMaster = isPortMasterSystem(patch.system);
+      if (isPortMaster) {
+        port++;
+      } else {
+        total++;
+      }
+
       if (patch.patchedRomUrl?.trim()) rom++;
       if (patch.walkthroughUrl?.trim()) walkthrough++;
 
@@ -109,7 +121,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    return { total, today, week, rom, walkthrough, bySystem, byTranslator, byTag };
+    return { total, today, week, rom, port, walkthrough, bySystem, byTranslator, byTag };
   });
 
   protected systemCount(shortName: string): number {

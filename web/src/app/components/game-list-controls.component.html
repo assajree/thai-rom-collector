@@ -54,7 +54,7 @@
       </div>
     </div>
   }
-  @if (routeKind !== 'system') {
+  @if (routeKind !== 'system' && routeKind !== 'port') {
     <div class="sort-field">
       <label for="filter-system">เครื่องเกม</label>
       <div class="control-autocomplete" (click)="$event.stopPropagation()">

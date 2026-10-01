@@ -213,4 +213,12 @@ describe('GameListControlsComponent', () => {
 
     expect(input.value).toBe('Pixel Thai');
   });
+
+  it('hides system filter when routeKind is port', () => {
+    component.routeKind = 'port';
+    fixture.detectChanges();
+
+    const systemInput = fixture.nativeElement.querySelector('#filter-system');
+    expect(systemInput).toBeNull();
+  });
 });

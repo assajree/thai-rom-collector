@@ -7,7 +7,7 @@ import { GameListControlsComponent } from '../components/game-list-controls.comp
 import { PatchCardListComponent } from '../components/patch-card-list.component';
 import { AuthService } from '../services/auth.service';
 import { BrowseFilterStateService } from '../shared/browse-filter-state.service';
-import { BrowseRouteKind, normalizeBrowseName } from '../shared/browse-route.util';
+import { BrowseRouteKind, isPortMasterSystem, normalizeBrowseName } from '../shared/browse-route.util';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
 import { PatchCacheService } from '../services/patch-cache.service';
 import { TagRepository } from '../repositories/tag.repository';
@@ -37,7 +37,15 @@ export class BrowsePageComponent implements OnInit {
   protected readonly selectedTag = this.filterState.selectedTag;
   protected readonly selectedTranslatorId = this.filterState.selectedTranslatorId;
   protected readonly selectedSystem = this.filterState.selectedSystem;
-  protected readonly systems = computed(() => [...new Set(this.patches().map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' })));
+  protected readonly systems = computed(() => {
+    const kind = this.routeKind();
+    const patches = this.patches().filter((patch) => {
+      if (kind === 'port') return isPortMasterSystem(patch.system);
+      if (kind === null) return !isPortMasterSystem(patch.system);
+      return true;
+    });
+    return [...new Set(patches.map((patch) => patch.system.trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b, 'th', { sensitivity: 'base' }));
+  });
   protected readonly translators = signal<Translator[]>([]);
   protected readonly tags = signal<Tag[]>([]);
   protected readonly systemMasters = signal<SystemMaster[]>([]);
@@ -94,6 +102,7 @@ export class BrowsePageComponent implements OnInit {
     const kind = this.routeKind();
     const selectedLabels = this.selectedRouteLabels();
     if (kind === 'rom') return this.joinRouteLabels('รอมแปลไทย', ...selectedLabels);
+    if (kind === 'port') return this.joinRouteLabels('Port Master', ...selectedLabels);
     if (kind === 'walkthrough') return this.joinRouteLabels('บทสรุป', ...selectedLabels);
     if (kind === 'today') return this.joinRouteLabels('เกมใหม่วันนี้', ...selectedLabels);
     if (kind === 'week') return this.joinRouteLabels('เกมใหม่สัปดาห์นี้', ...selectedLabels);
@@ -115,6 +124,8 @@ export class BrowsePageComponent implements OnInit {
   protected readonly sortedPatches = computed(() => this.patches().filter((patch) => {
     if (this.routeKind() === 'rom' && !patch.patchedRomUrl?.trim()) return false;
     if (this.routeKind() === 'walkthrough' && !patch.walkthroughUrl?.trim()) return false;
+    if (this.routeKind() === 'port' && !isPortMasterSystem(patch.system)) return false;
+    if (this.routeKind() === null && isPortMasterSystem(patch.system)) return false;
     const kind = this.routeKind();
     if ((kind === 'today' || kind === 'week') && !this.isInRecentWindow(patch.updateDate, kind)) return false;
     const tag = this.selectedTag();
@@ -141,7 +152,7 @@ export class BrowsePageComponent implements OnInit {
     }
     const primary = field === 'updateDate'
       ? (Number.isNaN(Date.parse(a.updateDate)) ? Number.NEGATIVE_INFINITY : Date.parse(a.updateDate))
-        - (Number.isNaN(Date.parse(b.updateDate)) ? Number.NEGATIVE_INFINITY : Date.parse(b.updateDate))
+      - (Number.isNaN(Date.parse(b.updateDate)) ? Number.NEGATIVE_INFINITY : Date.parse(b.updateDate))
       : a[field].localeCompare(b[field], 'th', { sensitivity: 'base' });
     if (primary !== 0) return primary * (this.direction() === 'asc' ? 1 : -1);
     return a.id.localeCompare(b.id);
@@ -246,7 +257,7 @@ export class BrowsePageComponent implements OnInit {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(tag.id);
-    } else if (kind === 'rom' || kind === 'walkthrough') {
+    } else if (kind === 'rom' || kind === 'walkthrough' || kind === 'port') {
       this.filterState.selectedSystem.set(null);
       this.filterState.selectedTranslatorId.set(null);
       this.filterState.selectedTag.set(null);

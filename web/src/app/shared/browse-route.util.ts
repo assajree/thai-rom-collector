@@ -1,4 +1,4 @@
-export type BrowseRouteKind = 'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | 'walkthrough';
+export type BrowseRouteKind = 'system' | 'translator' | 'tag' | 'rom' | 'today' | 'week' | 'walkthrough' | 'port';
 
 export function normalizeBrowseName(value: string): string {
   return value.trim().replace(/\s+/g, ' ');
@@ -13,5 +13,11 @@ export function browseRoute(kind: BrowseRouteKind, value = ''): string {
   if (kind === 'translator') return `/translator?translator=${encodeURIComponent(normalizeBrowseName(value))}`;
   if (kind === 'rom') return '/rom';
   if (kind === 'walkthrough') return '/walkthrough';
+  if (kind === 'port') return '/port';
   return `/${kind}/${browseSlug(value)}`;
+}
+
+export function isPortMasterSystem(system: string | null | undefined): boolean {
+  const s = (system ?? '').trim().toLowerCase();
+  return s === 'port' || s === 'portmaster' || s === 'port master';
 }

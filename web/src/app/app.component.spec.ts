@@ -55,6 +55,42 @@ describe('AppComponent', () => {
       referenceText: '',
       referenceUrl: '',
       walkthroughUrl: ''
+    },
+    {
+      id: 'p3',
+      updateDate: '2020-01-02T00:00:00.000Z',
+      haveUpdateFlag: false,
+      patchVersion: '1.0',
+      gameTitle: 'Celeste',
+      system: 'PortMaster',
+      translatorId: 'trans1',
+      translatedBy: 'G-Translators',
+      patchTool: '',
+      tags: ['tag1'],
+      coverUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      referenceText: '',
+      referenceUrl: '',
+      walkthroughUrl: ''
+    },
+    {
+      id: 'p4',
+      updateDate: '2020-01-03T00:00:00.000Z',
+      haveUpdateFlag: false,
+      patchVersion: '1.1',
+      gameTitle: 'Grand Theft Auto: San Andreas',
+      system: 'PORT',
+      translatorId: 'trans1',
+      translatedBy: 'G-Translators',
+      patchTool: '',
+      tags: ['tag1'],
+      coverUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      referenceText: '',
+      referenceUrl: '',
+      walkthroughUrl: ''
     }
   ];
 
@@ -96,7 +132,11 @@ describe('AppComponent', () => {
         {
           provide: SystemRepository,
           useValue: {
-            watchAll: () => of([{ id: 'sys1', shortName: 'SFC', name: 'Super Famicom' }]),
+            watchAll: () => of([
+              { id: 'sys1', shortName: 'SFC', name: 'Super Famicom' },
+              { id: 'sys2', shortName: 'PortMaster', name: 'PortMaster' },
+              { id: 'sys3', shortName: 'PORT', name: 'PortMaster' }
+            ]),
             refreshAll: jasmine.createSpy('refreshAll')
           }
         },
@@ -147,33 +187,44 @@ describe('AppComponent', () => {
   });
 
   it('should calculate patch counts accurately', () => {
-    const counts = (app as unknown as { patchCounts: () => {
-      total: number;
-      today: number;
-      week: number;
-      rom: number;
-      walkthrough: number;
-      bySystem: Record<string, number>;
-      byTranslator: Record<string, number>;
-      byTag: Record<string, number>;
-    } }).patchCounts();
+    const counts = (app as unknown as {
+      patchCounts: () => {
+        total: number;
+        today: number;
+        week: number;
+        rom: number;
+        port: number;
+        walkthrough: number;
+        bySystem: Record<string, number>;
+        byTranslator: Record<string, number>;
+        byTag: Record<string, number>;
+      }
+    }).patchCounts();
 
     expect(counts.total).toBe(2);
+    expect(counts.port).toBe(2);
     expect(counts.today).toBe(1);
     expect(counts.week).toBe(1);
     expect(counts.rom).toBe(1);
     expect(counts.walkthrough).toBe(1);
     expect(counts.bySystem['sfc']).toBe(2);
-    expect(counts.byTranslator['trans1']).toBe(2);
-    expect(counts.byTag['tag1']).toBe(2);
+    expect(counts.bySystem['portmaster']).toBe(1);
+    expect(counts.bySystem['port']).toBe(1);
+    expect(counts.byTranslator['trans1']).toBe(4);
+    expect(counts.byTag['tag1']).toBe(4);
   });
 
-  it('should render counts in sidebar links', () => {
+  it('should render counts in sidebar links and exclude PortMaster from systems list', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const text = compiled.textContent ?? '';
     expect(text).toContain('เกมทั้งหมด (2)');
+    expect(text).toContain('Port Master (2)');
     expect(text).toContain('รอมแปลไทย (1)');
     expect(text).toContain('บทสรุป (1)');
+
+    const platforms = (app as unknown as { sidebarPlatforms: () => Array<{ shortName: string }> }).sidebarPlatforms();
+    expect(platforms.map((p) => p.shortName)).toEqual(['SFC']);
+    expect(platforms.some((p) => p.shortName === 'PortMaster' || p.shortName === 'PORT')).toBeFalse();
   });
 
   it('should render published articles in sidebar', () => {

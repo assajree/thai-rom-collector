@@ -439,3 +439,167 @@ describe('BrowsePageComponent - Page Mode Functionality', () => {
   });
 });
 
+describe('BrowsePageComponent - PortMaster Filtering and /port Route', () => {
+  let component: BrowsePageComponent;
+  let fixture: ComponentFixture<BrowsePageComponent>;
+  let routeDataSubject: BehaviorSubject<Record<string, unknown>>;
+
+  const testPatches: Patch[] = [
+    {
+      id: 'patch-retro-1',
+      gameTitle: 'Super Mario World',
+      system: 'SNES',
+      patchVersion: '1.0',
+      translatedBy: 'Team A',
+      translatorId: 'translator-1',
+      haveUpdateFlag: false,
+      patchTool: '',
+      referenceText: '',
+      referenceUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      walkthroughUrl: '',
+      coverUrl: '',
+      tags: [],
+      updateDate: '2026-01-01T00:00:00Z'
+    },
+    {
+      id: 'patch-retro-2',
+      gameTitle: 'Pokemon Emerald',
+      system: 'GBA',
+      patchVersion: '1.0',
+      translatedBy: 'Team A',
+      translatorId: 'translator-1',
+      haveUpdateFlag: false,
+      patchTool: '',
+      referenceText: '',
+      referenceUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      walkthroughUrl: '',
+      coverUrl: '',
+      tags: [],
+      updateDate: '2026-01-02T00:00:00Z'
+    },
+    {
+      id: 'patch-portmaster-1',
+      gameTitle: 'Celeste',
+      system: 'PortMaster',
+      patchVersion: '1.0',
+      translatedBy: 'Team A',
+      translatorId: 'translator-1',
+      haveUpdateFlag: false,
+      patchTool: '',
+      referenceText: '',
+      referenceUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      walkthroughUrl: '',
+      coverUrl: '',
+      tags: [],
+      updateDate: '2026-01-03T00:00:00Z'
+    },
+    {
+      id: 'patch-port-2',
+      gameTitle: 'Grand Theft Auto: San Andreas',
+      system: 'PORT',
+      patchVersion: '1.1',
+      translatedBy: 'Team A',
+      translatorId: 'translator-1',
+      haveUpdateFlag: false,
+      patchTool: '',
+      referenceText: '',
+      referenceUrl: '',
+      patchFileUrl: '',
+      patchedRomUrl: '',
+      walkthroughUrl: '',
+      coverUrl: '',
+      tags: [],
+      updateDate: '2026-01-04T00:00:00Z'
+    }
+  ];
+
+  beforeEach(async () => {
+    routeDataSubject = new BehaviorSubject<Record<string, unknown>>({});
+
+    await TestBed.configureTestingModule({
+      imports: [BrowsePageComponent],
+      providers: [
+        provideRouter([]),
+        {
+          provide: PatchRepository,
+          useValue: { watchAll: () => of(testPatches) }
+        },
+        {
+          provide: TranslatorRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: TagRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: SystemRepository,
+          useValue: { watchAll: () => of([]) }
+        },
+        {
+          provide: PatchCacheService,
+          useValue: { refreshRequested: () => 0 }
+        },
+        {
+          provide: AuthService,
+          useValue: { isAdmin: () => false }
+        },
+        BrowseFilterStateService,
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            data: routeDataSubject.asObservable(),
+            paramMap: of(convertToParamMap({})),
+            queryParamMap: of(convertToParamMap({})),
+            snapshot: {
+              data: {},
+              queryParamMap: convertToParamMap({})
+            }
+          }
+        }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(BrowsePageComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('filters out PortMaster and PORT games on the main page (routeKind is null)', () => {
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    expect(sorted.length).toBe(2);
+    expect(sorted.some((p) => p.system === 'PortMaster' || p.system === 'PORT')).toBeFalse();
+    expect(sorted.map((p) => p.id)).toEqual(['patch-retro-2', 'patch-retro-1']);
+  });
+
+  it('excludes PortMaster and PORT from systems dropdown list on main page', () => {
+    const systems = (component as unknown as { systems: () => string[] }).systems();
+    expect(systems).toEqual(['GBA', 'SNES']);
+    expect(systems.includes('PortMaster')).toBeFalse();
+    expect(systems.includes('PORT')).toBeFalse();
+  });
+
+  it('shows only PortMaster/PORT games and sets label when browseKind is port', () => {
+    routeDataSubject.next({ browseKind: 'port' });
+    fixture.detectChanges();
+
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    expect(sorted.length).toBe(2);
+    expect(sorted.map((p) => p.id)).toEqual(['patch-port-2', 'patch-portmaster-1']);
+    expect(sorted.every((p) => p.system === 'PortMaster' || p.system === 'PORT')).toBeTrue();
+
+    const label = (component as unknown as { activeRouteLabel: () => string }).activeRouteLabel();
+    expect(label).toBe('Port Master');
+
+    const systems = (component as unknown as { systems: () => string[] }).systems();
+    expect(systems).toEqual(['PORT', 'PortMaster']);
+  });
+});
+
+

@@ -85,4 +85,8 @@ The user normally keeps `web/_run_web.bat` (`npm start` / `ng serve`) running in
 
 When executing unit tests, prioritize testing against the active Karma runner at `http://localhost:9876/` (e.g. using `npx karma run` or checking the active runner) instead of triggering a cold build. If `http://localhost:9876/` is not running or cannot be reached, inform the user to run `_run_debug.bat` (located in `web/_run_debug.bat`) to start the test server.
 
+## PortMaster Game Filtering & Route Management
+
+When modifying game categorization, system filters, or PortMaster routing, refer to `docs/portmaster-game-filtering.md`. This file documents the architecture and implementation details for separating PortMaster games (`PORT`, `PortMaster`) from the retro home feed into their own dedicated `/port` route and sidebar navigation.
+
 
