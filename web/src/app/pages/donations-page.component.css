@@ -208,7 +208,7 @@ h1 span {
   background: var(--color-highlight);
   border: 2px solid var(--color-highlight);
   box-shadow: inset 0 0 0 2px rgba(255, 217, 43, 0.2), 2px 2px 0 var(--color-shadow);
-  color: var(--color-text-dark);
+  color: var(--color-accent-text);
   text-align: center;
   white-space: nowrap;
   user-select: none;

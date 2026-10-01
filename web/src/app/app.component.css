@@ -32,7 +32,7 @@
 
 .marquee {
   background-color: var(--color-accent);
-  color: var(--color-text-invert);
+  color: var(--color-accent-text);
 }
 
 .app-shell {
@@ -66,17 +66,17 @@
 
 .status-message--success {
   background: var(--color-status-success);
-  color: var(--color-text);
+  color: var(--color-status-text);
 }
 
 .status-message--info {
   background: var(--color-status-info);
-  color: #fff;
+  color: var(--color-status-text);
 }
 
 .status-message--error {
   background: var(--color-status-error);
-  color: #fff;
+  color: var(--color-status-text);
 }
 
 .status-message--offline {
