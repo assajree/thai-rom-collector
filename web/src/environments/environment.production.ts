@@ -13,6 +13,7 @@ export const environment: FirebaseEnvironment = {
     storageBucket: "thairomdb",
     messagingSenderId: "408124827279",
     appId: "1:408124827279:web:f5fd7228b32d08465632fa",
+    databaseURL: "https://thairomdb-default-rtdb.asia-southeast1.firebasedatabase.app",
   },
   r2: {
     workerUrl: 'https://r2-upload-worker.thairomdb.workers.dev',

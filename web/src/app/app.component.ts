@@ -2,6 +2,7 @@ import { AfterViewInit, Component, computed, effect, HostListener, inject, OnDes
 import { DOCUMENT, NgTemplateOutlet } from '@angular/common';
 import { NavigationEnd, NavigationStart, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { SwUpdate } from '@angular/service-worker';
+import { firstValueFrom } from 'rxjs';
 
 import { StatusMessageService } from './shared/status-message.service';
 import { AuthService } from './services/auth.service';
@@ -138,6 +139,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   protected readonly isOffline = signal(false);
   protected readonly appUpdateReady = signal(false);
   protected readonly updatingApp = signal(false);
+  protected readonly refreshingPatches = signal(false);
   protected sidebarLinksFor(section: SidebarLinkSection): SidebarLink[] { return this.sidebarLinks().filter((link) => link.section === section); }
   protected readonly browserInfo = this.getBrowserInfo();
   protected readonly userAgent = typeof navigator === 'undefined' ? 'ไม่ทราบ' : navigator.userAgent;
@@ -204,16 +206,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     this.filterState.selectedTranslatorId.set(null);
     this.closeSidebar();
   }
-  protected forceRefreshPatches(): void {
-    this.patchCache.requestForceRefresh();
-    this.loadPatches();
-    this.tagRepository.refreshAll();
-    this.translatorRepository.refreshAll();
-    this.systemRepository.refreshAll();
-    this.articleRepository.refreshAll();
-    this.loadServerCost();
-    this.statusMessageService.show('รีเฟรชข้อมูลล่าสุดเรียบร้อยแล้ว', 'success');
-    this.closeSidebar();
+  protected async forceRefreshPatches(): Promise<void> {
+    if (this.refreshingPatches()) return;
+    if (typeof navigator !== 'undefined' && !navigator.onLine) {
+      this.statusMessageService.show('ไม่สามารถดึงข้อมูลล่าสุดได้ขณะออฟไลน์', 'error');
+      return;
+    }
+    this.refreshingPatches.set(true);
+    this.statusMessageService.show('กำลังดึงข้อมูลล่าสุด...', 'info', false);
+    try {
+      this.patchCache.requestForceRefresh();
+      this.tagRepository.refreshAll();
+      this.translatorRepository.refreshAll();
+      this.systemRepository.refreshAll();
+      this.articleRepository.refreshAll();
+      const patches = await firstValueFrom(this.patchRepository.watchAll());
+      this.patches.set(patches);
+      this.patchesLoaded.set(true);
+      this.loadServerCost();
+      this.statusMessageService.show('รีเฟรชข้อมูลล่าสุดเรียบร้อยแล้ว', 'success');
+    } catch {
+      this.statusMessageService.show('ไม่สามารถดึงข้อมูลล่าสุดได้ กรุณาตรวจสอบการเชื่อมต่อ', 'error');
+    } finally {
+      this.refreshingPatches.set(false);
+      this.closeSidebar();
+    }
   }
 
   private loadPatches(): void {
@@ -222,7 +239,9 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.patches.set(patches);
         this.patchesLoaded.set(true);
       },
-      error: () => {}
+      error: () => {
+        this.statusMessageService.show('ไม่สามารถเชื่อมต่อฐานข้อมูลได้ กรุณาตรวจสอบอินเทอร์เน็ตหรือปิดตัวบล็อกโฆษณา', 'error', false);
+      }
     });
   }
 

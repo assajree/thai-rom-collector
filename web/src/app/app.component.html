@@ -73,7 +73,9 @@
     <div class="retro-sidebar-section">
       <p class="retro-rail-heading">สมาชิก VIP</p>
       <nav aria-label="VIP tools">
-        <a class="retro-rail-link" href="#" (click)="forceRefreshPatches()">ดึงข้อมูลล่าสุด</a>
+        <a class="retro-rail-link" href="#" [class.pointer-events-none]="refreshingPatches()" [class.opacity-50]="refreshingPatches()" (click)="$event.preventDefault(); forceRefreshPatches()">
+          {{ refreshingPatches() ? 'กำลังดึงข้อมูล...' : 'ดึงข้อมูลล่าสุด' }}
+        </a>
       </nav>
     </div>
     }

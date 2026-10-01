@@ -15,7 +15,7 @@ export class PatchCacheService {
   clear(): void { this.cache.clear('patches'); }
 
   requestForceRefresh(): void {
-    this.clear();
+    this.cache.invalidate('patches');
     this.refreshRequested.update((value) => value + 1);
   }
 
