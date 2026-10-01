@@ -65,6 +65,10 @@ Do not use the middle dot character `·` in UI text or source content because th
 
 New pages must fill the available center content area in both width and height. Use the existing app-shell/content layout and set an appropriate minimum height for the viewport content area so short pages do not leave unused gaps.
 
+## Component File Separation
+
+Always separate Angular components (both pages and reusable components) into distinct `.html`, `.css`, and `.ts` files (using `templateUrl` and `styleUrl`) instead of inline `template` or `styles`, to keep code clean and easy to maintain and edit.
+
 ## UI Design & Styling Patterns
 
 When designing, building, or modifying UI components, layouts, or pages, read `docs/design-pattern-knowledge.md` first. Follow the established design patterns, including the 3-column app shell constraints (overflow prevention), multi-theme CSS variable tokens, retro/arcade component structures, font compatibility, and Angular style budget guidelines.
