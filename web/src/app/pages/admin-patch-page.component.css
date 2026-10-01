@@ -119,42 +119,18 @@ label.required::before {
   color: var(--color-brand);
 }
 
-.form-actions {
-  min-height: 44px;
-  padding-bottom: 3rem;
-}
-
-.floating-save-patch {
-  align-items: center;
-  border-radius: 50%;
-  bottom: 1rem;
-  cursor: pointer;
-  display: flex;
-  flex-shrink: 0;
-  font-weight: 800;
-  gap: .4rem;
-  justify-content: center;
-  padding: 0;
+.floating-action {
   position: fixed;
   right: 1rem;
-  width: 3rem;
-  height: 3rem;
-  z-index: 10;
+  bottom: 1rem;
 }
 
-.floating-save-patch:focus-visible {
-  outline: 3px solid var(--color-text);
-  outline-offset: 3px;
-}
-
-.floating-save-patch:disabled {
-  cursor: not-allowed;
+.floating-action:disabled {
   display: none;
 }
 
-.floating-save-patch i {
-  font-size: 1.15rem;
-  line-height: 1;
+.form-actions {
+  padding-bottom: 34pt;
 }
 
 @media (max-width: 768px) {
@@ -162,13 +138,13 @@ label.required::before {
     padding-right: 3.5rem;
   }
 
-  .floating-save-patch {
+  .floating-action {
     right: 1rem;
   }
 }
 
 @media (min-width: 1200px) {
-  .floating-save-patch {
+  .floating-action {
     right: 300px;
   }
 }

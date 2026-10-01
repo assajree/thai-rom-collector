@@ -561,14 +561,14 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
 
   it('renders floating save button by default without scroll dependency', () => {
     fixture.detectChanges();
-    const floatingBtn: HTMLButtonElement | null = fixture.nativeElement.querySelector('.floating-save-patch');
+    const floatingBtn: HTMLButtonElement | null = fixture.nativeElement.querySelector('.floating-action');
     expect(floatingBtn).toBeTruthy();
   });
 
   it('renders floating save button and calls save on click', () => {
     fixture.detectChanges();
 
-    const floatingBtn: HTMLButtonElement | null = fixture.nativeElement.querySelector('.floating-save-patch');
+    const floatingBtn: HTMLButtonElement | null = fixture.nativeElement.querySelector('.floating-action');
     expect(floatingBtn).toBeTruthy();
     expect(floatingBtn?.disabled).toBeTrue(); // initially invalid form
 

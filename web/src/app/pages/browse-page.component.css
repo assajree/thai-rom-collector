@@ -146,8 +146,7 @@
   pointer-events: auto;
 }
 
-.back-to-top,
-.floating-add-game {
+.back-to-top {
   align-items: center;
   cursor: pointer;
   display: flex;
@@ -159,23 +158,8 @@
   padding: .55rem .8rem;
 }
 
-.floating-add-game {
-  border-radius: 50%;
-  flex-shrink: 0;
-  height: 2.75rem;
-  justify-content: center;
-  padding: 0;
-  text-decoration: none;
-  width: 2.75rem;
-}
-
 .back-to-top span {
   font-size: 1.35rem;
-  line-height: 1;
-}
-
-.floating-add-game i {
-  font-size: 1.15rem;
   line-height: 1;
 }
 
@@ -232,7 +216,7 @@
 }
 
 .back-to-top:focus-visible,
-.floating-add-game:focus-visible,
+.floating-action:focus-visible,
 .load-more-button:focus-visible,
 .mode-toggle-link:focus-visible,
 .pagination__button:focus-visible {

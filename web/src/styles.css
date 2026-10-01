@@ -541,3 +541,22 @@ a,
 .loading {
   cursor: url("https://blob.gifcities.org/gifcities/24NMRXMRFGJS54ANSFVFT3FMOTYM3F2A.gif"), not-allowed;
 }
+
+.floating-action {
+  border-radius: 50%;
+  justify-content: center;
+  padding: 0;
+  text-decoration: none;
+  width: 40pt;
+  height: 40pt;
+  font-size: 1.15rem;
+  line-height: 1;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  box-shadow: none;
+}
+
+*:disabled {
+  cursor: not-allowed;
+}

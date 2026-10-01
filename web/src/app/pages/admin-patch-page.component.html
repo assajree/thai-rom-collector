@@ -232,7 +232,7 @@
   }
 
   @if (showFloatingSave()) {
-  <button class="floating-save-patch button btn-primary" type="button" (click)="save()"
+  <button class="floating-action button btn-primary" type="button" (click)="save()"
     [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving" aria-label="บันทึกแพตช์"
     title="บันทึกแพตช์">
     <i class="fa-solid" [class.fa-floppy-disk]="!saving" [class.fa-circle-notch]="saving" [class.fa-spin]="saving"

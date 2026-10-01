@@ -136,14 +136,14 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     const authService = TestBed.inject(AuthService);
     spyOn(authService, 'isAdmin').and.returnValue(false);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.floating-add-game')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.floating-action')).toBeNull();
   });
 
   it('renders floating add game button when user is admin regardless of scroll position', () => {
     const authService = TestBed.inject(AuthService);
     spyOn(authService, 'isAdmin').and.returnValue(true);
     fixture.detectChanges();
-    const floatingBtn = fixture.nativeElement.querySelector('.floating-add-game');
+    const floatingBtn = fixture.nativeElement.querySelector('.floating-action');
     expect(floatingBtn).toBeTruthy();
     expect(floatingBtn.getAttribute('routerLink')).toBe('/add');
   });
@@ -158,7 +158,7 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     expect(actionsContainer).toBeTruthy();
     const children = actionsContainer.children;
     expect(children.length).toBe(2);
-    expect(children[0].classList.contains('floating-add-game')).toBeTrue();
+    expect(children[0].classList.contains('floating-action')).toBeTrue();
     expect(children[1].classList.contains('back-to-top')).toBeTrue();
   });
 
