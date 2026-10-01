@@ -52,7 +52,7 @@ export interface ProcessedCover {
   height: number;
 }
 
-export type GameListSortField = 'gameTitle' | 'translatedBy' | 'system' | 'updateDate';
+export type GameListSortField = 'gameTitle' | 'translatedBy' | 'system' | 'updateDate' | 'playTime';
 export type SortDirection = 'asc' | 'desc';
 
 export interface GameListFilters {

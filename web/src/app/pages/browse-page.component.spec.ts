@@ -208,4 +208,54 @@ describe('BrowsePageComponent - Load More Functionality', () => {
     const statBar = fixture.nativeElement.querySelector('.browse-stat-bar');
     expect(statBar).toBeNull();
   });
+
+  it('sorts patches by playTime in ascending order with 0 and null placed at the end', () => {
+    const patchesSignal = (component as unknown as { patches: { set: (v: Patch[]) => void } }).patches;
+    patchesSignal.set([
+      { ...mockPatches[0], id: 'p-null', gameTitle: 'Game Null', playTime: null },
+      { ...mockPatches[1], id: 'p-20', gameTitle: 'Game 20', playTime: 20 },
+      { ...mockPatches[2], id: 'p-0', gameTitle: 'Game Zero', playTime: 0 },
+      { ...mockPatches[0], id: 'p-5', gameTitle: 'Game 5', playTime: 5 }
+    ]);
+    (component as unknown as { setFilters: (f: unknown) => void }).setFilters({
+      keyword: '',
+      tag: null,
+      translatorId: null,
+      system: null,
+      sortBy: 'playTime',
+      sortDirection: 'asc'
+    });
+    fixture.detectChanges();
+
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    expect(sorted.map((p) => p.id)).toEqual(['p-5', 'p-20', 'p-0', 'p-null']);
+  });
+
+  it('sorts patches by playTime in descending order with 0 and null placed at the end', () => {
+    const patchesSignal = (component as unknown as { patches: { set: (v: Patch[]) => void } }).patches;
+    patchesSignal.set([
+      { ...mockPatches[0], id: 'p-null', gameTitle: 'Game Null', playTime: null },
+      { ...mockPatches[1], id: 'p-5', gameTitle: 'Game 5', playTime: 5 },
+      { ...mockPatches[2], id: 'p-0', gameTitle: 'Game Zero', playTime: 0 },
+      { ...mockPatches[0], id: 'p-20', gameTitle: 'Game 20', playTime: 20 }
+    ]);
+    (component as unknown as { setFilters: (f: unknown) => void }).setFilters({
+      keyword: '',
+      tag: null,
+      translatorId: null,
+      system: null,
+      sortBy: 'playTime',
+      sortDirection: 'desc'
+    });
+    fixture.detectChanges();
+
+    const sorted = (component as unknown as { sortedPatches: () => Patch[] }).sortedPatches();
+    expect(sorted.map((p) => p.id)).toEqual(['p-20', 'p-5', 'p-0', 'p-null']);
+  });
+
+  it('reads sort=playTime from URL query params', () => {
+    queryParamMapSubject.next(convertToParamMap({ sort: 'playTime' }));
+    fixture.detectChanges();
+    expect((component as unknown as { sortBy: () => string }).sortBy()).toBe('playTime');
+  });
 });

@@ -53,4 +53,22 @@ describe('GameListControlsComponent', () => {
     }));
     expect(searchInput.focus).toHaveBeenCalled();
   });
+
+  it('renders "ความยาวเกม" option in sort select', () => {
+    const select = fixture.nativeElement.querySelector('#sort-patches') as HTMLSelectElement;
+    const playTimeOption = Array.from(select.options).find(opt => opt.value === 'playTime');
+    expect(playTimeOption).toBeTruthy();
+    expect(playTimeOption?.textContent?.trim()).toBe('ความยาวเกม');
+  });
+
+  it('displays direction toggle button text as "น้อย → มาก" for asc and "มาก → น้อย" for desc', () => {
+    component.draft.sortDirection = 'asc';
+    fixture.detectChanges();
+    const btn = fixture.nativeElement.querySelector('.sort-field--sort .button') as HTMLButtonElement;
+    expect(btn.textContent?.trim()).toBe('น้อย → มาก');
+
+    component.draft.sortDirection = 'desc';
+    fixture.detectChanges();
+    expect(btn.textContent?.trim()).toBe('มาก → น้อย');
+  });
 });

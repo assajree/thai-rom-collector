@@ -2,7 +2,7 @@ import { Component, HostListener, OnInit, computed, effect, inject, signal, untr
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PatchRepository } from '../repositories/patch.repository';
 import { TranslatorRepository } from '../repositories/translator.repository';
-import { Patch, Tag, Translator } from '../models/patch.models';
+import { GameListSortField, Patch, Tag, Translator } from '../models/patch.models';
 import { GameListControlsComponent } from '../components/game-list-controls.component';
 import { PatchCardListComponent } from '../components/patch-card-list.component';
 import { AuthService } from '../services/auth.service';
@@ -47,7 +47,7 @@ export class BrowsePageComponent implements OnInit {
   protected readonly showBackToTop = signal(false);
   protected readonly currentPage = signal(1);
   protected readonly pageSize = 10;
-  protected readonly sortBy = signal<'gameTitle' | 'translatedBy' | 'system' | 'updateDate'>('updateDate');
+  protected readonly sortBy = signal<GameListSortField>('updateDate');
   protected readonly direction = signal<'asc' | 'desc'>('desc');
   private readonly queryStateReady = signal(false);
   private readonly translatorQuery = signal<string | null>(null);
@@ -125,6 +125,16 @@ export class BrowsePageComponent implements OnInit {
       .some((value) => value.trim().toLocaleLowerCase('th').includes(query));
   }).sort((a, b) => {
     const field = this.sortBy();
+    if (field === 'playTime') {
+      const tierA = typeof a.playTime === 'number' && a.playTime > 0 ? 1 : a.playTime === 0 ? 2 : 3;
+      const tierB = typeof b.playTime === 'number' && b.playTime > 0 ? 1 : b.playTime === 0 ? 2 : 3;
+      if (tierA !== tierB) return tierA - tierB;
+      if (tierA === 1) {
+        const diff = (a.playTime! - b.playTime!) * (this.direction() === 'asc' ? 1 : -1);
+        if (diff !== 0) return diff;
+      }
+      return a.id.localeCompare(b.id);
+    }
     const primary = field === 'updateDate'
       ? (Number.isNaN(Date.parse(a.updateDate)) ? Number.NEGATIVE_INFINITY : Date.parse(a.updateDate))
         - (Number.isNaN(Date.parse(b.updateDate)) ? Number.NEGATIVE_INFINITY : Date.parse(b.updateDate))
@@ -234,7 +244,7 @@ export class BrowsePageComponent implements OnInit {
     this.filterState.selectedTranslatorId.set(translator?.id ?? null);
     this.queryStateReady.set(true);
   }, { allowSignalWrites: true });
-  protected setSort(value: 'gameTitle' | 'translatedBy' | 'system' | 'updateDate'): void { this.sortBy.set(value); }
+  protected setSort(value: GameListSortField): void { this.sortBy.set(value); }
   protected isInRecentWindow(updateDate: string, window: 'today' | 'week'): boolean {
     const timestamp = Date.parse(updateDate);
     const now = Date.now();
@@ -311,7 +321,7 @@ export class BrowsePageComponent implements OnInit {
       this.keyword.set(params.get('q') ?? '');
       this.translatorQuery.set(params.get('translator'));
       this.filterState.selectedSystem.set(params.get('system'));
-      this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' ? sort : 'updateDate');
+      this.sortBy.set(sort === 'gameTitle' || sort === 'translatedBy' || sort === 'system' || sort === 'updateDate' || sort === 'playTime' ? sort : 'updateDate');
       this.direction.set(direction === 'asc' ? 'asc' : 'desc');
     });
   }
