@@ -62,7 +62,6 @@
 .browse-route-label__title {
   color: var(--color-highlight);
   font-size: 1.5rem;
-  font-weight: bold;
   text-align: center;
   width: 100%;
 }
@@ -93,7 +92,6 @@
 
 .browse-stat-value {
   color: var(--color-highlight);
-  font-weight: bold;
 }
 
 .browse-route-label__clear {

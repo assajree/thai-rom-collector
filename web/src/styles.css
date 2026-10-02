@@ -33,6 +33,9 @@
   --color-status-info: #2563eb;
   --color-status-error: #dc2626;
 
+  --color-input-bg: var(--color-surface);
+  --color-input-text: var(--color-text);
+
   --color-overlay: rgb(0 0 0 / 55%);
 }
 
@@ -56,6 +59,9 @@ body[data-theme='pocket-pet'] {
   --color-shadow: #808080;
   --color-disabled: #808080;
   --color-overlay: rgb(53 67 59 / 35%);
+
+  --color-input-bg: var(--color-surface);
+  --color-input-text: var(--color-text);
 }
 
 body[data-theme='pocket-pet'] .site-title img {
@@ -116,6 +122,9 @@ body[data-theme='classic-blue'] {
   --color-shadow: #000000;
   --color-disabled: #808080;
   --color-overlay: rgb(0 0 0 / 50%);
+
+  --color-input-bg: #fff;
+  --color-input-text: var(--color-text);
 }
 
 /* Sharp Corners (0px) across the entire theme */
@@ -167,7 +176,6 @@ body[data-theme='classic-blue'] .win98-ctrl-btn {
   background: #c0c0c0;
   border: 1px solid;
   border-color: #ffffff #000000 #000000 #ffffff;
-  font-weight: bold;
   color: #000000 !important;
   display: flex;
   align-items: center;
@@ -210,7 +218,6 @@ body[data-theme='classic-blue'] .right-ad-sidebar {
 
 body[data-theme='classic-blue'] .retro-rail-heading {
   color: #000080;
-  font-weight: bold;
   background: transparent;
   border: none;
   box-shadow: none;
@@ -312,7 +319,6 @@ body[data-theme='classic-blue'] .retro-rail-link--active,
 body[data-theme='classic-blue'] .retro-system-button--active {
   background-color: transparent;
   color: #800080;
-  font-weight: bold;
   text-decoration: underline;
 }
 
@@ -336,7 +342,6 @@ body[data-theme='classic-blue'] .retro-system-button--active:hover * {
 body[data-theme='classic-blue'] a,
 body[data-theme='classic-blue'] .link {
   color: #000080;
-  text-decoration: underline;
 }
 
 body[data-theme='classic-blue'] a:hover,
@@ -427,7 +432,6 @@ body[data-theme='classic-blue'] .sort-row__titlebar {
   width: calc(100% + 1.7rem);
   flex: 0 0 calc(100% + 1.7rem);
   box-sizing: border-box;
-  font-weight: bold;
   letter-spacing: 0.5px;
   user-select: none;
 }
@@ -451,7 +455,6 @@ body[data-theme='classic-blue'] .sort-toggle__restore-btn {
   border: 1px solid !important;
   border-color: #ffffff #000000 #000000 #ffffff !important;
   color: #000000 !important;
-  font-weight: bold;
   box-shadow: inset 1px 1px 0px #dfdfdf !important;
   cursor: pointer;
   display: inline-flex;
@@ -483,7 +486,6 @@ body[data-theme='classic-blue'] .sort-field {
 
 body[data-theme='classic-blue'] .sort-field label {
   color: #000000;
-  font-weight: bold;
   text-align: left;
   width: 5.5rem;
   min-width: 5.5rem;
@@ -569,7 +571,8 @@ body[data-theme='classic-blue'] .control-autocomplete__option:hover {
 }
 
 /* Patch Cards: Authentic Windows 98 Window Chrome */
-body[data-theme='classic-blue'] .patch-card {
+body[data-theme='classic-blue'] .patch-card,
+body[data-theme='classic-blue'] .admin-patch-card {
   background-color: #c0c0c0;
   box-sizing: border-box;
   color: #000000;
@@ -577,6 +580,19 @@ body[data-theme='classic-blue'] .patch-card {
   border-color: #dfdfdf #000000 #000000 #dfdfdf;
   box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080, 2px 2px 0px rgba(0, 0, 0, 0.4);
   padding: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .admin-page-shell {
+    background-color: var(--color-surface);
+  }
+
+  body[data-theme='classic-blue'] .admin-patch-card {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
 }
 
 body[data-theme='classic-blue'] .win98-card-titlebar {
@@ -623,12 +639,9 @@ body[data-theme='classic-blue'] .button,
 body[data-theme='classic-blue'] .btn-primary,
 body[data-theme='classic-blue'] .btn-accent,
 body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn):not(.sort-toggle) {
-  background-color: #c0c0c0;
-  color: #000000;
   border: 2px solid;
   border-color: #ffffff #000000 #000000 #ffffff;
   box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #808080;
-  font-weight: bold;
   text-shadow: none;
 }
 
@@ -650,7 +663,6 @@ body[data-theme='classic-blue'] .browse-route-label {
 
 body[data-theme='classic-blue'] .browse-route-label__title {
   color: #000080;
-  font-weight: bold;
 }
 
 body[data-theme='classic-blue'] .browse-stat-bar {
@@ -667,13 +679,11 @@ body[data-theme='classic-blue'] .browse-stat-subtext {
 
 body[data-theme='classic-blue'] .browse-stat-value {
   color: #ffd92b;
-  font-weight: bold;
   text-shadow: 1px 1px 0px #000000;
 }
 
 body[data-theme='classic-blue'] .pagination__current {
   color: #ffffff;
-  font-weight: bold;
 }
 
 /****** End Classic Blue (Windows 98) Theme Style ******/
@@ -683,7 +693,6 @@ body[data-theme='classic-blue'] .pagination__current {
   src: url('/assets/fonts/RD%20CHULAJARUEK.ttf') format('truetype');
   font-display: swap;
   font-style: normal;
-  font-weight: 100 900;
 }
 
 @layer base {
@@ -819,7 +828,6 @@ body {
 .retro-rail-heading,
 .heading {
   font-family: 'Courier New', monospace;
-  font-weight: bold;
 }
 
 .danger {
@@ -872,7 +880,6 @@ body {
   display: inline-flex;
   flex: 0 0 1.35rem;
   font-size: 1.35rem;
-  font-weight: bold;
   justify-content: center;
   line-height: 1;
 }
@@ -921,10 +928,10 @@ a:hover .fa-regular,
   display: block;
   margin-top: .35rem;
   width: 100%;
-  background: var(--color-surface-light);
   border: 1px solid var(--color-border);
   color: var(--color-text);
   padding: .65rem;
+  background-color: var(--color-input-bg);
 }
 
 .admin-dialog-backdrop {
@@ -1155,6 +1162,6 @@ a,
   cursor: not-allowed;
 }
 
-i {
+.button {
   text-decoration: none;
 }

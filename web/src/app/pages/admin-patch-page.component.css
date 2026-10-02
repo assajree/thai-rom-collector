@@ -1,9 +1,46 @@
+.admin-patch-card-wrap {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.admin-patch-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-shadow);
+  box-shadow: 2px 2px 0 var(--color-shadow);
+  box-sizing: border-box;
+  max-width: 52rem;
+  padding: 1.5rem;
+  width: 100%;
+}
+
+@media (max-width: 640px) {
+  :host {
+    display: block;
+    width: 100%;
+  }
+
+  :host .admin-page-shell {
+    padding: 1rem 0.75rem;
+  }
+
+  .admin-patch-card {
+    border: none !important;
+    box-shadow: none !important;
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .win98-card-titlebar {
+    display: none !important;
+  }
+}
+
 .admin-input {
   box-sizing: border-box;
   display: block;
   margin-top: .35rem;
   width: 100%;
-  background: var(--color-surface-light);
   border: 1px solid var(--color-border);
   color: var(--color-text);
   padding: .65rem;

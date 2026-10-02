@@ -1,187 +1,210 @@
 <main class="admin-page-shell article-container pb-24 sm:pb-8">
-  <h1 class="mt-1 ">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
-  <form class="relative mt-8 grid max-w-2xl gap-4" [formGroup]="form" (ngSubmit)="save()">
-    @if (loadingData) {
-    <div
-      class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--color-bg)]/60 backdrop-blur-sm loading">
-      <div class="flex flex-col items-center">
-        <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-slate-400" aria-hidden="true"></i>
-        <p class="font-bold text-slate-400">กำลังโหลดข้อมูลแพตช์…</p>
-      </div>
-    </div>
-    }
 
-    <div>
-      <label class="required"><i class="fa-solid fa-users mr-1" aria-hidden="true"></i>ทีมแปล</label>
-      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
-        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
-          (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
-          (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
-          [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options"
-          [disabled]="loadingData" />
-        <input formControlName="translatorId" type="hidden" />
-        @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
-        <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
-          @for (translator of filteredTranslatorOptions(); track translator.id) {
-          <li><button class="button" type="button" role="option" (click)="selectTranslator(translator)">{{
-              translatorLabel(translator)
-              }}</button></li>
+
+
+  <div class="admin-patch-card-wrap">
+
+    <div class="admin-patch-card">
+
+      <div class="win98-card-titlebar" aria-hidden="true">
+        <div class="win98-card-title truncate">
+          <span class="win98-title-icon">🎮</span>
+          <span class="win98-title-text truncate">THAI ROM DB</span>
+        </div>
+      </div>
+
+      <h1 class="mt-1 ">{{ editId ? 'แก้ไขแพตช์เกม' : 'เพิ่มแพตช์เกม' }}</h1>
+      <form class="relative mt-8 grid w-full gap-4" [formGroup]="form" (ngSubmit)="save()">
+        @if (loadingData) {
+        <div
+          class="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-[var(--color-bg)]/60 backdrop-blur-sm loading">
+          <div class="flex flex-col items-center">
+            <i class="fa-solid fa-circle-notch fa-spin text-4xl mb-4 text-slate-400" aria-hidden="true"></i>
+            <p class="font-bold text-slate-400">กำลังโหลดข้อมูลแพตช์…</p>
+          </div>
+        </div>
+        }
+
+        <div>
+          <label class="required"><i class="fa-solid fa-users mr-1" aria-hidden="true"></i>ทีมแปล</label>
+          <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+            <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาทีมแปล" [value]="translatorSearchText"
+              (focus)="openTranslatorAutocomplete($event)" (input)="onTranslatorInput($any($event.target).value)"
+              (keydown.escape)="translatorAutocompleteOpen = false" autocomplete="off" role="combobox"
+              [attr.aria-expanded]="translatorAutocompleteOpen" aria-controls="translator-options"
+              [disabled]="loadingData" />
+            <input formControlName="translatorId" type="hidden" />
+            @if (translatorAutocompleteOpen && filteredTranslatorOptions().length > 0) {
+            <ul id="translator-options" class="tag-autocomplete__list" role="listbox">
+              @for (translator of filteredTranslatorOptions(); track translator.id) {
+              <li><button class="button" type="button" role="option" (click)="selectTranslator(translator)">{{
+                  translatorLabel(translator)
+                  }}</button></li>
+              }
+            </ul>
+            } @else if (translatorAutocompleteOpen) {
+            <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
+            }
+          </div>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openTranslatorDialog()"
+            [disabled]="loadingData">เพิ่มทีมแปล</button>
+        </div>
+        <div>
+          <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
+          <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+            <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาเครื่องเกม" [value]="systemSearchText"
+              (focus)="openSystemAutocomplete($event)" (input)="onSystemInput($any($event.target).value)"
+              (keydown.escape)="systemAutocompleteOpen = false" autocomplete="off" role="combobox"
+              [attr.aria-expanded]="systemAutocompleteOpen" aria-controls="system-options" [disabled]="loadingData" />
+            <input formControlName="system" type="hidden" />
+            @if (systemAutocompleteOpen && filteredSystemOptions().length > 0) {
+            <ul id="system-options" class="tag-autocomplete__list" role="listbox">
+              @for (system of filteredSystemOptions(); track system.id) {
+              <li><button type="button" class="button" role="option" (click)="selectSystem(system)">{{
+                  systemLabel(system)
+                  }}</button></li>
+              }
+            </ul>
+            } @else if (systemAutocompleteOpen) {
+            <p class="tag-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</p>
+            }
+          </div>
+          <button class="mt-2 border  px-3 py-2 font-bold button" type="button" (click)="openSystemDialog()"
+            [disabled]="loadingData">เพิ่มเครื่องเกม</button>
+        </div>
+        <div>
+          <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
+              class="admin-input" formControlName="gameTitle" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('gameTitle')"
+            [disabled]="pastingField === 'gameTitle' || loadingData">{{ pastingField === 'gameTitle' ? 'กำลังวาง…' :
+            'Clipboard' }}</button>
+        </div>
+        <div [class.pointer-events-none]="loadingData" [class.opacity-50]="loadingData">
+          <label><i class="fa-solid fa-image mr-1" aria-hidden="true"></i>ภาพปก</label>
+          <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value"
+            [system]="form.controls.system.value" (selected)="cover = $event" />
+        </div>
+
+        <div>
+          <label><i class="fa-solid fa-clock mr-1" aria-hidden="true"></i>เวลาที่ใช้ในการเล่นจนจบ (ชั่วโมง)<input
+              #playTimeInput class="admin-input" formControlName="playTime" type="number" step="0.1" min="0"
+              placeholder="เช่น 15 หรือ 0.5" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openHowLongToBeat()"
+            [disabled]="loadingData">HowLongToBeat</button>
+        </div>
+
+        <div>
+          <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input
+              class="admin-input" formControlName="patchTool" /></label>
+          <div class="mt-2 flex flex-wrap gap-2">
+            <button class="border px-3 py-2 font-bold button" type="button" (click)="setDefaultPatchTool()"
+              [disabled]="loadingData">Default</button>
+            <button class="border px-3 py-2 font-bold button" type="button" (click)="setRomPatcherTool()"
+              [disabled]="loadingData">RomPatcher.js</button>
+            <button class="border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchTool')"
+              [disabled]="pastingField === 'patchTool' || loadingData">{{ pastingField === 'patchTool' ? 'กำลังวาง…' :
+              'Clipboard' }}</button>
+          </div>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-file-arrow-down mr-1" aria-hidden="true"></i>Patch<input class="admin-input"
+              formControlName="patchFileUrl" type="url" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchFileUrl')"
+            [disabled]="pastingField === 'patchFileUrl' || loadingData">{{ pastingField === 'patchFileUrl' ? 'กำลังวาง…'
+            :
+            'Clipboard' }}</button>
+        </div>
+        <div>
+          <label><i class="fa-solid fa-file-code mr-1" aria-hidden="true"></i>ROM<input class="admin-input"
+              formControlName="patchedRomUrl" type="url" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchedRomUrl')"
+            [disabled]="pastingField === 'patchedRomUrl' || loadingData">{{ pastingField === 'patchedRomUrl' ?
+            'กำลังวาง…' :
+            'Clipboard' }}</button>
+        </div>
+
+        <div>
+          <label>
+            <i class="fa-solid fa-link mr-1" aria-hidden="true"></i>Reference URL
+            <input class="admin-input" formControlName="referenceUrl" type="url" />
+          </label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('referenceUrl')"
+            [disabled]="pastingField === 'referenceUrl' || loadingData">{{ pastingField === 'referenceUrl' ? 'กำลังวาง…'
+            :
+            'Clipboard' }}</button>
+        </div>
+        <label>
+          <i class="fa-solid fa-quote-left mr-1" aria-hidden="true"></i>Reference Text
+          <input class="admin-input" formControlName="referenceText" type="text" />
+        </label>
+        <div>
+          <label><i class="fa-solid fa-book-open mr-1" aria-hidden="true"></i>บทสรุป<input class="admin-input"
+              formControlName="walkthroughUrl" type="url" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('walkthroughUrl')"
+            [disabled]="pastingField === 'walkthroughUrl' || loadingData">{{ pastingField === 'walkthroughUrl' ?
+            'กำลังวาง…'
+            :
+            'Clipboard' }}</button>
+        </div>
+
+        <fieldset class="border border-slate-600 p-3 relative">
+          <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>
+          <button class="mb-3 border px-3 py-2 font-bold button" type="button" (click)="createTag()"
+            [disabled]="!newTagName.trim() || loadingData">เพิ่ม tag ใหม่</button>
+
+          @if (selectedTags.length > 0) {
+          <ul class="selected-tags" aria-label="tag ที่เลือก">
+            @for (tag of selectedTags; track tag) {
+            <li>{{ tagName(tag) }} <button class="no-button" type="button" (click)="removeTag(tag)"
+                [attr.aria-label]="'ลบ tag ' + tagName(tag)" [disabled]="loadingData">x</button></li>
+            }
+          </ul>
           }
-        </ul>
-        } @else if (translatorAutocompleteOpen) {
-        <p class="tag-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</p>
-        }
-      </div>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openTranslatorDialog()"
-        [disabled]="loadingData">เพิ่มทีมแปล</button>
-    </div>
-    <div>
-      <label class="required"><i class="fa-solid fa-display mr-1" aria-hidden="true"></i>เครื่องเกม</label>
-      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
-        <input class="admin-input" placeholder="พิมพ์เพื่อค้นหาเครื่องเกม" [value]="systemSearchText"
-          (focus)="openSystemAutocomplete($event)" (input)="onSystemInput($any($event.target).value)"
-          (keydown.escape)="systemAutocompleteOpen = false" autocomplete="off" role="combobox"
-          [attr.aria-expanded]="systemAutocompleteOpen" aria-controls="system-options" [disabled]="loadingData" />
-        <input formControlName="system" type="hidden" />
-        @if (systemAutocompleteOpen && filteredSystemOptions().length > 0) {
-        <ul id="system-options" class="tag-autocomplete__list" role="listbox">
-          @for (system of filteredSystemOptions(); track system.id) {
-          <li><button type="button" class="button" role="option" (click)="selectSystem(system)">{{ systemLabel(system)
-              }}</button></li>
+
+          <div class="tag-autocomplete" (click)="$event.stopPropagation()">
+            <input #tagInput class="admin-input" placeholder="พิมพ์เพื่อค้นหา tag" [value]="newTagName"
+              (focus)="openTagAutocomplete()" (input)="onTagInput($any($event.target).value)"
+              (keydown.enter)="$event.preventDefault(); createTag()" autocomplete="off" [disabled]="loadingData" />
+            @if (tagAutocompleteOpen && filteredTagSuggestions().length > 0) {
+            <ul class="tag-autocomplete__list" role="listbox">
+              @for (tag of filteredTagSuggestions(); track tag.id) {
+              <li><button class="button" type="button" role="option" (click)="selectTag(tag)">{{ tag.name }}</button>
+              </li>
+              }
+            </ul>
+            } @else if (tagAutocompleteOpen && newTagName.trim()) {
+            <p class="tag-autocomplete__empty">ไม่พบ tag ที่ตรงกัน — กด “เพิ่ม tag” เพื่อสร้างใหม่</p>
+            }
+          </div>
+
+
+        </fieldset>
+        <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<textarea class="admin-input"
+            formControlName="patchVersion" rows="3"></textarea>
+        </label>
+        <label class="flex items-center gap-2">
+          <input formControlName="haveUpdateFlag" type="checkbox" />
+          <span>แสดงเป็นแพตช์อัปเดต</span>
+        </label>
+        <div>
+          <label><i class="fa-solid fa-calendar-days mr-1" aria-hidden="true"></i>วันที่และเวลาอัปเดต<input
+              class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
+          <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()"
+            [disabled]="loadingData">ตอนนี้</button>
+        </div>
+        <div class="form-actions mt-8 flex w-full flex-wrap items-center justify-between">
+          <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button btn-primary" type="submit"
+            [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…'
+            :
+            'บันทึกแพตช์' }}</button>
+          @if (editId) {
+          <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button btn-danger" type="button"
+            [disabled]="saving || loadingData" (click)="deletePatch()">ลบแพตช์</button>
           }
-        </ul>
-        } @else if (systemAutocompleteOpen) {
-        <p class="tag-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</p>
-        }
-      </div>
-      <button class="mt-2 border  px-3 py-2 font-bold button" type="button" (click)="openSystemDialog()"
-        [disabled]="loadingData">เพิ่มเครื่องเกม</button>
+        </div>
+      </form>
     </div>
-    <div>
-      <label class="required"><i class="fa-solid fa-gamepad mr-1" aria-hidden="true"></i>ชื่อเกม<input
-          class="admin-input" formControlName="gameTitle" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('gameTitle')"
-        [disabled]="pastingField === 'gameTitle' || loadingData">{{ pastingField === 'gameTitle' ? 'กำลังวาง…' :
-        'Clipboard' }}</button>
-    </div>
-    <div [class.pointer-events-none]="loadingData" [class.opacity-50]="loadingData">
-      <label><i class="fa-solid fa-image mr-1" aria-hidden="true"></i>ภาพปก</label>
-      <app-cover-input class="block" [gameTitle]="form.controls.gameTitle.value" [system]="form.controls.system.value"
-        (selected)="cover = $event" />
-    </div>
-
-    <div>
-      <label><i class="fa-solid fa-clock mr-1" aria-hidden="true"></i>เวลาที่ใช้ในการเล่นจนจบ (ชั่วโมง)<input
-          class="admin-input" formControlName="playTime" type="number" step="0.1" min="0"
-          placeholder="เช่น 15 หรือ 0.5" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="openHowLongToBeat()"
-        [disabled]="loadingData">HowLongToBeat</button>
-    </div>
-
-    <div>
-      <label><i class="fa-solid fa-screwdriver-wrench mr-1" aria-hidden="true"></i>Patch Tool<input class="admin-input"
-          formControlName="patchTool" /></label>
-      <div class="mt-2 flex flex-wrap gap-2">
-        <button class="border px-3 py-2 font-bold button" type="button" (click)="setDefaultPatchTool()"
-          [disabled]="loadingData">Default</button>
-        <button class="border px-3 py-2 font-bold button" type="button" (click)="setRomPatcherTool()"
-          [disabled]="loadingData">RomPatcher.js</button>
-        <button class="border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchTool')"
-          [disabled]="pastingField === 'patchTool' || loadingData">{{ pastingField === 'patchTool' ? 'กำลังวาง…' :
-          'Clipboard' }}</button>
-      </div>
-    </div>
-    <div>
-      <label><i class="fa-solid fa-file-arrow-down mr-1" aria-hidden="true"></i>Patch<input class="admin-input"
-          formControlName="patchFileUrl" type="url" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchFileUrl')"
-        [disabled]="pastingField === 'patchFileUrl' || loadingData">{{ pastingField === 'patchFileUrl' ? 'กำลังวาง…' :
-        'Clipboard' }}</button>
-    </div>
-    <div>
-      <label><i class="fa-solid fa-file-code mr-1" aria-hidden="true"></i>ROM<input class="admin-input"
-          formControlName="patchedRomUrl" type="url" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('patchedRomUrl')"
-        [disabled]="pastingField === 'patchedRomUrl' || loadingData">{{ pastingField === 'patchedRomUrl' ? 'กำลังวาง…' :
-        'Clipboard' }}</button>
-    </div>
-
-    <div>
-      <label>
-        <i class="fa-solid fa-link mr-1" aria-hidden="true"></i>Reference URL
-        <input class="admin-input" formControlName="referenceUrl" type="url" />
-      </label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('referenceUrl')"
-        [disabled]="pastingField === 'referenceUrl' || loadingData">{{ pastingField === 'referenceUrl' ? 'กำลังวาง…' :
-        'Clipboard' }}</button>
-    </div>
-    <label>
-      <i class="fa-solid fa-quote-left mr-1" aria-hidden="true"></i>Reference Text
-      <input class="admin-input" formControlName="referenceText" type="text" />
-    </label>
-    <div>
-      <label><i class="fa-solid fa-book-open mr-1" aria-hidden="true"></i>บทสรุป<input class="admin-input"
-          formControlName="walkthroughUrl" type="url" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="pasteTo('walkthroughUrl')"
-        [disabled]="pastingField === 'walkthroughUrl' || loadingData">{{ pastingField === 'walkthroughUrl' ? 'กำลังวาง…'
-        :
-        'Clipboard' }}</button>
-    </div>
-
-    <fieldset class="border border-slate-600 p-3 relative">
-      <legend><i class="fa-solid fa-tags mr-1" aria-hidden="true"></i>หมวดหมู่</legend>
-      <button class="mb-3 border px-3 py-2 font-bold button" type="button" (click)="createTag()"
-        [disabled]="!newTagName.trim() || loadingData">เพิ่ม tag ใหม่</button>
-
-      @if (selectedTags.length > 0) {
-      <ul class="selected-tags" aria-label="tag ที่เลือก">
-        @for (tag of selectedTags; track tag) {
-        <li>{{ tagName(tag) }} <button class="no-button" type="button" (click)="removeTag(tag)"
-            [attr.aria-label]="'ลบ tag ' + tagName(tag)" [disabled]="loadingData">x</button></li>
-        }
-      </ul>
-      }
-
-      <div class="tag-autocomplete" (click)="$event.stopPropagation()">
-        <input #tagInput class="admin-input" placeholder="พิมพ์เพื่อค้นหา tag" [value]="newTagName"
-          (focus)="openTagAutocomplete()" (input)="onTagInput($any($event.target).value)"
-          (keydown.enter)="$event.preventDefault(); createTag()" autocomplete="off" [disabled]="loadingData" />
-        @if (tagAutocompleteOpen && filteredTagSuggestions().length > 0) {
-        <ul class="tag-autocomplete__list" role="listbox">
-          @for (tag of filteredTagSuggestions(); track tag.id) {
-          <li><button class="button" type="button" role="option" (click)="selectTag(tag)">{{ tag.name }}</button></li>
-          }
-        </ul>
-        } @else if (tagAutocompleteOpen && newTagName.trim()) {
-        <p class="tag-autocomplete__empty">ไม่พบ tag ที่ตรงกัน — กด “เพิ่ม tag” เพื่อสร้างใหม่</p>
-        }
-      </div>
-
-
-    </fieldset>
-    <label><i class="fa-solid fa-code-branch mr-1" aria-hidden="true"></i>Patch Version<textarea class="admin-input"
-        formControlName="patchVersion" rows="3"></textarea>
-    </label>
-    <label class="flex items-center gap-2">
-      <input formControlName="haveUpdateFlag" type="checkbox" />
-      <span>แสดงเป็นแพตช์อัปเดต</span>
-    </label>
-    <div>
-      <label><i class="fa-solid fa-calendar-days mr-1" aria-hidden="true"></i>วันที่และเวลาอัปเดต<input
-          class="admin-input" formControlName="updateDate" type="datetime-local" /></label>
-      <button class="mt-2 border px-3 py-2 font-bold button" type="button" (click)="setUpdateDateNow()"
-        [disabled]="loadingData">ตอนนี้</button>
-    </div>
-    <div class="form-actions mt-8 flex w-full flex-wrap items-center justify-between">
-      <button class="w-fit  px-5 py-3 font-bold text-ink disabled:opacity-50 button btn-primary" type="submit"
-        [disabled]="form.invalid || saving || loadingData" [attr.aria-busy]="saving">{{ saving ? 'กำลังบันทึกแพตช์…' :
-        'บันทึกแพตช์' }}</button>
-      @if (editId) {
-      <button class="w-fit  px-5 py-3 font-bold disabled:opacity-50 button btn-danger" type="button"
-        [disabled]="saving || loadingData" (click)="deletePatch()">ลบแพตช์</button>
-      }
-    </div>
-  </form>
+  </div>
   @if (systemDialogOpen) {
   <div class="admin-dialog-backdrop system-dialog-backdrop" role="presentation">
     <section class="admin-dialog system-dialog" role="dialog" aria-modal="true" aria-labelledby="system-dialog-title"

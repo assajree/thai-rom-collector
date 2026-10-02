@@ -283,7 +283,6 @@ label {
 input:not([type=checkbox]):not([type=radio]):not(.admin-input),
 select:not(.app-select),
 textarea:not(.admin-input) {
-    background: var(--color-shadow);
     border: 1px solid var(--color-border);
     color: var(--color-text);
     padding: .55rem .65rem;

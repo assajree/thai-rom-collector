@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, HostListener, ViewChild, inject, signal } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, ElementRef, HostListener, ViewChild, inject, signal } from '@angular/core';
 import { AsyncPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
@@ -29,6 +29,7 @@ const defaultDocumentTitle = 'เกมแปลไทย เกมย้อน�
 export class AdminPatchPageComponent {
   @ViewChild(CoverInputComponent) private coverInput?: CoverInputComponent;
   @ViewChild('tagInput') private tagInput?: ElementRef<HTMLInputElement>;
+  @ViewChild('playTimeInput') private playTimeInput?: ElementRef<HTMLInputElement>;
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly fb = inject(FormBuilder);
@@ -40,6 +41,7 @@ export class AdminPatchPageComponent {
   private readonly systemRepository = inject(SystemRepository);
   private readonly auth = inject(AuthService);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   private async isNotAdmin(): Promise<boolean> {
     return !this.auth.isAdmin() && !(await this.auth.waitForAdminCheck(1500));
@@ -309,6 +311,7 @@ export class AdminPatchPageComponent {
     });
     if (!id) return;
     this.loadingData = true;
+    let shouldScrollToPlayTime = false;
     try {
       const patch = await this.patchRepository.getById(id);
       if (request !== this.editLoadRequest) return;
@@ -321,12 +324,32 @@ export class AdminPatchPageComponent {
       if (selectedTranslator) this.translatorSearchText = this.translatorLabel(selectedTranslator);
       const selectedSystem = this.systemOptions.find((item) => item.shortName === patch.system);
       if (selectedSystem) this.systemSearchText = this.systemLabel(selectedSystem);
-      this.selectedTags = patch.tags.filter((tagId) => this.tagSuggestions.some((tag) => tag.id === tagId));
+      const patchTags = Array.isArray(patch.tags) ? patch.tags : [];
+      this.selectedTags = patchTags.filter((tagId) => this.tagSuggestions.some((tag) => tag.id === tagId));
+      if (patch.playTime == null || (patch.playTime as unknown) === '' || Number(patch.playTime) <= 0) {
+        shouldScrollToPlayTime = true;
+      }
     } finally {
       if (request === this.editLoadRequest) {
         this.loadingData = false;
+        this.cdr.detectChanges();
+        if (shouldScrollToPlayTime) {
+          this.scrollToPlayTime();
+        }
       }
     }
+  }
+
+  private scrollToPlayTime(): void {
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const inputEl = this.playTimeInput?.nativeElement ?? document.querySelector<HTMLInputElement>('input[formControlName="playTime"]');
+        if (inputEl) {
+          inputEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          inputEl.focus({ preventScroll: true });
+        }
+      }, 150);
+    });
   }
   private todayInputDate(): string {
     const now = new Date();

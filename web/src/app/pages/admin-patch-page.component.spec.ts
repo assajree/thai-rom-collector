@@ -584,5 +584,47 @@ describe('AdminPatchPageComponent - Clipboard Paste', () => {
     floatingBtn?.click();
     expect((component as any).save).toHaveBeenCalled();
   });
+
+  it('scrolls to and focuses playTime when playTime is missing in edit mode', async () => {
+    fixture.detectChanges();
+    const c = component as any;
+    spyOn(c, 'scrollToPlayTime');
+    patchRepositoryStub.getById.and.returnValue(Promise.resolve({
+      id: 'patch-1',
+      gameTitle: 'Dragon Quest',
+      system: 'SFC',
+      translatorId: 'trans-1',
+      updateDate: '2026-01-01T00:00:00.000Z',
+      tags: [],
+      playTime: null,
+      coverUrl: '',
+      patchTool: '',
+      patchFileUrl: ''
+    }));
+
+    await c.loadEditRecord('patch-1');
+    expect(c.scrollToPlayTime).toHaveBeenCalled();
+  });
+
+  it('does not scroll to playTime when playTime is present in edit mode', async () => {
+    fixture.detectChanges();
+    const c = component as any;
+    spyOn(c, 'scrollToPlayTime');
+    patchRepositoryStub.getById.and.returnValue(Promise.resolve({
+      id: 'patch-1',
+      gameTitle: 'Dragon Quest',
+      system: 'SFC',
+      translatorId: 'trans-1',
+      updateDate: '2026-01-01T00:00:00.000Z',
+      tags: [],
+      playTime: 25,
+      coverUrl: '',
+      patchTool: '',
+      patchFileUrl: ''
+    }));
+
+    await c.loadEditRecord('patch-1');
+    expect(c.scrollToPlayTime).not.toHaveBeenCalled();
+  });
 });
 
