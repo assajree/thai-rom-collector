@@ -1,6 +1,17 @@
-<section class="mx-auto mt-2 max-w-4xl" aria-label="Game patch cards">
+<section class="patch-card-container w-full" aria-label="Game patch cards">
   @for (patch of patches; track patch.id; let index = $index) {
   <article class="patch-card">
+    <div class="win98-card-titlebar" aria-hidden="true">
+      <div class="win98-card-title truncate">
+        <span class="win98-title-icon">🎮</span>
+        <span class="win98-title-text truncate">THAI ROM DB</span>
+      </div>
+      <div class="win98-window-controls">
+        <span class="win98-ctrl-btn">_</span>
+        <span class="win98-ctrl-btn">□</span>
+        <span class="win98-ctrl-btn">✕</span>
+      </div>
+    </div>
 
     <div class="patch-cover-wrap">
       <div class="patch-cover-placeholder" aria-hidden="true"></div>

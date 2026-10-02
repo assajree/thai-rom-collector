@@ -257,4 +257,33 @@ describe('AppComponent', () => {
     expect(leftHitCounter).toBeNull();
     expect(rightHitCounter).toBeTruthy();
   });
+
+  it('should support switching to classic-blue theme and cycling themes', () => {
+    const themeSignal = (app as unknown as { theme: () => string }).theme;
+    const toggleTheme = (app as unknown as { toggleTheme: () => void }).toggleTheme.bind(app);
+    const selectTheme = (app as unknown as { selectTheme: (e: Event) => void }).selectTheme.bind(app);
+
+    expect(themeSignal()).toBe('default');
+
+    // Toggle: default -> pocket-pet -> classic-blue -> default
+    toggleTheme();
+    expect(themeSignal()).toBe('pocket-pet');
+    expect(document.body.dataset['theme']).toBe('pocket-pet');
+
+    toggleTheme();
+    expect(themeSignal()).toBe('classic-blue');
+    expect(document.body.dataset['theme']).toBe('classic-blue');
+
+    toggleTheme();
+    expect(themeSignal()).toBe('default');
+    expect(document.body.dataset['theme']).toBe('');
+
+    // Select theme directly
+    selectTheme({ target: { value: 'classic-blue' } } as unknown as Event);
+    expect(themeSignal()).toBe('classic-blue');
+    expect(document.body.dataset['theme']).toBe('classic-blue');
+
+    // Clean up
+    selectTheme({ target: { value: 'default' } } as unknown as Event);
+  });
 });

@@ -96,6 +96,593 @@ body[data-theme='pocket-pet'] main {
 
 /****** End Pocket Pet Theme Style ******/
 
+/****** Begin Classic Blue (Windows 98) Theme Style ******/
+
+body[data-theme='classic-blue'] {
+  --color-surface: #c0c0c0;
+  --color-surface-text: #000000;
+  --color-surface-light: #004e98;
+  --color-border: #808080;
+  --color-text: #000000;
+  --color-text-muted: #4a4a4a;
+  --color-brand: #000080;
+  --color-brand-text: #ffffff;
+  --color-highlight: #ff0000;
+  --color-highlight-text: #ffffff;
+  --color-link: #000080;
+  --color-accent: #fff59d;
+  --color-accent-text: #1a1a1a;
+  --color-accent-hover: #fff9c4;
+  --color-shadow: #000000;
+  --color-disabled: #808080;
+  --color-overlay: rgb(0 0 0 / 50%);
+}
+
+/* Sharp Corners (0px) across the entire theme */
+body[data-theme='classic-blue'] * {
+  border-radius: 0px !important;
+}
+
+/* Typography: Authentic Windows 98 / Thai Edition System Font */
+body[data-theme='classic-blue'],
+body[data-theme='classic-blue'] *:not(.fa):not(.fa-solid):not(.fa-brands):not(.fa-regular):not([class*='fa-']) {
+  font-family: 'MS Sans Serif', Tahoma, 'Microsoft Sans Serif', sans-serif;
+}
+
+body[data-theme='classic-blue'] code,
+body[data-theme='classic-blue'] pre,
+body[data-theme='classic-blue'] kbd,
+body[data-theme='classic-blue'] samp {
+  font-family: 'Courier New', Courier, monospace !important;
+}
+
+/* Topbar: Windows 98 Active Title Bar Gradient */
+body[data-theme='classic-blue'] .app-topbar {
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+  color: #ffffff;
+  border-bottom: 2px solid #000000;
+}
+
+body[data-theme='classic-blue'] .app-topbar * {
+  color: #ffffff;
+}
+
+body[data-theme='classic-blue'] #last-update {
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+body[data-theme='classic-blue'] .mobile-menu-button {
+  background: #c0c0c0;
+  color: #000000 !important;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #808080;
+  padding: 2px 8px;
+}
+
+body[data-theme='classic-blue'] .win98-window-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+body[data-theme='classic-blue'] .win98-ctrl-btn {
+  width: 16px;
+  height: 14px;
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  font-weight: bold;
+  color: #000000 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  box-shadow: inset 1px 1px 0px #dfdfdf;
+  user-select: none;
+  cursor: default;
+}
+
+/* Marquee: Classic InfoBar Yellow (#fff59d) */
+body[data-theme='classic-blue'] .marquee {
+  background-color: #fff59d;
+  color: #1a1a1a;
+  border-top: 1px solid #c0c0c0;
+  border-bottom: 2px solid #808080;
+}
+
+body[data-theme='classic-blue'] .marquee * {
+  color: #1a1a1a;
+}
+
+/* Content Area: Classic Navy Desktop Background (#004e98) */
+body[data-theme='classic-blue'] .app-content,
+body[data-theme='classic-blue'] .browse-catalogue,
+body[data-theme='classic-blue'] .main-content {
+  background-color: #004e98;
+  background-image: none;
+}
+
+/* Sidebar: Windows Explorer Tree View Styling */
+body[data-theme='classic-blue'] .retro-rail,
+body[data-theme='classic-blue'] .right-ad-sidebar {
+  background-color: #c0c0c0;
+  color: #000000;
+  border-right: 2px solid #808080;
+  box-shadow: inset -1px 0px 0px #ffffff;
+}
+
+body[data-theme='classic-blue'] .retro-rail-heading {
+  color: #000080;
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 2px 0;
+  margin: 0.5rem 0 0.25rem;
+  letter-spacing: 0.5px;
+}
+
+body[data-theme='classic-blue'] .retro-rail-heading::before {
+  content: '📁 ';
+}
+
+body[data-theme='classic-blue'] .retro-sidebar-section {
+  background: none;
+  border-top: 1px solid #808080;
+  box-shadow: inset 0 1px 0 #ffffff;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+}
+
+body[data-theme='classic-blue'] .retro-sidebar-section:first-child,
+body[data-theme='classic-blue'] .retro-sidebar-section.first-section {
+  border-top: none;
+  box-shadow: none;
+  margin-top: 0;
+  padding-top: 0;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link,
+body[data-theme='classic-blue'] .retro-system-button {
+  background: transparent;
+  color: #000080;
+  border: 1px solid transparent;
+  padding: 3px 8px 3px 18px;
+  position: relative;
+  display: block;
+  width: fit-content;
+  max-width: 100%;
+  transition: none;
+  box-shadow: none;
+  text-decoration: underline;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link::before,
+body[data-theme='classic-blue'] .retro-system-button::before {
+  content: '💾';
+  margin-right: 6px;
+  display: inline-block;
+  text-decoration: none !important;
+}
+
+body[data-theme='classic-blue'] .sidebar-link-text,
+body[data-theme='classic-blue'] .sidebar-count {
+  display: inline;
+}
+
+body[data-theme='classic-blue'] .sidebar-translator-row>.retro-system-button {
+  display: inline-flex;
+  text-decoration: none;
+  width: auto;
+  max-width: 100%;
+}
+
+body[data-theme='classic-blue'] .sidebar-translator-row>.retro-system-button::before {
+  flex-shrink: 0;
+  text-decoration: none !important;
+}
+
+body[data-theme='classic-blue'] .sidebar-translator-row>.retro-system-button .sidebar-link-text {
+  border-bottom: 1px solid currentColor;
+  display: block;
+  text-decoration: none;
+}
+
+body[data-theme='classic-blue'] .sidebar-translator-row .sidebar-count {
+  border-bottom: 1px solid currentColor;
+  display: inline;
+  text-decoration: none;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link:hover,
+body[data-theme='classic-blue'] .retro-system-button:hover {
+  background-color: transparent;
+  color: #ff0000;
+  text-decoration: underline;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link:hover *,
+body[data-theme='classic-blue'] .retro-system-button:hover * {
+  color: #ff0000;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link:hover::before,
+body[data-theme='classic-blue'] .retro-system-button:hover::before {
+  text-decoration: none !important;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link--active,
+body[data-theme='classic-blue'] .retro-system-button--active {
+  background-color: transparent;
+  color: #800080;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link--active *,
+body[data-theme='classic-blue'] .retro-system-button--active * {
+  color: #800080;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link--active:hover,
+body[data-theme='classic-blue'] .retro-system-button--active:hover {
+  background-color: transparent;
+  color: #ff0000;
+}
+
+body[data-theme='classic-blue'] .retro-rail-link--active:hover *,
+body[data-theme='classic-blue'] .retro-system-button--active:hover * {
+  color: #ff0000;
+}
+
+/* 90s Browser Hyperlinks Styling */
+body[data-theme='classic-blue'] a,
+body[data-theme='classic-blue'] .link {
+  color: #000080;
+  text-decoration: underline;
+}
+
+body[data-theme='classic-blue'] a:hover,
+body[data-theme='classic-blue'] .link:hover {
+  color: #ff0000;
+  text-decoration: underline;
+}
+
+body[data-theme='classic-blue'] a:active,
+body[data-theme='classic-blue'] .link:active {
+  color: #ff0000;
+}
+
+/* Font Awesome Icons inside Links: No Underline */
+body[data-theme='classic-blue'] a i[class*="fa-"],
+body[data-theme='classic-blue'] a .fa-solid,
+body[data-theme='classic-blue'] a .fa-brands,
+body[data-theme='classic-blue'] a .fa-regular,
+body[data-theme='classic-blue'] a.my-fa-link,
+body[data-theme='classic-blue'] a.retro-rail-admin-link,
+body[data-theme='classic-blue'] a.sidebar-translator-edit-link {
+  display: inline-block;
+  text-decoration: none !important;
+}
+
+body[data-theme='classic-blue'] a:hover i[class*="fa-"],
+body[data-theme='classic-blue'] a:hover .fa-solid,
+body[data-theme='classic-blue'] a:hover .fa-brands,
+body[data-theme='classic-blue'] a:hover .fa-regular,
+body[data-theme='classic-blue'] a.my-fa-link:hover,
+body[data-theme='classic-blue'] a.retro-rail-admin-link:hover,
+body[data-theme='classic-blue'] a.sidebar-translator-edit-link:hover {
+  color: #ff0000;
+  text-decoration: none !important;
+}
+
+/* Preserve Topbar Header Links */
+body[data-theme='classic-blue'] .app-topbar a,
+body[data-theme='classic-blue'] .app-topbar a:hover,
+body[data-theme='classic-blue'] .app-topbar a:active {
+  color: #ffffff !important;
+  text-decoration: none;
+}
+
+/* Category & Controls: Win98 GroupBox Filter & Search Panels */
+
+body[data-theme='classic-blue'] .search-console {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080;
+  box-sizing: border-box;
+  color: #000000;
+}
+
+body[data-theme='classic-blue'] .sort-row {
+  background-color: #c0c0c0;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080;
+  box-sizing: border-box;
+  position: relative;
+  padding: 0 0.85rem 0.85rem 0.85rem;
+  margin-top: 0.75rem;
+  color: #000000;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  align-items: stretch;
+}
+
+@media (max-width: 34rem) {
+  body[data-theme='classic-blue'] .sort-row:not(.sort-row--open) {
+    display: none;
+  }
+}
+
+body[data-theme='classic-blue'] .sort-row__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+  color: #ffffff;
+  padding: 3px 6px;
+  margin: 0 -0.85rem 0.75rem -0.85rem;
+  width: calc(100% + 1.7rem);
+  flex: 0 0 calc(100% + 1.7rem);
+  box-sizing: border-box;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+body[data-theme='classic-blue'] .sort-row__title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body[data-theme='classic-blue'] .sort-row__text {
+  line-height: 1.2;
+}
+
+body[data-theme='classic-blue'] .sort-row__close-btn {
+  width: 16px;
+  height: 14px;
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  color: #000000;
+  font-weight: bold;
+  box-shadow: inset 1px 1px 0px #dfdfdf;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  outline: none;
+}
+
+body[data-theme='classic-blue'] .sort-row__close-btn:active {
+  border-color: #000000 #ffffff #ffffff #000000;
+  box-shadow: inset 1px 1px 0px #808080;
+}
+
+body[data-theme='classic-blue'] .sort-field {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0.55rem;
+  width: 100%;
+  min-width: 0;
+}
+
+body[data-theme='classic-blue'] .sort-field label {
+  color: #000000;
+  font-weight: bold;
+  text-align: left;
+  width: 5.5rem;
+  min-width: 5.5rem;
+  max-width: 5.5rem;
+  flex: 0 0 5.5rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+body[data-theme='classic-blue'] .sort-field .control-autocomplete {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+}
+
+body[data-theme='classic-blue'] .sort-field .control-autocomplete__input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+body[data-theme='classic-blue'] .sort-field--sort {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+}
+
+body[data-theme='classic-blue'] .sort-field--sort>select.app-select {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+body[data-theme='classic-blue'] .sort-field--sort>button {
+  flex: 0 0 auto !important;
+  width: auto !important;
+  min-width: max-content !important;
+  white-space: nowrap !important;
+  grid-column: auto !important;
+}
+
+body[data-theme='classic-blue'] .sort-toggle {
+  color: #000000;
+  font-weight: bold;
+}
+
+/* Input Fields & Autocomplete: 3D Sunken Inset */
+body[data-theme='classic-blue'] .app-select,
+body[data-theme='classic-blue'] input[type="text"],
+body[data-theme='classic-blue'] input[type="search"],
+body[data-theme='classic-blue'] .admin-search-field,
+body[data-theme='classic-blue'] .control-autocomplete__input {
+  background-color: #ffffff;
+  color: #000000;
+  border: 2px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  box-shadow: inset 1px 1px 0px #000000;
+}
+
+body[data-theme='classic-blue'] .admin-search-field input {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #000000;
+}
+
+body[data-theme='classic-blue'] .control-autocomplete__list {
+  background-color: #ffffff;
+  border: 2px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  box-shadow: inset 1px 1px 0px #000000;
+}
+
+body[data-theme='classic-blue'] .control-autocomplete__option {
+  color: #000000;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+body[data-theme='classic-blue'] .control-autocomplete__item--active .control-autocomplete__option,
+body[data-theme='classic-blue'] .control-autocomplete__option:hover {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+/* Patch Cards: Authentic Windows 98 Window Chrome */
+body[data-theme='classic-blue'] .patch-card {
+  background-color: #c0c0c0;
+  box-sizing: border-box;
+  color: #000000;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080, 2px 2px 0px rgba(0, 0, 0, 0.4);
+  padding: 1.25rem;
+}
+
+body[data-theme='classic-blue'] .win98-card-titlebar {
+  display: flex;
+  grid-column: 1 / -1;
+  margin: -1.25rem -1.25rem 1rem -1.25rem;
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+  color: #ffffff;
+  padding: 3px 6px;
+  align-items: center;
+  justify-content: space-between;
+  letter-spacing: 0.5px;
+}
+
+body[data-theme='classic-blue'] .win98-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+body[data-theme='classic-blue'] .patch-cover-wrap {
+  border: 2px solid;
+  border-color: #808080 #dfdfdf #dfdfdf #808080;
+  box-shadow: inset 1px 1px 0px #000000;
+  background: #ffffff;
+  padding: 2px;
+}
+
+body[data-theme='classic-blue'] .patch-card .heading .game-title {
+  color: #800080;
+  font-weight: bold;
+}
+
+body[data-theme='classic-blue'] .patch-card__description {
+  color: #000000;
+}
+
+body[data-theme='classic-blue'] .patch-card__label {
+  color: #404040;
+  font-weight: bold;
+}
+
+/* Buttons: 3D Raised Bevel with Sunken Active State */
+body[data-theme='classic-blue'] .button,
+body[data-theme='classic-blue'] .btn-primary,
+body[data-theme='classic-blue'] .btn-accent,
+body[data-theme='classic-blue'] .sort-toggle,
+body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn) {
+  background-color: #c0c0c0;
+  color: #000000;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  box-shadow: inset 1px 1px 0px #dfdfdf, inset -1px -1px 0px #808080;
+  font-weight: bold;
+  text-shadow: none;
+}
+
+body[data-theme='classic-blue'] .button:active,
+body[data-theme='classic-blue'] .btn-primary:active,
+body[data-theme='classic-blue'] .sort-toggle:active,
+body[data-theme='classic-blue'] button:not(.no-button):active {
+  border-color: #000000 #ffffff #ffffff #000000;
+  box-shadow: inset 1px 1px 0px #808080;
+}
+
+body[data-theme='classic-blue'] .browse-route-label {
+  background-color: #c0c0c0;
+  box-sizing: border-box;
+  color: #000000;
+  border: 2px solid;
+  border-color: #dfdfdf #000000 #000000 #dfdfdf;
+  box-shadow: inset 1px 1px 0px #ffffff, inset -1px -1px 0px #808080;
+}
+
+body[data-theme='classic-blue'] .browse-route-label__title {
+  color: #000080;
+  font-weight: bold;
+}
+
+body[data-theme='classic-blue'] .browse-stat-bar {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: #ffffff;
+}
+
+body[data-theme='classic-blue'] .browse-stat-label,
+body[data-theme='classic-blue'] .browse-stat-subtext {
+  color: #d0e4ff;
+}
+
+body[data-theme='classic-blue'] .browse-stat-value {
+  color: #ffd92b;
+  font-weight: bold;
+  text-shadow: 1px 1px 0px #000000;
+}
+
+body[data-theme='classic-blue'] .pagination__current {
+  color: #ffffff;
+  font-weight: bold;
+}
+
+/****** End Classic Blue (Windows 98) Theme Style ******/
+
 @font-face {
   font-family: 'RD Chulajaruek';
   src: url('/assets/fonts/RD%20CHULAJARUEK.ttf') format('truetype');
@@ -121,7 +708,6 @@ body[data-theme='pocket-pet'] main {
     @apply min-h-screen bg-panel;
     height: 100%;
     color: var(--color-text);
-    font-size: 1rem;
     background-size: 100% 4px;
     transition: background-color .2s ease, color .2s ease;
     margin: 0;
@@ -302,19 +888,31 @@ a,
   color: var(--color-link);
 }
 
-a,
-.link {
-  text-decoration: underline;
-}
-
 a:hover,
 .link:hover {
   color: var(--color-highlight);
 }
 
-.my-fa-link {
-  text-decoration: none;
-  color: var(--color-link);
+/* Font Awesome Icons in Links: Never Underlined */
+a i[class*="fa-"],
+a .fa-solid,
+a .fa-brands,
+a .fa-regular,
+.my-fa-link,
+.retro-rail-admin-link,
+.sidebar-translator-edit-link {
+  display: inline-block;
+  text-decoration: none !important;
+}
+
+a:hover i[class*="fa-"],
+a:hover .fa-solid,
+a:hover .fa-brands,
+a:hover .fa-regular,
+.my-fa-link:hover,
+.retro-rail-admin-link:hover,
+.sidebar-translator-edit-link:hover {
+  text-decoration: none !important;
 }
 
 .admin-page-shell {
@@ -466,10 +1064,6 @@ app-article-page {
   margin: 0 0 0rem;
 }
 
-.markdown-body strong {
-  font-weight: 900;
-}
-
 .markdown-body em {
   color: var(--color-text-muted);
 }
@@ -478,7 +1072,6 @@ app-article-page {
   padding: .12rem .35rem;
   background: var(--color-surface-light);
   color: var(--color-text);
-  font-size: .92em;
 }
 
 .markdown-body pre {
@@ -565,4 +1158,8 @@ a,
 
 *:disabled {
   cursor: not-allowed;
+}
+
+i {
+  text-decoration: none;
 }

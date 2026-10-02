@@ -1,103 +1,103 @@
 <main class="browse-catalogue min-h-full p-4 sm:p-6 lg:p-8 main-content">
 
-  <app-game-list-controls [translators]="translators()" [systems]="systems()" [systemMasters]="systemMasters()"
-    [routeKind]="routeKind()" [draft]="filters()" (filtersChanged)="setFilters($event)" />
+  <div class="browse-column">
+    <app-game-list-controls [translators]="translators()" [systems]="systems()" [systemMasters]="systemMasters()"
+      [routeKind]="routeKind()" [draft]="filters()" (filtersChanged)="setFilters($event)" />
 
-  @if (activeRouteLabel(); as routeLabel) {
-  <div class="browse-route-label">
-    <span class="browse-route-label__title">{{ routeLabel }} ({{ sortedPatches().length }})</span>
+    @if (activeRouteLabel(); as routeLabel) {
+    <div class="browse-route-label">
+      <span class="browse-route-label__title">{{ routeLabel }} ({{ sortedPatches().length }})</span>
 
-    <button type="button" class="no-button browse-route-label__clear" aria-label="ล้างตัวกรองทั้งหมด"
-      (click)="clearAllFilters()">x</button>
-  </div>
-
-  @if (isPageMode() && !loading() && !unavailable() && sortedPatches().length > 0 && totalPages() > 1) {
-  <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
-    <button type="button" class="pagination__button no-button" [disabled]="currentPage() === 1"
-      aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
-    <span class="pagination__current" aria-live="polite">หน้า {{ currentPage() }} / {{ totalPages() }}</span>
-    <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"
-      aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
-  </nav>
-  }
-
-  @if (playTimeStats(); as stats) {
-  @if (stats.hasData) {
-  <div class="browse-stat-bar" aria-label="สถิติเวลาเล่นรวม">
-    <span class="browse-stat-label">ต้องใช้เวลาเล่น:</span>
-    <span class="browse-stat-value">{{ stats.formattedDuration }}</span>
-    <span class="browse-stat-subtext">(จาก {{ stats.count }} เกม)</span>
-  </div>
-  }
-  }
-  }
-
-
-
-  @if (loading()) {
-  <div class="skeleton-grid" aria-label="กำลังโหลดรายการแพตช์" aria-busy="true">
-    @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) { <div class="patch-skeleton"><span></span>
-      <div><i></i><i></i><i></i></div>
-    </div> }
-  </div>
-  }
-  @if (unavailable()) { <div class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
-    กรุณาลองใหม่อีกครั้ง <button type="button" class="retry-button" (click)="retry()">ลองใหม่</button></div> }
-  @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">
-    ไม่พบรายการแพตช์ตามเงื่อนไข</p>
-  }
-
-  @if (!loading() && !unavailable() && sortedPatches().length > 0) {
-  <app-patch-card-list [patches]="paginatedPatches()" [translators]="translators()" [systems]="systemMasters()"
-    [tags]="tags()" [canEdit]="auth.isAdmin()" />
-
-  @if (isPageMode()) {
-  @if (totalPages() > 1) {
-  <nav class="pagination pagination--bottom" aria-label="การแบ่งหน้ารายการแพตช์">
-    <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === 1"
-      aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
-    <div class="pagination__pages">
-      @for (page of pageNumbers(); track page) {
-      <button type="button" class="pagination__button pagination__page"
-        [class.pagination__page--active]="page === currentPage()"
-        [attr.aria-current]="page === currentPage() ? 'page' : null" [attr.aria-label]="'ไปหน้าที่ ' + page"
-        (click)="setPage(page)">{{ page }}</button>
-      }
+      <button type="button" class="no-button browse-route-label__clear" aria-label="ล้างตัวกรองทั้งหมด"
+        (click)="clearAllFilters()">x</button>
     </div>
-    <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === totalPages()"
-      aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
-  </nav>
-  }
-  <div class="mode-toggle-section">
-    <a routerLink="/" [queryParams]="currentFilterQueryParams()" class="mode-toggle-link"
-      aria-label="สลับไปโหมดโหลดต่อเนื่อง">
-      <span>สลับไปโหมดโหลดต่อเนื่อง</span>
-    </a>
-  </div>
-  } @else {
-  <div class="load-more-section">
-    @if (sortedPatches().length > pageSize) {
-    @if (hasMore()) {
-    <button type="button" class="load-more-button button" (click)="loadMore()" aria-label="โหลดเกมเพิ่มเติม">
-      <i class="fa-solid fa-angles-down" aria-hidden="true"></i>
-      <span>โหลดเพิ่มเติม (+{{ nextLoadCount() }})</span>
-    </button>
-    <p class="load-more-status" aria-live="polite">กำลังแสดง {{ paginatedPatches().length }} จาก {{
-      sortedPatches().length }} เกม</p>
+
+    @if (isPageMode() && !loading() && !unavailable() && sortedPatches().length > 0 && totalPages() > 1) {
+    <nav class="pagination pagination--top" aria-label="การแบ่งหน้ารายการแพตช์">
+      <button type="button" class="pagination__button no-button" [disabled]="currentPage() === 1"
+        aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
+      <span class="pagination__current" aria-live="polite">หน้า {{ currentPage() }} / {{ totalPages() }}</span>
+      <button type="button" class="pagination__button" [disabled]="currentPage() === totalPages()"
+        aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
+    </nav>
+    }
+
+    @if (playTimeStats(); as stats) {
+    @if (stats.hasData) {
+    <div class="browse-stat-bar" aria-label="สถิติเวลาเล่นรวม">
+      <span class="browse-stat-label">ต้องใช้เวลาเล่น:</span>
+      <span class="browse-stat-value">{{ stats.formattedDuration }}</span>
+      <span class="browse-stat-subtext">(จาก {{ stats.count }} เกม)</span>
+    </div>
+    }
+    }
+    }
+
+    @if (loading()) {
+    <div class="skeleton-grid" aria-label="กำลังโหลดรายการแพตช์" aria-busy="true">
+      @for (skeleton of [1, 2, 3, 4, 5, 6]; track skeleton) { <div class="patch-skeleton"><span></span>
+        <div><i></i><i></i><i></i></div>
+      </div> }
+    </div>
+    }
+    @if (unavailable()) { <div class="state-message state-message--error" role="alert">ไม่สามารถโหลดข้อมูลได้ในขณะนี้
+      กรุณาลองใหม่อีกครั้ง <button type="button" class="retry-button" (click)="retry()">ลองใหม่</button></div> }
+    @if (!loading() && !unavailable() && sortedPatches().length === 0) { <p class="state-message">
+      ไม่พบรายการแพตช์ตามเงื่อนไข</p>
+    }
+
+    @if (!loading() && !unavailable() && sortedPatches().length > 0) {
+    <app-patch-card-list [patches]="paginatedPatches()" [translators]="translators()" [systems]="systemMasters()"
+      [tags]="tags()" [canEdit]="auth.isAdmin()" />
+
+    @if (isPageMode()) {
+    @if (totalPages() > 1) {
+    <nav class="pagination pagination--bottom" aria-label="การแบ่งหน้ารายการแพตช์">
+      <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === 1"
+        aria-label="ไปหน้าก่อนหน้า" (click)="setPage(currentPage() - 1)">&lt;</button>
+      <div class="pagination__pages">
+        @for (page of pageNumbers(); track page) {
+        <button type="button" class="pagination__button pagination__page"
+          [class.pagination__page--active]="page === currentPage()"
+          [attr.aria-current]="page === currentPage() ? 'page' : null" [attr.aria-label]="'ไปหน้าที่ ' + page"
+          (click)="setPage(page)">{{ page }}</button>
+        }
+      </div>
+      <button type="button" class="pagination__button pagination__step_button" [disabled]="currentPage() === totalPages()"
+        aria-label="ไปหน้าถัดไป" (click)="setPage(currentPage() + 1)">&gt;</button>
+    </nav>
+    }
+    <div class="mode-toggle-section">
+      <a routerLink="/" [queryParams]="currentFilterQueryParams()" class="mode-toggle-link"
+        aria-label="สลับไปโหมดโหลดต่อเนื่อง">
+        <span>สลับไปโหมดโหลดต่อเนื่อง</span>
+      </a>
+    </div>
     } @else {
-    <div class="load-more-end" aria-live="polite">
-      <span class="load-more-end-icon" aria-hidden="true">★</span>
-      <span>แสดงรายการทั้งหมดครบแล้ว ({{ sortedPatches().length }} เกม)</span>
+    <div class="load-more-section">
+      @if (sortedPatches().length > pageSize) {
+      @if (hasMore()) {
+      <button type="button" class="load-more-button button" (click)="loadMore()" aria-label="โหลดเกมเพิ่มเติม">
+        <i class="fa-solid fa-angles-down" aria-hidden="true"></i>
+        <span>โหลดเพิ่มเติม (+{{ nextLoadCount() }})</span>
+      </button>
+      <p class="load-more-status" aria-live="polite">กำลังแสดง {{ paginatedPatches().length }} จาก {{
+        sortedPatches().length }} เกม</p>
+      } @else {
+      <div class="load-more-end" aria-live="polite">
+        <span class="load-more-end-icon" aria-hidden="true">★</span>
+        <span>แสดงรายการทั้งหมดครบแล้ว ({{ sortedPatches().length }} เกม)</span>
+      </div>
+      }
+      }
+      <a routerLink="/page" [queryParams]="currentFilterQueryParams()" class="mode-toggle-link"
+        aria-label="สลับไปโหมดแบ่งหน้า">
+        <span>สลับไปโหมดแบ่งหน้า</span>
+      </a>
     </div>
     }
     }
-    <a routerLink="/page" [queryParams]="currentFilterQueryParams()" class="mode-toggle-link"
-      aria-label="สลับไปโหมดแบ่งหน้า">
-      <span>สลับไปโหมดแบ่งหน้า</span>
-    </a>
   </div>
-  }
-  }
 
   @if (auth.isAdmin() || showBackToTop()) {
   <div class="browse-floating-actions">

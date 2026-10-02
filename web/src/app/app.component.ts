@@ -20,6 +20,8 @@ import { SidebarLinkRepository } from './repositories/sidebar-link.repository';
 import { Article } from './models/article.models';
 import { ArticleRepository } from './repositories/article.repository';
 
+export type AppTheme = 'default' | 'pocket-pet' | 'classic-blue';
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -41,7 +43,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
   }
   private static readonly themeStorageKey = 'rom-collector-theme';
-  protected readonly theme = signal<'default' | 'pocket-pet'>('default');
+  protected readonly theme = signal<AppTheme>('default');
   private readonly document = inject(DOCUMENT);
   protected readonly statusMessageService = inject(StatusMessageService);
   protected readonly authService = inject(AuthService);
@@ -312,24 +314,31 @@ export class AppComponent implements AfterViewInit, OnDestroy {
   }
 
   protected toggleTheme(): void {
-    const nextTheme = this.theme() === 'default' ? 'pocket-pet' : 'default';
-    this.theme.set(nextTheme);
-    this.document.body.dataset['theme'] = nextTheme === 'default' ? '' : nextTheme;
-    try { window.localStorage.setItem(AppComponent.themeStorageKey, nextTheme); } catch { /* storage can be unavailable */ }
+    const current = this.theme();
+    const nextTheme: AppTheme =
+      current === 'default' ? 'pocket-pet' : current === 'pocket-pet' ? 'classic-blue' : 'default';
+    this.applyTheme(nextTheme);
   }
 
   protected selectTheme(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
+    const value = (event.target as HTMLSelectElement).value as AppTheme;
     if (value === this.theme()) return;
-    this.toggleTheme();
+    this.applyTheme(value);
+  }
+
+  private applyTheme(theme: AppTheme): void {
+    this.theme.set(theme);
+    this.document.body.dataset['theme'] = theme === 'default' ? '' : theme;
+    try { window.localStorage.setItem(AppComponent.themeStorageKey, theme); } catch { /* storage can be unavailable */ }
   }
 
   private restoreTheme(): void {
     let savedTheme: string | null = null;
     try { savedTheme = window.localStorage.getItem(AppComponent.themeStorageKey); } catch { /* storage can be unavailable */ }
-    const theme = savedTheme === 'pocket-pet' ? 'pocket-pet' : 'default';
+    const theme: AppTheme =
+      savedTheme === 'pocket-pet' || savedTheme === 'classic-blue' ? savedTheme : 'default';
     this.theme.set(theme);
-    if (theme === 'pocket-pet') this.document.body.dataset['theme'] = theme;
+    if (theme !== 'default') this.document.body.dataset['theme'] = theme;
   }
 
   protected dismissStatusMessage(): void {

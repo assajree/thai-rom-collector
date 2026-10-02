@@ -25,6 +25,7 @@ export class GameListControlsComponent implements OnChanges {
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
   protected sortOpen = false;
+  protected sortCollapsed = false;
 
   // Translator autocomplete state
   protected translatorSearchText = '';
@@ -213,6 +214,16 @@ export class GameListControlsComponent implements OnChanges {
       this.systemSearchText = this.selectedSystemName();
       this.highlightedSystemIndex = -1;
     }
+  }
+
+  protected closeSort(): void {
+    this.sortOpen = false;
+    this.sortCollapsed = true;
+  }
+
+  protected openSort(): void {
+    this.sortOpen = true;
+    this.sortCollapsed = false;
   }
 
   protected clearKeyword(): void {

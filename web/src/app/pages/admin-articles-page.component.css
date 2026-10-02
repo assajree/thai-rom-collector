@@ -31,9 +31,6 @@
 
 .eyebrow {
   color: var(--color-brand);
-  font-size: .75rem;
-  font-weight: 800;
-  letter-spacing: .14em
 }
 
 .primary-button {
@@ -80,8 +77,6 @@
 
 .status {
   color: var(--color-highlight);
-  font-size: .75rem;
-  font-weight: 800
 }
 
 .status.published {
@@ -125,7 +120,6 @@
   display: grid;
   gap: .4rem;
   color: var(--color-text-muted);
-  font-weight: 700
 }
 
 .editor-form input,
@@ -159,7 +153,7 @@
   color: var(--color-text-muted)
 }
 
-.publish-button{
+.publish-button {
   width: 120px;
 }
 

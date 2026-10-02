@@ -29,7 +29,6 @@
     background: var(--color-accent);
     color: var(--color-surface);
     padding: .5rem .75rem;
-    font-weight: 700
 }
 
 .confirm-dialog-action--danger {

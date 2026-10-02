@@ -43,8 +43,6 @@
 
 .eyebrow {
   color: var(--color-accent);
-  font-size: 0.85rem;
-  font-weight: 700;
   letter-spacing: 0.14em;
   margin: 0 0 0.5rem;
   text-transform: uppercase;
@@ -53,7 +51,6 @@
 h1 {
   color: var(--color-text);
   font-size: clamp(1.85rem, 4.5vw, 3.25rem);
-  font-weight: 900;
   line-height: 1.05;
   margin: 0 0 0.85rem;
   overflow-wrap: break-word;
@@ -132,7 +129,6 @@ h1 span {
 .card-heading,
 .perks-heading {
   color: var(--color-highlight);
-  font-weight: 700;
   margin: 0 0 0.5rem;
 }
 
@@ -149,7 +145,6 @@ h1 span {
 
 .card-subtext {
   color: var(--color-text-muted);
-  font-size: 0.95rem;
   line-height: 1.5;
   margin: 0 0 1.25rem;
 }
@@ -163,7 +158,6 @@ h1 span {
   color: var(--color-text);
   font-family: monospace;
   font-size: 1.15rem;
-  font-weight: 700;
   letter-spacing: 0.05em;
   padding: 0.65rem 0.85rem;
   outline: none;
@@ -183,8 +177,6 @@ h1 span {
   border: 1px solid var(--color-border);
   box-shadow: 3px 3px 0 var(--color-shadow);
   cursor: pointer;
-  font-size: 1.05rem;
-  font-weight: 700;
   padding: 0.75rem 1.25rem;
   min-height: 44px;
 }
@@ -210,8 +202,6 @@ h1 span {
   border: 1px solid var(--color-border);
   box-shadow: 3px 3px 0 var(--color-shadow);
   cursor: pointer;
-  font-size: 1.05rem;
-  font-weight: 700;
   padding: 0.75rem 1.5rem;
   width: 100%;
   max-width: 22rem;
@@ -228,10 +218,8 @@ h1 span {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
   text-decoration: none;
   padding: 0.65rem 1rem;
-  font-size: 0.95rem;
   min-height: 44px;
   border: 1px solid var(--color-border);
   box-shadow: 2px 2px 0 var(--color-shadow);
@@ -256,8 +244,6 @@ h1 span {
   border: 1px solid var(--color-accent);
   color: var(--color-accent);
   padding: 0.65rem 0.85rem;
-  font-weight: 700;
-  font-size: 0.9rem;
   text-decoration: none;
   min-height: 44px;
   line-height: 1.4;

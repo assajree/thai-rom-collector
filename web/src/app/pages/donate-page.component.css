@@ -28,8 +28,6 @@
 
 .eyebrow {
   color: var(--color-accent);
-  font-size: .85rem;
-  font-weight: 700;
   letter-spacing: .14em;
   margin: 0 0 .85rem;
   text-transform: uppercase;
@@ -45,7 +43,6 @@ p {
 h1 {
   color: var(--color-text);
   font-size: clamp(2.7rem, 7vw, 6.7rem);
-  font-weight: 900;
   line-height: .92;
   margin-bottom: 1.5rem;
 }
@@ -73,7 +70,6 @@ h1 span {
 
 .back-link {
   color: var(--color-highlight);
-  font-weight: 700;
   text-underline-offset: 4px;
 }
 
@@ -136,7 +132,6 @@ h2 {
   cursor: pointer;
   display: flex;
   font-size: clamp(1.15rem, 2.2vw, 1.6rem);
-  font-weight: 700;
   gap: .7rem;
   margin-bottom: -1px;
   padding: 0 0 1rem;

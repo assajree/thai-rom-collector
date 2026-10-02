@@ -11,6 +11,14 @@ Split a section out of this file into its own `rules/*.md` file (referenced back
 
 Keep a section inline in `AGENTS.md` when it's short and stable (a one-off convention or constraint that doesn't keep growing) and broadly relevant to most tasks in this repo — splitting those out just fragments the file without saving tokens.
 
+## Proposal & Option Ordering
+
+When proposing solutions, options, or alternatives to the user—including during `/grill-me`, interactive questions, design reviews, and planning:
+
+- Always order choices starting from the smallest, least invasive change (minimal diff / simplest fix) first.
+- Progress towards broader refactors, larger architectural overhauls, or heavier changes last.
+- Default to recommending the lowest-friction, smallest-surface-area option that fully satisfies the user's requirements without unnecessary complexity.
+
 ## Project Structure
 
 ```text
@@ -72,6 +80,8 @@ Always separate Angular components (both pages and reusable components) into dis
 ## UI Design & Styling Patterns
 
 When designing, building, or modifying UI components, layouts, or pages, read `docs/design-pattern-knowledge.md` first. Follow the established design patterns, including the 3-column app shell constraints (overflow prevention), multi-theme CSS variable tokens, retro/arcade component structures, font compatibility, and Angular style budget guidelines.
+
+Always use semantic theme CSS variables (`var(--color-*)`) for all colors in UI components, templates, and styles. Do not hardcode HEX/RGB/HSL color values or use static Tailwind color utility classes (e.g. `bg-white`, `text-black`, `bg-slate-800`, `text-pink-600`) in component files, as they break multi-theme compatibility. Literal color definitions are strictly restricted to theme token blocks in `styles.css`.
 
 ## Mobile Layout & Navigation Patterns
 

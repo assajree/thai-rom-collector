@@ -1,15 +1,25 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
 .search-console {
-    display: block;
-    margin-inline: auto;
-    max-width: 48rem;
+  box-sizing: border-box;
+  display: block;
+  margin: 0;
+  max-width: 100%;
+  width: 100%;
 }
 
 .search-console .admin-search-field {
   align-items: stretch;
+  box-sizing: border-box;
   gap: 0.55rem;
+  max-width: 100%;
   min-height: 2.5rem;
   overflow: hidden;
   padding: 0 0 0 0.75rem;
+  width: 100%;
 }
 
 .search-console .admin-search-icon {
@@ -35,7 +45,6 @@
   cursor: pointer;
   display: inline-flex;
   flex: 0 0 2.5rem;
-  font-size: 1rem;
   justify-content: center;
   line-height: 1;
   padding: 0;
@@ -63,64 +72,79 @@
 }
 
 .filter-chips {
-    display: flex;
-    gap: 1rem;
-    margin: 2rem auto 0;
-    max-width: 48rem;
-    overflow-x: auto;
-    padding: 0 0.4rem 0.5rem;
+  box-sizing: border-box;
+  display: flex;
+  gap: 1rem;
+  margin: 0.75rem 0 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding: 0 0.4rem 0.5rem;
+  width: 100%;
 }
 
 .filter-chip {
-    border: 3px solid var(--color-shadow);
-    color: var(--color-shadow);
-    font-family: inherit;
-    font-weight: 800;
-    padding: 0.45rem 1.1rem;
-    white-space: nowrap;
-    clip-path: polygon(12% 0, 88% 0, 100% 25%, 100% 75%, 88% 100%, 12% 100%, 0 75%, 0 25%);
-    padding-inline: 1.45rem;
+  border: 3px solid var(--color-shadow);
+  color: var(--color-shadow);
+  font-family: inherit;
+  padding: 0.45rem 1.1rem;
+  white-space: nowrap;
+  clip-path: polygon(12% 0, 88% 0, 100% 25%, 100% 75%, 88% 100%, 12% 100%, 0 75%, 0 25%);
+  padding-inline: 1.45rem;
 }
 
 .filter-chip--green {
-    background: var(--color-status-success);
+  background: var(--color-status-success);
 }
 
 .filter-chip--selected {
-    outline: 3px solid var(--color-text);
-    outline-offset: 2px;
+  outline: 3px solid var(--color-text);
+  outline-offset: 2px;
 }
 
 .filter-chip--clear {
-    background: var(--color-surface);
-    color: var(--color-shadow);
+  background: var(--color-surface);
+  color: var(--color-shadow);
 }
 
 .sort-toggle {
-    display: none;
+  display: none;
+}
+
+.sort-toggle--closed {
+  display: block !important;
+}
+
+.sort-row__titlebar {
+  display: none;
+}
+
+.sort-row--collapsed {
+  display: none !important;
 }
 
 .sort-row {
-    align-items: center;
-    color: var(--color-text);
-    display: flex;
-    flex-wrap: wrap;
-    gap: .55rem;
-    justify-content: flex-end;
-    margin: 1.4rem auto 0;
-    max-width: 48rem;
+  align-items: center;
+  box-sizing: border-box;
+  color: var(--color-text);
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  justify-content: flex-end;
+  margin: 0.75rem 0 0;
+  max-width: 100%;
+  width: 100%;
 }
 
 .sort-field {
-    align-items: center;
-    display: flex;
-    gap: .55rem;
+  align-items: center;
+  display: flex;
+  gap: .55rem;
 }
 
 .sort-field label {
-    align-self: center;
-    margin: 0;
-    white-space: nowrap;
+  align-self: center;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .sort-row button {
@@ -140,7 +164,7 @@
 }
 
 .sort-row button:hover {
-    background: var(--color-accent);
+  background: var(--color-accent);
 }
 
 .control-autocomplete {
@@ -182,7 +206,6 @@
   justify-content: center;
   padding: 0 !important;
   font-size: 1.15rem;
-  font-weight: 700;
   line-height: 1;
   opacity: 0.7;
 }
@@ -237,60 +260,59 @@
 
 .control-autocomplete__empty {
   color: var(--color-text-muted);
-  font-size: 0.875rem;
   padding: 0.55rem 0.65rem;
 }
 
 @media (max-width: 34rem) {
-    .sort-toggle {
-        background: var(--color-surface);
-        border: 1px solid var(--color-shadow);
-        box-shadow: 2px 2px var(--color-shadow);
-        color: var(--color-text);
-        cursor: pointer;
-        display: block;
-        font: inherit;
-        font-weight: 800;
-        margin: .75rem auto 0;
-        max-width: 48rem;
-        padding: .45rem .7rem;
-        width: 100%;
-    }
+  .sort-toggle {
+    background: var(--color-surface);
+    border: 1px solid var(--color-shadow);
+    box-shadow: 2px 2px var(--color-shadow);
+    box-sizing: border-box;
+    color: var(--color-text);
+    cursor: pointer;
+    display: block;
+    font: inherit;
+    margin: .75rem 0 0;
+    max-width: 100%;
+    padding: .45rem .7rem;
+    width: 100%;
+  }
 
-    .sort-toggle:hover {
-        background: var(--color-accent);
-    }
+  .sort-toggle:hover {
+    background: var(--color-accent);
+  }
 
-    .sort-row {
-        align-items: stretch;
-        display: none;
-        flex-direction: column;
-        gap: .75rem;
-    }
+  .sort-row {
+    align-items: stretch;
+    display: none;
+    flex-direction: column;
+    gap: .75rem;
+  }
 
-    .sort-row--open {
-        display: flex;
-    }
+  .sort-row--open {
+    display: flex;
+  }
 
-    .sort-field {
-        align-items: center;
-        display: grid;
-        grid-template-columns: minmax(5rem, auto) 1fr;
-        width: 100%;
-    }
+  .sort-field {
+    align-items: center;
+    display: grid;
+    grid-template-columns: minmax(5rem, auto) 1fr;
+    width: 100%;
+  }
 
-    .sort-field > select,
-    .sort-field > button,
-    .sort-field .control-autocomplete {
-        min-width: 0;
-        width: 100%;
-    }
+  .sort-field>select,
+  .sort-field>button,
+  .sort-field .control-autocomplete {
+    min-width: 0;
+    width: 100%;
+  }
 
-    .sort-field--sort {
-        grid-template-columns: minmax(5rem, auto) 1fr;
-    }
+  .sort-field--sort {
+    grid-template-columns: minmax(5rem, auto) 1fr;
+  }
 
-    .sort-field--sort > button {
-        grid-column: 2;
-    }
+  .sort-field--sort>button {
+    grid-column: 2;
+  }
 }

@@ -10,7 +10,6 @@
 
 .eyebrow {
     color: var(--color-accent);
-    font-weight: 700;
     letter-spacing: .12em;
     text-transform: uppercase;
 }
@@ -29,7 +28,6 @@
 
 label {
     display: block;
-    font-weight: 700;
 }
 
 .cost-input-row {

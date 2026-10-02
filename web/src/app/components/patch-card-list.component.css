@@ -1,3 +1,12 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.win98-card-titlebar {
+  display: none;
+}
+
 .patch-card {
   background: var(--color-surface);
   display: grid;
@@ -75,12 +84,14 @@
 
 /* Compact retro web card */
 .patch-card {
+  box-sizing: border-box;
+  color: var(--color-text);
   gap: .45rem;
   grid-template-columns: minmax(0, 250px) minmax(0, 1fr);
-  margin: 0 auto .7rem;
-  max-width: 42rem;
+  margin: 0 0 .75rem;
+  max-width: 100%;
   padding: .3rem;
-  color: var(--color-text);
+  width: 100%;
 }
 
 .patch-cover-image {
@@ -189,7 +200,6 @@
 
 .translator-link-icon {
   display: inline-block;
-  font-size: 1rem;
   line-height: inherit;
   vertical-align: baseline;
 }

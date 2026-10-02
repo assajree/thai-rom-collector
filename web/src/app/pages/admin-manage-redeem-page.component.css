@@ -38,8 +38,6 @@
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
-  font-size: 0.85rem;
-  font-weight: 700;
   padding: 0.5rem 0.6rem;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
@@ -56,6 +54,7 @@
     gap: 0.5rem;
     margin-bottom: 1.5rem;
   }
+
   .tab-btn {
     flex: 0 0 auto;
     font-size: 1rem;
@@ -79,7 +78,6 @@
 .tab-count-badge {
   background: rgba(255, 255, 255, 0.15);
   color: inherit;
-  font-size: 0.75rem;
   padding: 0.1rem 0.4rem;
   border-radius: 9999px;
   line-height: 1;
@@ -149,8 +147,6 @@
 .badge-available {
   display: inline-flex;
   align-items: center;
-  font-size: 0.7rem;
-  font-weight: 700;
   color: var(--color-status-success);
   background: color-mix(in srgb, var(--color-status-success) 15%, transparent);
   border: 1px solid var(--color-status-success);
@@ -164,8 +160,6 @@
 .badge-redeemed {
   display: inline-flex;
   align-items: center;
-  font-size: 0.7rem;
-  font-weight: 700;
   color: var(--color-status-error);
   background: color-mix(in srgb, var(--color-status-error) 15%, transparent);
   border: 1px solid var(--color-status-error);
@@ -177,9 +171,9 @@
 }
 
 @media (min-width: 640px) {
+
   .badge-available,
   .badge-redeemed {
-    font-size: 0.75rem;
     padding: 0.15rem 0.5rem;
   }
 }

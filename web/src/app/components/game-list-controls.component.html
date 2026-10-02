@@ -12,9 +12,23 @@
   </div>
 </div>
 
-<button type="button" class="sort-toggle" [attr.aria-expanded]="sortOpen" aria-controls="game-sort-row" (click)="sortOpen = !sortOpen">ตัวกรอง</button>
+<button
+  type="button"
+  class="sort-toggle"
+  [class.sort-toggle--closed]="sortCollapsed"
+  [attr.aria-expanded]="sortOpen && !sortCollapsed"
+  aria-controls="game-sort-row"
+  (click)="sortCollapsed ? openSort() : (sortOpen = !sortOpen)"
+>ตัวกรอง</button>
 
-<div id="game-sort-row" class="sort-row" [class.sort-row--open]="sortOpen">
+<div id="game-sort-row" class="sort-row" [class.sort-row--open]="sortOpen" [class.sort-row--collapsed]="sortCollapsed">
+  <div class="sort-row__titlebar">
+    <div class="sort-row__title">
+      <span class="sort-row__icon" aria-hidden="true">🔍</span>
+      <span class="sort-row__text">ตัวกรองและจัดเรียง</span>
+    </div>
+    <button type="button" class="win98-ctrl-btn sort-row__close-btn" (click)="closeSort(); $event.stopPropagation()" aria-label="ปิดตัวกรอง">✕</button>
+  </div>
    @if (routeKind !== 'translator') {
     <div class="sort-field">
       <label for="filter-translator">ทีมแปล</label>

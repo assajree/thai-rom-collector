@@ -33,11 +33,9 @@
 
 .article-card span {
     color: var(--color-brand);
-    font-weight: 800
 }
 
 .article-meta {
-    font-size: .8rem;
     color: var(--color-text-muted)
 }
 

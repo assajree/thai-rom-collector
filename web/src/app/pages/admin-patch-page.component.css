@@ -43,7 +43,6 @@ legend {
 label.required::before {
   color: var(--color-brand);
   content: '* ';
-  font-weight: 700;
 }
 
 .tag-autocomplete {
@@ -110,7 +109,6 @@ label.required::before {
 .selected-tags button {
   color: var(--color-brand);
   font-size: 1.1rem;
-  font-weight: 700;
   line-height: 1;
 }
 

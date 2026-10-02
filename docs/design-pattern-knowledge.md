@@ -10,10 +10,10 @@
 โครงสร้างหลักของเว็บไซต์ใน `web/src/app/app.component.html` จัดวางด้วย CSS Grid ดังนี้:
 
 - **Desktop (≥ 1200px):**
-  - คอลัมน์ที่ 1: `max-content` (Left Navigation Rail: `.retro-rail`)
+  - คอลัมน์ที่ 1: `288px` (Left Navigation Rail: `.retro-rail`)
   - คอลัมน์ที่ 2: `minmax(0, 1fr)` (Center Content Area: `.app-content`)
   - คอลัมน์ที่ 3: `288px` (Right Ad Sidebar: `.right-ad-sidebar`)
-- **Tablet (769px - 1199px):** 2 คอลัมน์ (`max-content minmax(0, 1fr)`) ซ่อนแถบโฆษณาด้านขวา
+- **Tablet (769px - 1199px):** 2 คอลัมน์ (`288px minmax(0, 1fr)`) ซ่อนแถบโฆษณาด้านขวา
 - **Mobile (≤ 768px):** คอลัมน์เดียว เมนูเปลี่ยนเป็น Drawer/Off-canvas
 
 ### 1.2 การป้องกัน Content ทะลุ / ล้นทับ Sidebar (Overflow Prevention)
@@ -41,21 +41,29 @@
 
 ## 2. Multi-Theme Token Architecture
 
-โปรเจกต์รองรับ 2 ธีมหลัก คือ **Blue Neon Theme (Default)** และ **Pocket-Pet Theme (LCD / Retro Handheld)** ผ่านการสลับ `data-theme` บน `<body>`
+โปรเจกต์รองรับ 3 ธีมหลัก คือ:
+1. **Blue Neon Theme (Default)** (`data-theme=""`)
+2. **Pocket-Pet Theme (LCD / Retro Handheld)** (`data-theme="pocket-pet"`)
+3. **Classic Blue Theme (Windows 98 Classic)** (`data-theme="classic-blue"`) - แรงบันดาลใจจากสถาปัตยกรรม Windows 98 พร้อมแถบ Title Bar สีน้ำเงินไล่เฉด, แถบวิ่งสีเหลือง Infobar, เมนู Explorer Tree View, และการ์ดหน้าต่าง 3D Bevel คม 0px
 
-### 2.1 CSS Variables ห้ามฮาร์ดโค้ดสี (Semantic Color Tokens)
-ห้ามใช้ Tailwind utility class ที่เป็นสีคงที่ (เช่น `bg-slate-800`, `text-pink-600`, `bg-white`) ในหน้าของระบบ เพราะจะทำให้การแสดงผลพังเมื่อเปลี่ยนธีม ให้ใช้ CSS Variables เสมอ:
+### 2.1 กฎการใช้สี: ใช้เฉพาะตัวแปรของ Theme เท่านั้น (Strict Theme Color Token Rule)
+> [!IMPORTANT]
+> **ห้ามฮาร์ดโค้ดสีเด็ดขาด (No Hardcoded Colors)**:
+> 1. **ห้ามใช้สีคงที่ (HEX, RGB, HSL)**: เช่น `#ffffff`, `#000000`, `rgb(...)` ในไฟล์ `.component.css` หรือ inline style ของ Component ใดๆ
+> 2. **ห้ามใช้ Tailwind Color Classes**: เช่น `bg-white`, `text-black`, `bg-slate-800`, `text-blue-500`, `border-gray-300` ในหน้าหรือคอมโพเนนต์ของระบบ
+> 3. **ทุกสีใน UI ต้องเรียกผ่าน CSS Variables เท่านั้น**: ใช้ `var(--color-*)` ในการกำหนดสีเสมอ เพื่อให้รองรับการเปลี่ยนธีม (Multi-Theme) ได้อย่างสมบูรณ์แบบ
+> 4. **ข้อยกเว้นเพียงจุดเดียว**: อนุญาตให้ระบุค่าสีคงที่ได้เฉพาะในไฟล์ `src/styles.css` ในส่วนที่กำหนดค่า Token ให้กับตัวแปรของแต่ละธีม (`:root` และ `body[data-theme='...']`) เท่านั้น
 
 | CSS Variable | ความหมาย / การใช้งาน | ตัวอย่างการใช้ |
 |---|---|---|
-| `--color-surface` | สีพื้นหลังหลักของหน้าเว็บ / Header | `background: var(--color-surface);` |
-| `--color-surface-light` | สีพื้นหลังการ์ด / กล่องคอนเทนต์ | `background: var(--color-surface-light);` |
+| `--color-surface` | สีพื้นหลังหลักของหน้าเว็บ / Header / Sidebar | `background: var(--color-surface);` |
+| `--color-surface-light` | สีพื้นหลังการ์ด / กล่องคอนเทนต์หลัก | `background: var(--color-surface-light);` |
 | `--color-border` | เส้นขอบของหน้าต่าง / การ์ด / เส้นแบ่ง | `border: 1px solid var(--color-border);` |
 | `--color-text` | สีตัวอักษรหลัก (High Contrast) | `color: var(--color-text);` |
 | `--color-text-muted` | สีตัวอักษรรอง / วันที่ / คำอธิบายย่อย | `color: var(--color-text-muted);` |
-| `--color-brand` | สีแบรนด์หลัก (ชมพู Neon / น้ำตาล LCD) | สีไอคอนหัวใจ, Badge สำคัญ |
-| `--color-highlight` | สีไฮไลต์เด่น (เหลือง Neon / น้ำตาลเข้ม) | ยอดเงิน, ข้อความหัวข้อเด่น |
-| `--color-accent` | สีเน้นย้ำ (เขียวชาร์ตรูส / สีทอง) | ขอบปุ่ม active, ปุ่ม action สำคัญ |
+| `--color-brand` | สีแบรนด์หลัก (ชมพู Neon / น้ำตาล LCD / น้ำเงิน 98) | สีไอคอนหัวใจ, Badge สำคัญ |
+| `--color-highlight` | สีไฮไลต์เด่น (เหลือง Neon / น้ำตาลเข้ม / น้ำเงินเข้ม) | ยอดเงิน, ข้อความหัวข้อเด่น |
+| `--color-accent` | สีเน้นย้ำ (เขียวชาร์ตรูส / สีทอง / เหลือง Infobar) | ขอบปุ่ม active, ปุ่ม action สำคัญ |
 | `--color-shadow` | เงา Retro Pixel Shadow (เงาทึบ 0 blur) | `box-shadow: 4px 4px 0 var(--color-shadow);` |
 
 ---
@@ -116,7 +124,11 @@
 > - **ผิด:** `25 ก.ย. 2569 · 12:00 น.`
 > - **ถูก:** `25 ก.ย. 2569 - 12:00 น.`
 
-### 4.2 Full-Space Page Standard
+### 4.2 Minimum Font Size (ขนาดตัวอักษรขั้นต่ำ 1rem)
+> [!IMPORTANT]
+> ขนาดตัวอักษรที่เล็กที่สุดที่อนุญาตให้ใช้ในระบบคือ **`1rem`** (เทียบเท่า `text-base` หรือ `16px`) ห้ามใช้ขนาดที่เล็กกว่า 1rem (เช่น `text-xs`, `text-sm`, `0.875rem`, `0.75rem`) ในเนื้อหาและองค์ประกอบ UI เพื่อให้อ่านภาษาไทยได้ชัดเจนและรองรับฟอนต์ `RD Chulajaruek` ได้อย่างเหมาะสม
+
+### 4.3 Full-Space Page Standard
 ทุกหน้าที่สร้างใหม่ต้องครอบคลุมพื้นที่ความสูงและกว้างทั้งหมดของคอนเทนต์กลาง:
 ```css
 .page-container {
