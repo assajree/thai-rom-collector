@@ -434,12 +434,20 @@ body[data-theme='classic-blue'] .sort-row__titlebar {
   box-sizing: border-box;
   letter-spacing: 0.5px;
   user-select: none;
+  border-bottom: none;
 }
 
 body[data-theme='classic-blue'] .sort-row__title {
   display: flex;
   align-items: center;
   gap: 6px;
+  left: auto;
+  position: static;
+  transform: none;
+}
+
+body[data-theme='classic-blue'] .sort-row__icon {
+  display: inline;
 }
 
 body[data-theme='classic-blue'] .sort-row__text {

@@ -25,7 +25,9 @@ export class GameListControlsComponent implements OnChanges {
   @Output() filtersChanged = new EventEmitter<GameListFilters>();
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
   protected sortOpen = false;
-  protected sortCollapsed = false;
+  protected sortCollapsed = true;
+  private initializedRoute = false;
+  private previousRouteKind: BrowseRouteKind | null = null;
 
   // Translator autocomplete state
   protected translatorSearchText = '';
@@ -40,6 +42,12 @@ export class GameListControlsComponent implements OnChanges {
   protected highlightedSystemIndex = -1;
 
   ngOnChanges(): void {
+    if (!this.initializedRoute || this.previousRouteKind !== this.routeKind) {
+      this.sortCollapsed = true;
+      this.sortOpen = false;
+      this.previousRouteKind = this.routeKind;
+      this.initializedRoute = true;
+    }
     if (!this.translatorOpen) {
       this.translatorSearchText = this.selectedTranslatorName();
     }
@@ -224,6 +232,10 @@ export class GameListControlsComponent implements OnChanges {
   protected openSort(): void {
     this.sortOpen = true;
     this.sortCollapsed = false;
+  }
+
+  protected toggleSort(): void {
+    this.sortCollapsed ? this.openSort() : this.closeSort();
   }
 
   protected clearKeyword(): void {

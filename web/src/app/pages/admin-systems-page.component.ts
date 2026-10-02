@@ -2,6 +2,7 @@ import { AsyncPipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { StatusMessageService } from '../shared/status-message.service';
 import { SystemMaster, SystemRepository } from '../repositories/system.repository';
@@ -18,7 +19,7 @@ export class AdminSystemsPageComponent {
   private readonly router = inject(Router);
   private readonly repository = inject(SystemRepository);
   private readonly status = inject(StatusMessageService);
-  protected readonly systems = this.repository.watchAll();
+  protected readonly systems = this.repository.watchAll().pipe(map((systems) => [...systems].sort((a, b) => a.shortName.localeCompare(b.shortName, 'th', { sensitivity: 'base' }) || a.name.localeCompare(b.name, 'th', { sensitivity: 'base' }))));
   protected dialogOpen = false;
   protected editingId: string | null = null;
   protected shortName = '';

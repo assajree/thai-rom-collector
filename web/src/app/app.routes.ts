@@ -61,11 +61,13 @@ export const routes: Routes = [
   { path: 'admin/maintenance', loadComponent: () => import('./pages/admin-maintenance-page.component').then(m => m.AdminMaintenancePageComponent), canActivate: [adminGuard] },
   {
     path: 'add',
-    component: AdminPatchPageComponent
+    component: AdminPatchPageComponent,
+    canDeactivate: [(component: AdminPatchPageComponent) => component.canDeactivate()]
   },
   {
     path: 'add/:id',
-    component: AdminPatchPageComponent
+    component: AdminPatchPageComponent,
+    canDeactivate: [(component: AdminPatchPageComponent) => component.canDeactivate()]
   },
   {
     path: 'admin/systems',
@@ -90,4 +92,3 @@ export const routes: Routes = [
     redirectTo: ''
   }
 ];
-

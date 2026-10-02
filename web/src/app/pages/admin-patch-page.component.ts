@@ -78,10 +78,18 @@ export class AdminPatchPageComponent {
   protected savingSystem = false;
   protected loadingData = false;
   private editLoadRequest = 0;
+  private skipDeactivateConfirm = false;
+
+  canDeactivate(): boolean {
+    if (this.skipDeactivateConfirm) return true;
+    return window.confirm('ต้องการออกจากหน้านี้หรือไม่? ข้อมูลที่ยังไม่ได้บันทึกจะหายไป');
+  }
   constructor() {
     this.initializeFilenameGeneration();
     this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-      void this.loadEditRecord(params.get('id'));
+      const id = params.get('id');
+      if (!id) this.skipDeactivateConfirm = false;
+      void this.loadEditRecord(id);
     });
   }
 
@@ -227,7 +235,9 @@ export class AdminPatchPageComponent {
       this.selectedTags = []; this.cover = undefined; this.coverInput?.clear();
       if (this.editId) {
         this.editId = null;
-        void this.router.navigateByUrl('/add', { replaceUrl: true });
+        this.skipDeactivateConfirm = true;
+        window.close();
+        if (!window.closed) void this.router.navigateByUrl('/add', { replaceUrl: true });
       }
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } catch (error) {

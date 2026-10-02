@@ -223,13 +223,17 @@ describe('GameListControlsComponent', () => {
   });
 
   it('collapses sort row when close button in titlebar is clicked and re-opens when toggle is clicked', () => {
+    const sortRow = fixture.nativeElement.querySelector('#game-sort-row') as HTMLElement;
+    const restoreBtn = fixture.nativeElement.querySelector('.sort-toggle') as HTMLButtonElement;
+    restoreBtn.click();
+    fixture.detectChanges();
+
     const closeBtn = fixture.nativeElement.querySelector('.sort-row__close-btn') as HTMLButtonElement;
     expect(closeBtn).toBeTruthy();
 
     closeBtn.click();
     fixture.detectChanges();
 
-    const sortRow = fixture.nativeElement.querySelector('#game-sort-row') as HTMLElement;
     const toggleBtn = fixture.nativeElement.querySelector('.sort-toggle') as HTMLButtonElement;
 
     expect(sortRow.classList.contains('sort-row--collapsed')).toBeTrue();
@@ -241,5 +245,9 @@ describe('GameListControlsComponent', () => {
     expect(sortRow.classList.contains('sort-row--collapsed')).toBeFalse();
     expect(sortRow.classList.contains('sort-row--open')).toBeTrue();
     expect(toggleBtn.classList.contains('sort-toggle--closed')).toBeFalse();
+  });
+
+  it('starts collapsed in every mode', () => {
+    expect(fixture.nativeElement.querySelector('#game-sort-row').classList.contains('sort-row--collapsed')).toBeTrue();
   });
 });
