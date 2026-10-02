@@ -12,104 +12,107 @@
   </div>
 </div>
 
-<button
-  type="button"
-  class="sort-toggle"
-  [class.sort-toggle--closed]="sortCollapsed"
-  [attr.aria-expanded]="sortOpen && !sortCollapsed"
-  aria-controls="game-sort-row"
-  (click)="sortCollapsed ? openSort() : (sortOpen = !sortOpen)"
->ตัวกรอง</button>
-
 <div id="game-sort-row" class="sort-row" [class.sort-row--open]="sortOpen" [class.sort-row--collapsed]="sortCollapsed">
-  <div class="sort-row__titlebar">
+  <div class="sort-row__titlebar" (click)="sortCollapsed ? openSort() : null" [style.cursor]="sortCollapsed ? 'pointer' : null">
     <div class="sort-row__title">
       <span class="sort-row__icon" aria-hidden="true">🔍</span>
       <span class="sort-row__text">ตัวกรองและจัดเรียง</span>
     </div>
-    <button type="button" class="win98-ctrl-btn sort-row__close-btn" (click)="closeSort(); $event.stopPropagation()" aria-label="ปิดตัวกรอง">✕</button>
+    <button
+      type="button"
+      class="win98-ctrl-btn sort-toggle"
+      [class.sort-row__close-btn]="!sortCollapsed"
+      [class.sort-row__minimize-btn]="!sortCollapsed"
+      [class.sort-row__restore-btn]="sortCollapsed"
+      [class.sort-toggle--closed]="sortCollapsed"
+      (click)="sortCollapsed ? openSort() : closeSort(); $event.stopPropagation()"
+      [attr.aria-label]="sortCollapsed ? 'ขยายตัวกรอง' : 'ย่อตัวกรอง'"
+    >{{ sortCollapsed ? '□' : '_' }}</button>
   </div>
-   @if (routeKind !== 'translator') {
-    <div class="sort-field">
-      <label for="filter-translator">ทีมแปล</label>
-      <div class="control-autocomplete" (click)="$event.stopPropagation()">
-        <input
-          id="filter-translator"
-          class="control-autocomplete__input app-select"
-          type="text"
-          placeholder="ทุกทีม"
-          [value]="translatorSearchText"
-          (focus)="openTranslator($event)"
-          (input)="onTranslatorInput($any($event.target).value)"
-          (keydown)="onTranslatorKeydown($event)"
-          autocomplete="off"
-          role="combobox"
-          [attr.aria-expanded]="translatorOpen"
-          aria-controls="filter-translator-options"
-        />
-        @if (draft.translatorId || translatorSearchText) {
-          <button type="button" class="control-autocomplete__clear" (click)="clearTranslator($event)" aria-label="ล้างทีมแปล" title="ล้างทีมแปล">x</button>
-        }
-        @if (translatorOpen) {
-          <ul id="filter-translator-options" class="control-autocomplete__list" role="listbox">
-            <li [class.control-autocomplete__item--active]="highlightedTranslatorIndex === -1">
-              <button class="control-autocomplete__option button" type="button" role="option" (click)="selectTranslator(null)">ทุกทีม</button>
-            </li>
-            @for (translator of filteredTranslators(); track translator.id; let i = $index) {
-              <li [class.control-autocomplete__item--active]="highlightedTranslatorIndex === i">
-                <button class="control-autocomplete__option button" type="button" role="option" (click)="selectTranslator(translator)">{{ translator.name }}</button>
+
+  <div class="sort-row__content">
+    @if (routeKind !== 'translator') {
+      <div class="sort-field">
+        <label for="filter-translator">ทีมแปล</label>
+        <div class="control-autocomplete" (click)="$event.stopPropagation()">
+          <input
+            id="filter-translator"
+            class="control-autocomplete__input app-select"
+            type="text"
+            placeholder="ทุกทีม"
+            [value]="translatorSearchText"
+            (focus)="openTranslator($event)"
+            (input)="onTranslatorInput($any($event.target).value)"
+            (keydown)="onTranslatorKeydown($event)"
+            autocomplete="off"
+            role="combobox"
+            [attr.aria-expanded]="translatorOpen"
+            aria-controls="filter-translator-options"
+          />
+          @if (draft.translatorId || translatorSearchText) {
+            <button type="button" class="control-autocomplete__clear" (click)="clearTranslator($event)" aria-label="ล้างทีมแปล" title="ล้างทีมแปล">x</button>
+          }
+          @if (translatorOpen) {
+            <ul id="filter-translator-options" class="control-autocomplete__list" role="listbox">
+              <li [class.control-autocomplete__item--active]="highlightedTranslatorIndex === -1">
+                <button class="control-autocomplete__option button" type="button" role="option" (click)="selectTranslator(null)">ทุกทีม</button>
               </li>
-            }
-            @if (filteredTranslators().length === 0) {
-              <li class="control-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</li>
-            }
-          </ul>
-        }
+              @for (translator of filteredTranslators(); track translator.id; let i = $index) {
+                <li [class.control-autocomplete__item--active]="highlightedTranslatorIndex === i">
+                  <button class="control-autocomplete__option button" type="button" role="option" (click)="selectTranslator(translator)">{{ translator.name }}</button>
+                </li>
+              }
+              @if (filteredTranslators().length === 0) {
+                <li class="control-autocomplete__empty">ไม่พบทีมแปลที่ตรงกัน</li>
+              }
+            </ul>
+          }
+        </div>
       </div>
-    </div>
-  }
-  @if (routeKind !== 'system' && routeKind !== 'port') {
-    <div class="sort-field">
-      <label for="filter-system">เครื่องเกม</label>
-      <div class="control-autocomplete" (click)="$event.stopPropagation()">
-        <input
-          id="filter-system"
-          class="control-autocomplete__input app-select"
-          type="text"
-          placeholder="ทุกเครื่อง"
-          [value]="systemSearchText"
-          (focus)="openSystem($event)"
-          (input)="onSystemInput($any($event.target).value)"
-          (keydown)="onSystemKeydown($event)"
-          autocomplete="off"
-          role="combobox"
-          [attr.aria-expanded]="systemOpen"
-          aria-controls="filter-system-options"
-        />
-        @if (draft.system || systemSearchText) {
-          <button type="button" class="control-autocomplete__clear" (click)="clearSystem($event)" aria-label="ล้างเครื่องเกม" title="ล้างเครื่องเกม">x</button>
-        }
-        @if (systemOpen) {
-          <ul id="filter-system-options" class="control-autocomplete__list" role="listbox">
-            <li [class.control-autocomplete__item--active]="highlightedSystemIndex === -1">
-              <button class="control-autocomplete__option button" type="button" role="option" (click)="selectSystem(null)">ทุกเครื่อง</button>
-            </li>
-            @for (sys of filteredSystems(); track sys.shortName; let i = $index) {
-              <li [class.control-autocomplete__item--active]="highlightedSystemIndex === i">
-                <button class="control-autocomplete__option button" type="button" role="option" (click)="selectSystem(sys)">{{ sys.name }}</button>
+    }
+    @if (routeKind !== 'system' && routeKind !== 'port') {
+      <div class="sort-field">
+        <label for="filter-system">เครื่องเกม</label>
+        <div class="control-autocomplete" (click)="$event.stopPropagation()">
+          <input
+            id="filter-system"
+            class="control-autocomplete__input app-select"
+            type="text"
+            placeholder="ทุกเครื่อง"
+            [value]="systemSearchText"
+            (focus)="openSystem($event)"
+            (input)="onSystemInput($any($event.target).value)"
+            (keydown)="onSystemKeydown($event)"
+            autocomplete="off"
+            role="combobox"
+            [attr.aria-expanded]="systemOpen"
+            aria-controls="filter-system-options"
+          />
+          @if (draft.system || systemSearchText) {
+            <button type="button" class="control-autocomplete__clear" (click)="clearSystem($event)" aria-label="ล้างเครื่องเกม" title="ล้างเครื่องเกม">x</button>
+          }
+          @if (systemOpen) {
+            <ul id="filter-system-options" class="control-autocomplete__list" role="listbox">
+              <li [class.control-autocomplete__item--active]="highlightedSystemIndex === -1">
+                <button class="control-autocomplete__option button" type="button" role="option" (click)="selectSystem(null)">ทุกเครื่อง</button>
               </li>
-            }
-            @if (filteredSystems().length === 0) {
-              <li class="control-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</li>
-            }
-          </ul>
-        }
+              @for (sys of filteredSystems(); track sys.shortName; let i = $index) {
+                <li [class.control-autocomplete__item--active]="highlightedSystemIndex === i">
+                  <button class="control-autocomplete__option button" type="button" role="option" (click)="selectSystem(sys)">{{ sys.name }}</button>
+                </li>
+              }
+              @if (filteredSystems().length === 0) {
+                <li class="control-autocomplete__empty">ไม่พบเครื่องเกมที่ตรงกัน</li>
+              }
+            </ul>
+          }
+        </div>
       </div>
+    } 
+    <div class="sort-field sort-field--sort">
+      <label for="sort-patches">เรียงตาม</label>
+      <select class="app-select" id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่เพิ่ม</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option><option value="playTime">ความยาวเกม</option></select>
+      <button type="button" class="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortDirection === 'asc' ? 'น้อย → มาก' : 'มาก → น้อย' }}</button>
     </div>
-  } 
-  <div class="sort-field sort-field--sort">
-    <label for="sort-patches">เรียงตาม</label>
-    <select class="app-select" id="sort-patches" [(ngModel)]="draft.sortBy" (ngModelChange)="emit()"><option value="updateDate">วันที่เพิ่ม</option><option value="gameTitle">ชื่อเกม</option><option value="translatedBy">ทีมแปล</option><option value="system">เครื่องเกม</option><option value="playTime">ความยาวเกม</option></select>
-    <button type="button" class="button" (click)="draft.sortDirection = draft.sortDirection === 'asc' ? 'desc' : 'asc'; emit()">{{ draft.sortDirection === 'asc' ? 'น้อย → มาก' : 'มาก → น้อย' }}</button>
   </div>
 </div>

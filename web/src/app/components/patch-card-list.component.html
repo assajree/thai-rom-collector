@@ -6,11 +6,6 @@
         <span class="win98-title-icon">🎮</span>
         <span class="win98-title-text truncate">THAI ROM DB</span>
       </div>
-      <div class="win98-window-controls">
-        <span class="win98-ctrl-btn">_</span>
-        <span class="win98-ctrl-btn">□</span>
-        <span class="win98-ctrl-btn">✕</span>
-      </div>
     </div>
 
     <div class="patch-cover-wrap">
@@ -18,8 +13,6 @@
       <img class="mock-cover patch-cover-image" [class.patch-cover-image--loaded]="loadedImages().has(patch.id)"
         [attr.loading]="index === 0 ? 'eager' : 'lazy'" decoding="async" [src]="imageUrl(patch)"
         [alt]="'ปกเกม ' + patch.gameTitle" (load)="onImageLoad(patch.id)" (error)="onImageError($event)" />
-      @if (canEdit) { <a class="edit-button button btn-primary" [routerLink]="['/add', patch.id]" target="_blank"
-        rel="noopener noreferrer">แก้ไข</a> }
     </div>
     <div class="patch-card__body">
 
@@ -38,6 +31,15 @@
 
       </div>
 
+      @if (canEdit) {
+      <div class="patch-card__admin-actions">
+        <a class="edit-button button btn-primary" [routerLink]="['/add', patch.id]" target="_blank"
+          rel="noopener noreferrer">
+          <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
+          <span>แก้ไข</span>
+        </a>
+      </div>
+      }
 
       <div class="patch-card__description">
 
@@ -81,6 +83,7 @@
 
 
       </div>
+
       @if (cardTags(patch).length > 0 || patch.walkthroughUrl.trim()) {
       <div class="patch-card__tags-row">
         <span class="patch-card__label patch-card__tags-label">แท็ก:</span>
@@ -92,6 +95,9 @@
           </li> }</ul>
       </div>
       }
+
+
+
       @if (hasDownloadLinks(patch)) {
       <div class="patch-card__links">
         <div class="patch-card__label patch-card__links-label">ลิ้ง:</div>
@@ -118,10 +124,8 @@
           <a [href]="patch.walkthroughUrl" target="_blank" rel="noopener noreferrer">บทสรุป</a>
           }
         </div>
-
       </div>
       }
-
 
     </div>
 

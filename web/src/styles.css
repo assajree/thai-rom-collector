@@ -161,12 +161,6 @@ body[data-theme='classic-blue'] .mobile-menu-button {
   padding: 2px 8px;
 }
 
-body[data-theme='classic-blue'] .win98-window-controls {
-  display: inline-flex;
-  align-items: center;
-  gap: 2px;
-}
-
 body[data-theme='classic-blue'] .win98-ctrl-btn {
   width: 16px;
   height: 14px;
@@ -414,10 +408,12 @@ body[data-theme='classic-blue'] .sort-row {
   align-items: stretch;
 }
 
-@media (max-width: 34rem) {
-  body[data-theme='classic-blue'] .sort-row:not(.sort-row--open) {
-    display: none;
-  }
+body[data-theme='classic-blue'] .sort-row.sort-row--collapsed {
+  padding-bottom: 0;
+}
+
+body[data-theme='classic-blue'] .sort-row.sort-row--collapsed .sort-row__titlebar {
+  margin-bottom: 0;
 }
 
 body[data-theme='classic-blue'] .sort-row__titlebar {
@@ -446,27 +442,34 @@ body[data-theme='classic-blue'] .sort-row__text {
   line-height: 1.2;
 }
 
-body[data-theme='classic-blue'] .sort-row__close-btn {
+body[data-theme='classic-blue'] .sort-row__close-btn,
+body[data-theme='classic-blue'] .sort-row__restore-btn,
+body[data-theme='classic-blue'] .sort-toggle__restore-btn {
   width: 16px;
   height: 14px;
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #000000 #000000 #ffffff;
-  color: #000000;
+  background: #c0c0c0 !important;
+  border: 1px solid !important;
+  border-color: #ffffff #000000 #000000 #ffffff !important;
+  color: #000000 !important;
   font-weight: bold;
-  box-shadow: inset 1px 1px 0px #dfdfdf;
+  box-shadow: inset 1px 1px 0px #dfdfdf !important;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
   line-height: 1;
   outline: none;
+  flex: 0 0 16px;
+  box-sizing: border-box;
 }
 
-body[data-theme='classic-blue'] .sort-row__close-btn:active {
-  border-color: #000000 #ffffff #ffffff #000000;
-  box-shadow: inset 1px 1px 0px #808080;
+body[data-theme='classic-blue'] .sort-row__close-btn:active,
+body[data-theme='classic-blue'] .sort-row__restore-btn:active,
+body[data-theme='classic-blue'] .sort-toggle__restore-btn:active,
+body[data-theme='classic-blue'] .sort-toggle:active .sort-toggle__restore-btn {
+  border-color: #000000 #ffffff #ffffff #000000 !important;
+  box-shadow: inset 1px 1px 0px #808080 !important;
 }
 
 body[data-theme='classic-blue'] .sort-field {
@@ -524,10 +527,6 @@ body[data-theme='classic-blue'] .sort-field--sort>button {
   grid-column: auto !important;
 }
 
-body[data-theme='classic-blue'] .sort-toggle {
-  color: #000000;
-  font-weight: bold;
-}
 
 /* Input Fields & Autocomplete: 3D Sunken Inset */
 body[data-theme='classic-blue'] .app-select,
@@ -609,7 +608,6 @@ body[data-theme='classic-blue'] .patch-cover-wrap {
 
 body[data-theme='classic-blue'] .patch-card .heading .game-title {
   color: #800080;
-  font-weight: bold;
 }
 
 body[data-theme='classic-blue'] .patch-card__description {
@@ -618,15 +616,13 @@ body[data-theme='classic-blue'] .patch-card__description {
 
 body[data-theme='classic-blue'] .patch-card__label {
   color: #404040;
-  font-weight: bold;
 }
 
 /* Buttons: 3D Raised Bevel with Sunken Active State */
 body[data-theme='classic-blue'] .button,
 body[data-theme='classic-blue'] .btn-primary,
 body[data-theme='classic-blue'] .btn-accent,
-body[data-theme='classic-blue'] .sort-toggle,
-body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn) {
+body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn):not(.sort-toggle) {
   background-color: #c0c0c0;
   color: #000000;
   border: 2px solid;
@@ -638,8 +634,7 @@ body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn) {
 
 body[data-theme='classic-blue'] .button:active,
 body[data-theme='classic-blue'] .btn-primary:active,
-body[data-theme='classic-blue'] .sort-toggle:active,
-body[data-theme='classic-blue'] button:not(.no-button):active {
+body[data-theme='classic-blue'] button:not(.no-button):not(.win98-ctrl-btn):not(.sort-toggle):active {
   border-color: #000000 #ffffff #ffffff #000000;
   box-shadow: inset 1px 1px 0px #808080;
 }
